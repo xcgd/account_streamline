@@ -1,0 +1,27 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_move_line_listing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-11 13:23+0000\n"
+"PO-Revision-Date: 2013-02-11 13:23+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_move_line_listing
+#: view:account.move.line:0
+msgid "Reconciled"
+msgstr "Lettré"
+
+#. module: account_move_line_listing
+#: view:account.move.line:0
+msgid "Reconciled Journal Items"
+msgstr "Ligne lettrées"
+
