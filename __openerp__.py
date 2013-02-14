@@ -3,7 +3,7 @@
 #
 ##############################################################################
 {
-    "name" : "account_streamline",
+    "name" : "Account Streamline",
     "version" : "0.1",
     "author" : "XCG Consulting",
     "category": 'Accounting',
