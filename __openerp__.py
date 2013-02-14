@@ -3,17 +3,19 @@
 #
 ##############################################################################
 {
-    "name" : "account_move_line_listing",
+    "name" : "account_streamline",
     "version" : "0.1",
     "author" : "XCG Consulting",
     "category": 'Accounting',
-    "description": """Enhancements to the account_move_line default view
+    "description": """Enhancements to the account module to streamline its
+    usage.
     """,
     'website': 'http://www.openerp-experts.com',
     'init_xml': [],
-    "depends" : ['base', 'account', ],
+    "depends" : ['base', 'account_accountant'],
     "data": [
-        'account_move_line.xml',
+        'account_move_line_search_unreconciled.xml',
+        'account_move_line_tree.xml',
     ],
     #'demo_xml': [],
     'test': [],
