@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree[@string='Journal Items']" position="replace">
                     <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
+                        <field name="state" />
                         <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                         <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
                         <field name="ref"/>
@@ -28,7 +29,6 @@
                         <field name="invoice" invisible="1"/>
                         <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                         <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
-                        <field name="state" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                     </tree>
                 </xpath>
