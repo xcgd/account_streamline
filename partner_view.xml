@@ -1,0 +1,37 @@
+<record id="view_partner_form_account_streamline" model="ir.ui.view">
+    <field name="name">res.partner.form.inherit.account.streamline</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <field name="property_account_receivable" position="replace">
+                <field name="property_account_receivable" groups="account.group_account_invoice"
+                       attrs="{'invisible': [('customer', '=', False)]}"/>
+            </field>
+            <field name="property_payment_term" position="replace">
+                <field name="property_payment_term" widget="selection"
+                       attrs="{'invisible': [('customer', '=', False)]}"/>
+            </field>
+            <field name="credit" position="replace">
+                <field name="credit"
+                       attrs="{'invisible': [('customer', '=', False)]}"/>
+            </field>
+            <field name="credit_limit" position="replace">
+                <field name="credit_limit"
+                       attrs="{'invisible': [('customer', '=', False)]}"/>
+            </field>
+            <field name="property_account_payable" position="replace">
+                <field name="property_account_payable" groups="account.group_account_invoice"
+                       attrs="{'invisible': [('supplier', '=', False)]}"/>
+            </field>
+            <field name="property_supplier_payment_term" position="replace">
+                <field name="property_supplier_payment_term" widget="selection"
+                       attrs="{'invisible': [('supplier', '=', False)]}"/>
+            </field>
+            <field name="debit" position="replace">
+                <field name="debit"
+                       attrs="{'invisible': [('supplier', '=', False)]}"/>
+            </field>
+        </data>
+    </field>
+</record>
