@@ -26,13 +26,25 @@ class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit =  ['res.partner','mail.thread', 'ir.needaction_mixin']
 
+    def _check_supplier_account(self, cr, uid, obj, ctx=None):
+        print "*"*35
+        print obj['supplier']
+        print obj.property_account_payable.type
+        res = obj['supplier'] and not obj.property_account_payable.type == 'payable'
+        return res
+
+    def _check_customer_account(self, cr, uid, obj, ctx=None):
+        print "*"*35
+        print obj['customer']
+        print obj.property_account_receivable.type
+        res = obj['customer'] and not obj.property_account_receivable.type == 'receivable'
+        return res
+
     _track = {
         'property_account_payable': {
-            'purchase.mt_partner_supplier': lambda self, cr, uid, obj, ctx=None:
-            obj['supplier'] and not obj.property_account_payable.type == 'payable',
+            'partner.mt_partner_supplier': _check_supplier_account,
             },
         'property_account_receivable': {
-            'purchase.mt_partner_customer': lambda self, cr, uid, obj, ctx=None:
-            obj['customer'] and not obj.property_account_receivable.type == 'receivable',
+            'partner.mt_partner_customer': _check_customer_account,
             },
         }
