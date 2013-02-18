@@ -74,7 +74,6 @@ class account_move_line(osv.osv):
                 current_move_id = None
                 current_journal_id = None
 
-
             # if the user tries to move away a line from an account_move which
             # if already posted
             if current_move_id and self.is_move_posted(
@@ -102,6 +101,9 @@ class account_move_line(osv.osv):
             update_check=update_check)
 
     def create(self, cr, uid, vals, context=None):
+        """add a security check to ensure no one is
+         creating new account.move.line inside and already posted account.move
+        """
         move_id = vals.get('move_id', False)
 
         if self.is_move_posted(cr, uid, move_id, context=context):
