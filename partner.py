@@ -48,3 +48,31 @@ class res_partner(osv.osv):
             'account_streamline.mt_partner_customer': _check_customer_account,
             },
         }
+
+    def create(self, cr, uid, values, context=None):
+        """ Override to control notifications """
+        if context is None:
+            context = {}
+        context.update({'mail_create_nolog':True, 'mail_create_nosubscribe':True})
+        cur_id = super(res_partner, self).create(cr, uid, values, context=context)
+        new_partner = self.browse(cr, uid, cur_id, context=context)
+        if self._check_supplier_account(cr, uid, new_partner):
+            self.message_post(cr, uid, cur_id,
+                          type='comment', subtype='account_streamline.mt_partner_supplier', context=context)
+        elif self._check_customer_account(cr, uid, new_partner):
+            self.message_post(cr, uid, cur_id,
+                              type='comment', subtype='account_streamline.mt_partner_customer', context=context)
+        return cur_id
+
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids)
+        # retrieve users from accounts creators group which comes from related module data
+        obj = self.pool.get('ir.model.data')
+        followers = obj.get_object(cr, uid, 'mail.message.group', 'group_account_creators').member_ids
+        for partner in self.browse(cr, uid, ids, context=context):
+        # set the list void by default
+            result[partner.id] = []
+            # if partner is not correctly set: manager is required to perform an action
+            if self._check_supplier_account(cr, uid, partner, context=context) or self._check_customer_account(cr, uid, partner, context=context):
+                result[partner.id] = [followers]
+        return result
