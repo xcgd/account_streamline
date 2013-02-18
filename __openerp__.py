@@ -14,15 +14,14 @@
     'init_xml': [],
     "depends" : ['base', 'account_accountant'],
     "data": [
-        'partner_data.xml'
+        'data/partner_data.xml',
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
-        'partner_view.xml'
+        'partner_view.xml',
     ],
     #'demo_xml': [],
     'test': [],
     'installable': True,
     'active': False,
-    #'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

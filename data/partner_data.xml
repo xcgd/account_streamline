@@ -12,5 +12,12 @@
             <field name="res_model">res.partner</field>
             <field name="description">Check Customer Account</field>
         </record>
+
+        <!-- Discussion groups -->
+        <record model="mail.group" id="group_account_creators">
+            <field name="name">Accounts</field>
+            <field name="description">Discussion about accounts creation</field>
+        </record>
+
     </data>
 </openerp>
