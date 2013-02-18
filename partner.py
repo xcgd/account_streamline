@@ -22,18 +22,19 @@
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
+
 class res_partner_needaction(osv.Model):
     _name = 'res.partner'
-    _inherit =  ['res.partner','mail.thread', 'ir.needaction_mixin']
+    _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
-    def _check_supplier_account(self, cr, uid, obj, ctx=None):
+    def _check_supplier_account(self, cr, uid, obj, context=None):
         print "*"*35
         print obj['supplier']
         print obj.property_account_payable.type
         res = obj['supplier'] and not obj.property_account_payable.type == 'payable'
         return res
 
-    def _check_customer_account(self, cr, uid, obj, ctx=None):
+    def _check_customer_account(self, cr, uid, obj, context=None):
         print "*"*35
         print obj['customer']
         print obj.property_account_receivable.type
@@ -53,26 +54,46 @@ class res_partner_needaction(osv.Model):
         """ Override to control notifications """
         if context is None:
             context = {}
-        context.update({'mail_create_nolog':True, 'mail_create_nosubscribe':True})
-        cur_id = super(res_partner, self).create(cr, uid, values, context=context)
+        context.update(
+            {'mail_create_nolog': True, 'mail_create_nosubscribe': True})
+
+        cur_id = super(res_partner_needaction, self).create(
+            cr, uid, values, context=context)
         new_partner = self.browse(cr, uid, cur_id, context=context)
+
         if self._check_supplier_account(cr, uid, new_partner):
-            self.message_post(cr, uid, cur_id,
-                          type='comment', subtype='account_streamline.mt_partner_supplier', context=context)
+            self.message_post(
+                cr, uid, cur_id, type='comment',
+                subtype='account_streamline.mt_partner_supplier',
+                context=context)
+
         elif self._check_customer_account(cr, uid, new_partner):
-            self.message_post(cr, uid, cur_id,
-                              type='comment', subtype='account_streamline.mt_partner_customer', context=context)
+            self.message_post(
+                cr, uid, cur_id, type='comment',
+                subtype='account_streamline.mt_partner_customer',
+                context=context)
+
         return cur_id
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids)
-        # retrieve users from accounts creators group which comes from related module data
+        # retrieve users from accounts creators group which
+        # comes from related module data
         obj = self.pool.get('ir.model.data')
-        followers = obj.get_object(cr, uid, 'mail.message.group', 'group_account_creators').member_ids
+        followers = obj.get_object(cr, uid, 'mail.message.group',
+                                   'group_account_creators').member_ids
+
         for partner in self.browse(cr, uid, ids, context=context):
         # set the list void by default
             result[partner.id] = []
-            # if partner is not correctly set: manager is required to perform an action
-            if self._check_supplier_account(cr, uid, partner, context=context) or self._check_customer_account(cr, uid, partner, context=context):
+            # if partner is not correctly set:
+            #  manager is required to perform an action
+            if self._check_supplier_account(
+                    cr, uid, partner, context=context
+            ) or self._check_customer_account(
+                    cr, uid, partner, context=context):
+
                 result[partner.id] = [followers]
+
         return result
+
