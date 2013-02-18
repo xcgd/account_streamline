@@ -10,7 +10,8 @@
                 <xpath expr="//tree[@string='Journal Items']" position="replace">
                     <tree colors="red:move_state == 'draft';black:move_state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
                         <field name="state" invisible="1" />
-                        <field name="move_id" required="0"/>
+                        <field name="move_id" required="0"
+                               domain="[('state', '=', 'draft'), ('journal_id', '=', context.get('journal_id')), ('period_id', '=', context.get('period_id'))]"/>
                         <field name="move_state" />
                         <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                         <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
