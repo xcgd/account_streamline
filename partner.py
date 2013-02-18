@@ -42,9 +42,9 @@ class res_partner(osv.osv):
 
     _track = {
         'property_account_payable': {
-            'partner.mt_partner_supplier': _check_supplier_account,
+            'account_streamline.mt_partner_supplier': _check_supplier_account,
             },
         'property_account_receivable': {
-            'partner.mt_partner_customer': _check_customer_account,
+            'account_streamline.mt_partner_customer': _check_customer_account,
             },
         }
