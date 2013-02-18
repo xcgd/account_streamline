@@ -22,7 +22,7 @@
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
-class res_partner(osv.osv):
+class res_partner_needaction(osv.Model):
     _name = 'res.partner'
     _inherit =  ['res.partner','mail.thread', 'ir.needaction_mixin']
 
