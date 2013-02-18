@@ -28,6 +28,7 @@ forbidden_fields = ["move_id"]
 msg_invalid_move = _('You cannot add line(s) into an already posted entry')
 msg_cannot_remove_line = _(
     'You cannot remove line(s) from an already posted entry')
+msg_invalid_journal = _('You cannot move line(s) between journal types')
 
 
 class account_move_line(osv.osv):
@@ -56,13 +57,23 @@ class account_move_line(osv.osv):
         """
         target_move_id = vals.get('move_id', False)
 
+        target_journal_id = None
+        if target_move_id:
+            move_osv = self.pool.get('account.move')
+            target_journal_id = move_osv.browse(cr, uid, target_move_id,
+                                                context=context).journal_id.id
+
         for aml in self.browse(cr, uid, ids, context=context):
 
             current_move = getattr(aml, 'move_id', None)
             if current_move:
-                current_move_id = current_move.id
+                current_move_id = aml.move_id.id
+                current_journal_id = aml.move_id.journal_id
+
             else:
                 current_move_id = None
+                current_journal_id = None
+
 
             # if the user tries to move away a line from an account_move which
             # if already posted
@@ -78,6 +89,12 @@ class account_move_line(osv.osv):
                     self.is_move_posted(
                         cr, uid, target_move_id, context=context):
                 raise osv.except_osv(_('Error!'), msg_invalid_move)
+
+            # we don't allow switching from one journal_id (journal type)
+            #  to the other even for draft entries
+            if target_journal_id and \
+                    not target_journal_id == current_journal_id:
+                raise osv.except_osv(_('Error!'), msg_invalid_journal)
 
         return super(account_move_line, self).write(
             cr, uid, ids, vals,
