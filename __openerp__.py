@@ -14,6 +14,7 @@
     'init_xml': [],
     "depends" : ['base', 'account_accountant'],
     "data": [
+        'partner_data.xml'
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
         'partner_view.xml'

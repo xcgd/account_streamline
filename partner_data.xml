@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Partner related subtypes for messaging / Chatter -->
+        <record id="purchase.mt_partner_supplier" model="mail.message.subtype">
+            <field name="name">Supplier</field>
+            <field name="res_model">res.partner</field>
+            <field name="description">Check Supplier Account</field>
+        </record>
+        <record id="purchase.mt_partner_customer" model="mail.message.subtype">
+            <field name="name">Customer</field>
+            <field name="res_model">res.partner</field>
+            <field name="description">Check Customer Account</field>
+        </record>
+    </data>
+</openerp>
