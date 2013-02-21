@@ -49,6 +49,7 @@ class good_to_pay(osv.osv_memory):
         journal_osv = self.pool.get('account.journal')
 
         supplier_to_voucher_map = dict()
+        voucher_amounts = dict()
 
         for form in self.read(cr, uid, ids, context=context):
             if form['sure']:
@@ -100,6 +101,8 @@ class good_to_pay(osv.osv_memory):
                                                         context=context)
 
                         supplier_to_voucher_map[partner_id] = voucher_id
+                        voucher_amounts[voucher_id] = 0.0
+
                     else:
                         voucher_id = supplier_to_voucher_map[partner_id]
 
@@ -119,5 +122,13 @@ class good_to_pay(osv.osv_memory):
                     line_vals2['amount'] = avl.amount_unreconciled
 
                     avl_osv.write(cr, uid, [avl_id], line_vals2)
+                    voucher_amounts[voucher_id] += avl.amount_unreconciled
+
+                # once every voucher is finished we recompute the voucher totals
+                # and write them back to the vouchers
+                for voucher_id in voucher_amounts.keys():
+                    voucher_osv.write(
+                        cr, uid, [voucher_id],
+                        {'amount': voucher_amounts[voucher_id]})
 
         return {'type': 'ir.actions.act_window_close'}
