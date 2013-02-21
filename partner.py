@@ -85,13 +85,13 @@ class res_partner_needaction(osv.Model):
         dom = super(res_partner_needaction, self)._needaction_domain_get(
             cr, uid, context=context)
         obj = self.pool.get('ir.model.data')
-        followers = obj.get_object(cr, uid, 'mail.message.group',
+        followers = obj.get_object(cr, uid, 'account_streamline',
                                    'group_account_creators').message_follower_ids
         if uid in followers:
             dom = ['|'] + dom + [
                 ('|', 'supplier_account_check', '=', 1),
                 ('customer_account_check', '=', 1),
             ]
-        # if this user is a hr.manager, he should do second validations
+
         return dom
 
