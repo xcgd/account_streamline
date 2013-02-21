@@ -28,29 +28,28 @@ class res_partner_needaction(osv.Model):
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
     def _check_supplier_account(self, cr, uid, obj, context=None):
-        print "*"*35
-        print obj
-        print dir(obj)
-        print obj['supplier']
-        print obj.property_account_payable.type
         res = obj['supplier'] and not obj.property_account_payable.type == 'payable'
         return res
 
     def _check_customer_account(self, cr, uid, obj, context=None):
-        print "*"*35
-        print obj['customer']
-        print obj.property_account_receivable.type
         res = obj['customer'] and not obj.property_account_receivable.type == 'receivable'
         return res
 
     _track = {
-        #'property_account_payable': {
-        #    'account_streamline.mt_partner_supplier': _check_supplier_account,
-        #    },
-        #'property_account_receivable': {
-        #    'account_streamline.mt_partner_customer': _check_customer_account,
-        #    },
+        'supplier_account_check': {
+            'account_streamline.mt_partner_supplier': lambda self,
+                        cr, uid, obj, ctx=None: obj['supplier_account_check'],
+            },
+        'customer_account_check': {
+            'account_streamline.mt_partner_customer': lambda self,
+                        cr, uid, obj, ctx=None: obj['customer_account_check'],
+            },
         }
+
+    _columns = dict(
+        supplier_account_check = fields.function('_check_supplier_account', type='boolean'),
+        customer_account_check = fields.function('_check_customer_account', type='boolean'),
+    )
 
     def create(self, cr, uid, values, context=None):
         """ Override to control notifications """
@@ -61,41 +60,38 @@ class res_partner_needaction(osv.Model):
 
         cur_id = super(res_partner_needaction, self).create(
             cr, uid, values, context=context)
-        new_partner = self.browse(cr, uid, cur_id, context=context)
 
-        if self._check_supplier_account(cr, uid, new_partner):
+        if values['supplier_account_check']:
             self.message_post(
-                cr, uid, cur_id, type='comment',
+                cr, uid, cur_id,
                 subtype='account_streamline.mt_partner_supplier',
+                body=_("Supplier created, please check related account."),
                 context=context)
 
-        elif self._check_customer_account(cr, uid, new_partner):
+        if values['customer_account_check']:
             self.message_post(
-                cr, uid, cur_id, type='comment',
+                cr, uid, cur_id,
                 subtype='account_streamline.mt_partner_customer',
+                body=_("Customer created, please check related account."),
                 context=context)
 
         return cur_id
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = dict.fromkeys(ids)
-        # retrieve users from accounts creators group which
-        # comes from related module data
+    def _needaction_domain_get(self, cr, uid, context=None):
+        """ Returns the domain to filter records that require an action
+            :return: domain or False is no action
+        """
+        # get domain from parent object if exists
+        dom = super(res_partner_needaction, self)._needaction_domain_get(
+            cr, uid, context=context)
         obj = self.pool.get('ir.model.data')
         followers = obj.get_object(cr, uid, 'mail.message.group',
-                                   'group_account_creators').member_ids
-
-        for partner in self.browse(cr, uid, ids, context=context):
-        # set the list void by default
-            result[partner.id] = []
-            # if partner is not correctly set:
-            #  manager is required to perform an action
-            if self._check_supplier_account(
-                    cr, uid, partner, context=context
-            ) or self._check_customer_account(
-                    cr, uid, partner, context=context):
-
-                result[partner.id] = [followers]
-
-        return result
+                                   'group_account_creators').message_follower_ids
+        if uid in followers:
+            dom = ['|'] + dom + [
+                ('|', 'supplier_account_check', '=', 1),
+                ('customer_account_check', '=', 1),
+            ]
+        # if this user is a hr.manager, he should do second validations
+        return dom
 
