@@ -58,6 +58,7 @@
                     <field name="move_id" required="0" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
+                    <field name="reconcile_id" invisible="1"/>
                     <field name="reconcile" invisible="1"/>
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
@@ -74,12 +75,28 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record id="action_move_line_tree_payment" model="ir.actions.act_window">
+            <field name="name">Payments Selection</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_readonly"/>
+            <field name="domain">[('account_id.type', '=', 'payable'), ('reconcile_id', '=', False), ('partner_id.supplier', '=', 1), ('move_id.state', '=', 'posted')]</field>
+            <field name="view_mode">tree</field>
+        </record>
+
         <menuitem
             action="action_move_line_tree_readonly"
             id="menu_action_account_move_line_readonly"
             parent="account.menu_finance_entries"
             sequence="10"
             groups="account.group_account_user"
+        />
+
+        <menuitem
+                action="action_move_line_tree_payment"
+                id="menu_action_account_move_line_payment"
+                parent="account.menu_finance_entries"
+                sequence="11"
+                groups="account.group_account_user"
         />
 
     </data>

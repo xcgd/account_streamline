@@ -29,6 +29,8 @@ class res_partner_needaction(osv.Model):
 
     def _check_supplier_account(self, cr, uid, obj, context=None):
         print "*"*35
+        print obj
+        print dir(obj)
         print obj['supplier']
         print obj.property_account_payable.type
         res = obj['supplier'] and not obj.property_account_payable.type == 'payable'
@@ -42,12 +44,12 @@ class res_partner_needaction(osv.Model):
         return res
 
     _track = {
-        'property_account_payable': {
-            'account_streamline.mt_partner_supplier': _check_supplier_account,
-            },
-        'property_account_receivable': {
-            'account_streamline.mt_partner_customer': _check_customer_account,
-            },
+        #'property_account_payable': {
+        #    'account_streamline.mt_partner_supplier': _check_supplier_account,
+        #    },
+        #'property_account_receivable': {
+        #    'account_streamline.mt_partner_customer': _check_customer_account,
+        #    },
         }
 
     def create(self, cr, uid, values, context=None):
