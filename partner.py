@@ -27,12 +27,18 @@ class res_partner_needaction(osv.Model):
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
-    def _check_supplier_account(self, cr, uid, obj, context=None):
-        res = obj['supplier'] and not obj.property_account_payable.type == 'payable'
+    def _check_supplier_account(self, cr, uid, ids, name, args, context=None):
+        res = dict()
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = partner.supplier and\
+                not partner.property_account_payable.type == 'payable'
         return res
 
-    def _check_customer_account(self, cr, uid, obj, context=None):
-        res = obj['customer'] and not obj.property_account_receivable.type == 'receivable'
+    def _check_customer_account(self, cr, uid, ids, name, args, context=None):
+        res = dict()
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = partner.customer and\
+                not partner.property_account_receivable.type == 'receivable'
         return res
 
     _track = {
