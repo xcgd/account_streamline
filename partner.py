@@ -53,8 +53,10 @@ class res_partner_needaction(osv.Model):
         }
 
     _columns = dict(
-        supplier_account_check = fields.function(_check_supplier_account, type='boolean'),
-        customer_account_check = fields.function(_check_customer_account, type='boolean'),
+        supplier_account_check = fields.function(_check_supplier_account,
+                                                 type='boolean'),
+        customer_account_check = fields.function(_check_customer_account,
+                                                 type='boolean'),
     )
 
     def create(self, cr, uid, values, context=None):
