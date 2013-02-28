@@ -30,25 +30,33 @@ class res_partner_needaction(osv.Model):
     def _check_supplier_account(self, cr, uid, ids, name, args, context=None):
         res = dict()
         for partner in self.browse(cr, uid, ids, context=context):
+            account = self.pool.get('account.account').browse(cr, uid,
+                                            partner.property_account_payable)
             res[partner.id] = partner.supplier and\
-                not partner.property_account_payable.type == 'payable'
+                not account.type == 'payable'
         return res
 
     def _check_customer_account(self, cr, uid, ids, name, args, context=None):
         res = dict()
         for partner in self.browse(cr, uid, ids, context=context):
+            account = self.pool.get('account.account').browse(cr, uid,
+                                            partner.property_account_payable)
             res[partner.id] = partner.customer and\
-                not partner.property_account_receivable.type == 'receivable'
+                not account.type == 'receivable'
         return res
 
     _track = {
-        'supplier_account_check': {
+        'property_account_payable': {
             'account_streamline.mt_partner_supplier': lambda self,
-                        cr, uid, obj, ctx=None: obj['supplier_account_check'],
+                        cr, uid, obj, ctx=None:
+            self.pool.get('account.account').browse(cr, uid,
+                        obj['property_account_payable']).type == 'payable',
             },
         'customer_account_check': {
             'account_streamline.mt_partner_customer': lambda self,
-                        cr, uid, obj, ctx=None: obj['customer_account_check'],
+                        cr, uid, obj, ctx=None:
+            self.pool.get('account.account').browse(cr, uid,
+                        obj['property_account_receivable']).type == 'receivable',
             },
         }
 
@@ -69,20 +77,20 @@ class res_partner_needaction(osv.Model):
         cur_id = super(res_partner_needaction, self).create(
             cr, uid, values, context=context)
 
-        if values['supplier_account_check']:
-            self.message_post(
-                cr, uid, cur_id,
-                subtype='account_streamline.mt_partner_supplier',
-                body=_("Supplier created, please check related account."),
-                context=context)
-
-        if values['customer_account_check']:
-            self.message_post(
-                cr, uid, cur_id,
-                subtype='account_streamline.mt_partner_customer',
-                body=_("Customer created, please check related account."),
-                context=context)
-
+    #     if values['supplier_account_check']:
+    #         self.message_post(
+    #             cr, uid, cur_id,
+    #             subtype='account_streamline.mt_partner_supplier',
+    #             body=_("Supplier created, please check related account."),
+    #             context=context)
+    #
+    #     if values['customer_account_check']:
+    #         self.message_post(
+    #             cr, uid, cur_id,
+    #             subtype='account_streamline.mt_partner_customer',
+    #             body=_("Customer created, please check related account."),
+    #             context=context)
+    #
         return cur_id
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -100,6 +108,9 @@ class res_partner_needaction(osv.Model):
                 ('|', 'supplier_account_check', '=', 1),
                 ('customer_account_check', '=', 1),
             ]
+
+        print '*'*35
+        print dom
 
         return dom
 
