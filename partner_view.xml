@@ -8,9 +8,10 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
-                <xpath expr="//field[@name='property_account_receivable']" position="replace">
+                    <xpath expr="//field[@name='property_account_receivable']" position="replace">
                         <field name="property_account_receivable" groups="account.group_account_invoice"
                                attrs="{'invisible': [('customer', '=', False)]}"/>
+                        <field name="customer_account_check" invisible="True"/>
                     </xpath>
                     <xpath expr="//field[@name='property_payment_term']" position="replace">
                         <field name="property_payment_term" widget="selection"
@@ -27,6 +28,7 @@
                     <xpath expr="//field[@name='property_account_payable']" position="replace">
                         <field name="property_account_payable" groups="account.group_account_invoice"
                                attrs="{'invisible': [('supplier', '=', False)]}"/>
+                        <field name="supplier_account_check" invisible="True"/>
                     </xpath>
                     <xpath expr="//field[@name='property_supplier_payment_term']" position="replace">
                         <field name="property_supplier_payment_term" widget="selection"
@@ -37,6 +39,20 @@
                                attrs="{'invisible': [('supplier', '=', False)]}"/>
                     </xpath>
                 </data>
+            </field>
+        </record>
+
+        <record id="view_res_partner_filter_account_streamline" model="ir.ui.view">
+            <field name="name">res.partner.select.inherit.account.streamline</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <filter string="Unread"
+                            name="message_unread" help="Show messages to read"
+                            domain="['|', '|', ('customer_account_check', '=', True), ('supplier_account_check', '=', True),
+                            ('message_unread', '=', True)]"/>
+                </xpath>
             </field>
         </record>
 
