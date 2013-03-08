@@ -89,7 +89,7 @@ class res_partner_needaction(osv.Model):
         self.message_subscribe(cr, uid, [cur_id], followers, subtypes,
                               context=context)
 
-        if values['supplier'] and not self.pool.get('account.account').browse(cr, uid,
+        if values.get('supplier', None) and not self.pool.get('account.account').browse(cr, uid,
                                                        values['property_account_payable']).type == 'payable':
             self.message_post(
                 cr, uid, cur_id,
@@ -97,7 +97,7 @@ class res_partner_needaction(osv.Model):
                 body=_("Supplier created, please check related account."),
                 context=context)
 
-        if values['customer'] and not self.pool.get('account.account').browse(cr, uid,
+        if values.get('customer', None) and not self.pool.get('account.account').browse(cr, uid,
                                                        values['property_account_receivable']).type == 'receivable':
             self.message_post(
                 cr, uid, cur_id,
