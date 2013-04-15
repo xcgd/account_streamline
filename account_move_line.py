@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
 # fields that are considered as forbidden once the move_id has been posted
@@ -36,9 +37,61 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     _columns = dict(
+        currency_id=fields.many2one('res.currency', 'Currency', help="The mandatory currency code"),
+
         move_state=fields.related("move_id", "state",
-                                  type="char", string="status", readonly=True)
+                                  type="char", string="status", readonly=True),
+
+        debit_curr=fields.float('Debit', digits_compute=dp.get_precision('Account')),
+        credit_curr=fields.float('Credit', digits_compute=dp.get_precision('Account')),
+        currency_rate=fields.float('Used rate', digits=(12,6)),
     )
+
+    def _get_currency(self, cr, uid, context=None):
+        """
+        override default so the currency is always present (coming from company)
+        """
+        if context is None:
+            context = {}
+        if not context.get('journal_id', False):
+            return False
+        jrn = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+        cur = jrn.currency and jrn.currency.id or jrn.company_id.currency_id.id
+        return cur or False
+
+    _defaults = {
+        'credit_curr': 0.0,
+        'debit_curr': 0.0,
+        'currency_rate': 1.0,
+    }
+
+    def _check_currency_company(self, cr, uid, ids, context=None):
+        """
+        disable check constraint on secondary currency.
+        The idea is to always have a currency and a rate on every single move line.
+        """
+        return True
+
+    def _default_get(self, cr, uid, fields, context=None):
+        """add other default valued related to multicurrency
+        """
+        data = super(account_move_line, self)._default_get(cr, uid, fields, context=context)
+
+        move_obj = self.pool.get('account.move')
+        if context.get('journal_id'):
+            total_curr = 0.0
+            #in account.move form view, it is not possible to compute total debit and credit using
+            #a browse record. So we must use the context to pass the whole one2many field and compute the total
+            if context.get('line_id'):
+                for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'), context=context):
+                    data['currency_id'] = data.get('currency_id') or move_line_dict.get('currency_id')
+                    total_curr += move_line_dict.get('debit_curr', 0.0) - move_line_dict.get('credit_curr', 0.0)
+
+            #compute the total of current move
+            data['debit_curr'] = total_curr < 0 and -total_curr or 0.0
+            data['credit_curr'] = total_curr > 0 and total_curr or 0.0
+
+        return data
 
     def is_move_posted(self, cr, uid, move_id, context=None):
         """internal helper function
@@ -49,12 +102,62 @@ class account_move_line(osv.osv):
             move = move_osv.browse(cr, uid, move_id, context=context)
             return move.state == 'posted'
 
+    def _compute_multicurrency(self, cr, uid, vals, context=None):
+        if context is None:
+            context={}
+        account_obj = self.pool.get('account.account')
+        cur_obj = self.pool.get('res.currency')
+
+        #compute actual rate when amounts in both base and transaction curr are given
+        amount = vals.get('amount_currency', 0.0)
+        d = vals.get('debit', False)
+        c = vals.get('credit', False)
+        if 'amount_currency' in vals:
+            vals['currency_rate'] = abs(amount / (vals.get('debit', 0.0)-vals.get('credit', 0.0)))
+
+        #make sure the secondary currency is always present
+        if 'account_id' and 'currency_id' in vals:
+            account = account_obj.browse(cr, uid, vals['account_id'], context=context)
+            if (vals.get('amount_currency', False) is False) and vals.get('currency_id') == account.company_id.currency_id.id:
+                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
+                                                          account.company_id.currency_id.id,
+                                                          vals.get('debit', 0.0)-vals.get('credit', 0.0),
+                                                          context=context)
+
+        #compute debit and credit in transaction currency when not provided
+        amount = vals.get('amount_currency', 0.0)
+        if 'amount_currency' in vals:
+            cur_browse = cur_obj.browse(cr, uid, vals.get('currency_id'), context=context)
+            vals['debit_curr'] = cur_obj.round(cr, uid, cur_browse, amount>0.0 and amount or 0.0)
+            vals['credit_curr'] = cur_obj.round(cr, uid, cur_browse, amount<0.0 and -amount or 0.0)
+
+        return vals
+
+    def onchange_currency(self, cr, uid, ids, account_id, debit, credit, currency_id, date=False, journal=False, context=None):
+        """override onchange to pass both debit and credit amount, not only signed amount
+        that might be computed only during the save process
+        """
+        amount = debit - credit
+        result = super(account_move_line,self).onchange_currency(cr, uid, ids, account_id, amount, currency_id,
+                                                               date=date, journal=journal, context=context)
+        if 'value' in result:
+            result['value']['amount_currency'] = amount
+        return result
+
     def write(self, cr, uid, ids, vals, context=None, check=True,
               update_check=True):
-        """re-implement the write method to enforce stricter security rules on
-        the account.move.line / account.move relationship related to the
-        posted status
-        """
+
+        if context is None:
+            context={}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        #processing vals to get complete multicurrency data
+        vals = self._compute_multicurrency(cr, uid, vals, context=context)
+
+        #enforce stricter security rules on
+        #the account.move.line / account.move relationship related to the
+        #posted status
         target_move_id = vals.get('move_id', False)
 
         target_journal_id = None
@@ -101,13 +204,17 @@ class account_move_line(osv.osv):
             update_check=update_check)
 
     def create(self, cr, uid, vals, context=None):
-        """add a security check to ensure no one is
-         creating new account.move.line inside and already posted account.move
+
+        """
+        add a security check to ensure no one is
+        creating new account.move.line inside and already posted account.move
         """
         move_id = vals.get('move_id', False)
-
-        if self.is_move_posted(cr, uid, move_id, context=context):
+        if move_id and self.is_move_posted(cr, uid, move_id, context=context):
             raise osv.except_osv(_('Error!'), msg_invalid_move)
+
+        #processing vals to get complete multicurrency data
+        vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
         return super(account_move_line, self).create(cr, uid, vals,
                                                      context=context)

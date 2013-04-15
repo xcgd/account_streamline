@@ -12,11 +12,12 @@
     """,
     'website': 'http://www.openerp-experts.com',
     'init_xml': [],
-    "depends" : ['base', 'account_accountant', 'account_voucher'],
+    "depends" : ['base', 'account_accountant', 'account_voucher', 'account_sequence'],
     "data": [
         'data/partner_data.xml',
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
+        'account_move_view.xml',
         'partner_view.xml',
         'payment_selection.xml',
     ],
