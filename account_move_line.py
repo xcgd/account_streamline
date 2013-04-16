@@ -171,7 +171,7 @@ class account_move_line(osv.osv):
             current_move = getattr(aml, 'move_id', None)
             if current_move:
                 current_move_id = aml.move_id.id
-                current_journal_id = aml.move_id.journal_id
+                current_journal_id = aml.move_id.journal_id.id
 
             else:
                 current_move_id = None
