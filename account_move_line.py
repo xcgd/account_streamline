@@ -22,6 +22,9 @@
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp import netsvc
+import time
+from datetime import datetime
 
 # fields that are considered as forbidden once the move_id has been posted
 forbidden_fields = ["move_id"]
@@ -44,7 +47,7 @@ class account_move_line(osv.osv):
 
         debit_curr=fields.float('Debit', digits_compute=dp.get_precision('Account')),
         credit_curr=fields.float('Credit', digits_compute=dp.get_precision('Account')),
-        currency_rate=fields.float('Used rate', digits=(12,6)),
+        currency_rate=fields.float('Used rate', digits=(12, 6)),
     )
 
     def _get_currency(self, cr, uid, context=None):
@@ -72,8 +75,15 @@ class account_move_line(osv.osv):
         """
         return True
 
+    _constraints = [
+        (_check_currency_company,
+         "If you see this, the constraint redefined "
+         "in account_streamline.account_move_line._check_currency_company is not working!",
+         ['currency_id']),
+    ]
+
     def _default_get(self, cr, uid, fields, context=None):
-        """add other default valued related to multicurrency
+        """add other default values related to multicurrency
         """
         data = super(account_move_line, self)._default_get(cr, uid, fields, context=context)
 
@@ -83,7 +93,8 @@ class account_move_line(osv.osv):
             #in account.move form view, it is not possible to compute total debit and credit using
             #a browse record. So we must use the context to pass the whole one2many field and compute the total
             if context.get('line_id'):
-                for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'), context=context):
+                for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'),
+                                                                      context=context):
                     data['currency_id'] = data.get('currency_id') or move_line_dict.get('currency_id')
                     total_curr += move_line_dict.get('debit_curr', 0.0) - move_line_dict.get('credit_curr', 0.0)
 
@@ -103,52 +114,71 @@ class account_move_line(osv.osv):
             return move.state == 'posted'
 
     def _compute_multicurrency(self, cr, uid, vals, context=None):
+
         if context is None:
-            context={}
+            context = {}
+
+        #some data to evaluate
         account_obj = self.pool.get('account.account')
         cur_obj = self.pool.get('res.currency')
+        amount_trans = vals.get('amount_currency', 0.0)
+        amount_base = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+        currency_trans = vals.get('currency_id', False)
 
-        #compute actual rate when amounts in both base and transaction curr are given
-        amount = vals.get('amount_currency', 0.0)
-        d = vals.get('debit', False)
-        c = vals.get('credit', False)
-        if 'amount_currency' in vals:
-            vals['currency_rate'] = abs(amount / (vals.get('debit', 0.0)-vals.get('credit', 0.0)))
+        cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
 
-        #make sure the secondary currency is always present
-        if 'account_id' and 'currency_id' in vals:
-            account = account_obj.browse(cr, uid, vals['account_id'], context=context)
-            if (vals.get('amount_currency', False) is False) and vals.get('currency_id') == account.company_id.currency_id.id:
-                vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
-                                                          account.company_id.currency_id.id,
-                                                          vals.get('debit', 0.0)-vals.get('credit', 0.0),
-                                                          context=context)
+        #compute actual rate ONLY when amounts in BOTH base and transaction curr are given
+        if not amount_trans == 0.0 and currency_trans and not amount_base == 0.0:
+            vals['currency_rate'] = cur_obj.round(cr, uid, cur_browse, abs(amount_trans / amount_base))
+
+        #make sure the secondary currency is always present by copying the base amount and currency
+        if 'account_id' in vals:
+            currency_base = account_obj.browse(cr, uid, vals['account_id'], context=context).company_id.currency_id.id
+            if amount_trans == 0.0 and (currency_trans == currency_base or not currency_trans):
+                amount_trans = vals['amount_currency'] = cur_obj.compute(cr, uid, currency_base,
+                                                        currency_base,
+                                                        vals.get('debit', 0.0) - vals.get('credit', 0.0),
+                                                        context=context)
+
+                currency_trans = vals['currency_id'] = currency_base
+                cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
+                vals['currency_rate'] = 1.0
+
+        #TODO : create proper tests!!!
+        print '*'*35
+        print vals
+        print '*'*35
 
         #compute debit and credit in transaction currency when not provided
-        amount = vals.get('amount_currency', 0.0)
-        if 'amount_currency' in vals:
-            cur_browse = cur_obj.browse(cr, uid, vals.get('currency_id'), context=context)
-            vals['debit_curr'] = cur_obj.round(cr, uid, cur_browse, amount>0.0 and amount or 0.0)
-            vals['credit_curr'] = cur_obj.round(cr, uid, cur_browse, amount<0.0 and -amount or 0.0)
+        #this should happen only with generated transaction, not with manual entries
+        if not amount_trans == 0.0:
+            vals['debit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
+            vals['credit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans < 0.0 and -amount_trans)
 
         return vals
 
-    def onchange_currency(self, cr, uid, ids, account_id, debit, credit, currency_id, date=False, journal=False, context=None):
+    def onchange_currency(self, cr, uid, ids, account_id, debit, credit, currency_id, date=False, journal=False,
+                          context=None):
         """override onchange to pass both debit and credit amount, not only signed amount
         that might be computed only during the save process
         """
+
         amount = debit - credit
-        result = super(account_move_line,self).onchange_currency(cr, uid, ids, account_id, amount, currency_id,
-                                                               date=date, journal=journal, context=context)
+        result = super(account_move_line, self).onchange_currency(cr, uid, ids, account_id, amount, currency_id,
+                                                                  date=date, journal=journal, context=context)
+        # the context is already updated by the previous statement
+        context_rate = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context).rate
+
         if 'value' in result:
             result['value']['amount_currency'] = amount
+            result['value']['currency_rate'] = context_rate
         return result
 
     def write(self, cr, uid, ids, vals, context=None, check=True,
               update_check=True):
 
         if context is None:
-            context={}
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
 
@@ -181,7 +211,7 @@ class account_move_line(osv.osv):
             # if already posted
             if current_move_id and self.is_move_posted(
                     cr, uid, current_move_id, context=context) and \
-                target_move_id and \
+                    target_move_id and \
                     not current_move_id == target_move_id:
                 raise osv.except_osv(_('Error!'), msg_cannot_remove_line)
 
@@ -189,7 +219,7 @@ class account_move_line(osv.osv):
             #  which is posted
             if target_move_id and not target_move_id == current_move_id and \
                     self.is_move_posted(
-                        cr, uid, target_move_id, context=context):
+                            cr, uid, target_move_id, context=context):
                 raise osv.except_osv(_('Error!'), msg_invalid_move)
 
             # we don't allow switching from one journal_id (journal type)
@@ -209,6 +239,9 @@ class account_move_line(osv.osv):
         add a security check to ensure no one is
         creating new account.move.line inside and already posted account.move
         """
+        #TODO : write proper tests!!!
+        print '*'*35
+        print vals
         move_id = vals.get('move_id', False)
         if move_id and self.is_move_posted(cr, uid, move_id, context=context):
             raise osv.except_osv(_('Error!'), msg_invalid_move)
@@ -219,3 +252,262 @@ class account_move_line(osv.osv):
         return super(account_move_line, self).create(cr, uid, vals,
                                                      context=context)
 
+    def reconcile(self, cr, uid, ids, type='auto',
+                  writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
+        '''This method is completely overridden in order to include a full multicurrency support
+          The context will determine if second currency is used for reconciliation or not 'reconcile_second_currency'
+          In addition, when matching the transaction amounts, differences must be processed as
+          both exchange difference and write-off, when applicable.
+          Finally, the original code is documented for an easier maintenance.
+        '''
+        account_obj = self.pool.get('account.account')
+        move_obj = self.pool.get('account.move')
+        move_rec_obj = self.pool.get('account.move.reconcile')
+        partner_obj = self.pool.get('res.partner')
+        currency_obj = self.pool.get('res.currency')
+        lines = self.browse(cr, uid, ids, context=context)
+        unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
+        credit = debit = credit_curr = debit_curr = 0.0
+        amount_currency_writeoff = writeoff = currency_rate_difference = 0.0
+        account_id = False
+        partner_id = False
+        currency_id = False
+
+        if context is None:
+            context = {}
+
+        company_list = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company '
+                                                      'should be the same for all entries.'))
+            company_list.append(line.company_id.id)
+
+        for line in unrec_lines:
+            # these are the received lines filtered out of already reconciled lines
+            # we compute allocation totals in both currencies
+            if line.state <> 'valid':
+                raise osv.except_osv(_('Error!'),
+                        _('Entry "%s" is not valid !') % line.name)
+
+            # control on second currency : must always be the same to authorise reconciliation on second currency
+            #TODO : the context key should be given by the reconciliation wizard
+            if context.get('reconcile_second_currency', True) and \
+                    currency_id and not currency_id == line['currency_id']['id']:
+                raise osv.except_osv(_('Error!'),
+                        _('All entries must have the same second currency! Reconcile on company currency otherwise.'))
+            # control on account : reconciliation must be on one account only
+            # TODO : check accuracy of this control
+            if account_id and not account_id == line['account_id']['id']:
+                raise osv.except_osv(_('Error!'),
+                        _('All entries must have the same account to be reconciled.'))
+
+            credit += line['credit']
+            credit_curr += line['credit_curr']
+            debit += line['debit']
+            debit_curr += line['debit_curr']
+            amount_currency_writeoff += line['amount_currency'] or 0.0
+
+            account_id = line['account_id']['id']
+            partner_id = (line['partner_id'] and line['partner_id']['id']) or False
+            currency_id = line['currency_id'] and line['currency_id']['id'] or False
+
+        # we need some browse records
+        account = account_obj.browse(cr, uid, account_id, context=context)
+        company_currency = account.company_id.currency_id
+        currency = currency_obj.browse(cr, uid, currency_id, context=context)
+
+        # Use date in context or today
+        date = context.get('date_p', time.strftime('%Y-%m-%d'))
+        # If date_p in context => take this date
+        # this is so old school...
+        # if context.has_key('date_p') and context['date_p']:
+        #     date = context['date_p']
+        # else:
+        #     date = time.strftime('%Y-%m-%d')
+
+        # We will be using a context key to define the reconciliation currency (base or trans)
+        if context.get('reconcile_second_currency', True):
+            # the actual write off is the conversion of the second currency net amount to base currency at current date
+            writeoff = currency_obj.compute(cr, uid, currency.id, company_currency.id,
+                                            amount_currency_writeoff, context={'date': date})
+            currency_rate_difference = debit - credit - writeoff
+        else:
+            writeoff = debit - credit
+
+        cr.execute('SELECT account_id, reconcile_id '\
+                   'FROM account_move_line '\
+                   'WHERE id IN %s '\
+                   'GROUP BY account_id,reconcile_id',
+                   (tuple(ids), ))
+        r = cr.fetchall()
+        #TODO: move this check to a constraint in the account_move_reconcile object
+        if not unrec_lines:
+            raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
+        if r[0][1] is not None:
+            raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
+
+        if context.get('fy_closing'):
+            # We don't want to generate any write-off when being called from the
+            # wizard used to close a fiscal year (and it doesn't give us any
+            # writeoff_acc_id).
+            pass
+        else:
+        # this condition is replaced as we separate write off from exchange difference
+        # elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+        #    (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
+
+            # create exchange difference transaction
+            if not currency_obj.is_zero(cr, uid, currency, currency_rate_difference):
+                if currency_rate_difference > 0:
+                    # this is a gain (account comes from account_voucher module)
+                    exchange_diff_acc_id = account.company_id.income_currency_exchange_account_id.id
+                    debit = currency_rate_difference
+                    credit = 0.0
+                    self_credit = currency_rate_difference
+                    self_debit = 0.0
+                else:
+                    # this is a loss
+                    exchange_diff_acc_id = account.company_id.expense_currency_exchange_account_id.id
+                    debit = 0.0
+                    credit = -currency_rate_difference
+                    self_credit = 0.0
+                    self_debit = -currency_rate_difference
+
+                libelle = _('Exchange difference')
+
+                exchange_diff_lines = [
+                    (0, 0, {
+                        'name': libelle,
+                        'debit': self_debit,
+                        'credit': self_credit,
+                        'account_id': account_id,
+                        'date': date,
+                        'partner_id': partner_id,
+                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'amount_currency': 0.0
+                    }),
+                    (0, 0, {
+                        'name': libelle,
+                        'debit': debit,
+                        'credit': credit,
+                        'account_id': exchange_diff_acc_id,
+                        'analytic_account_id': context.get('analytic_id', False),
+                        'date': date,
+                        'partner_id': partner_id,
+                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'amount_currency': 0.0
+                    })
+                ]
+
+                exchange_diff_move_id = move_obj.create(cr, uid, {
+                    'period_id': writeoff_period_id,
+                    'journal_id': writeoff_journal_id,
+                    'date':date,
+                    'state': 'draft',
+                    'line_id': exchange_diff_lines
+                })
+
+                # The generated transaction needs to be added to the allocation block
+                exchange_diff_line_ids = self.search(cr, uid,
+                                            [('move_id', '=', exchange_diff_move_id), ('account_id', '=', account_id)])
+                # the following case should never happen but still...
+                if account_id == exchange_diff_acc_id:
+                    exchange_diff_line_ids = [exchange_diff_line_ids[1]]
+                ids += exchange_diff_line_ids
+
+            # create write off transaction
+            if not currency_obj.is_zero(cr, uid, company_currency, writeoff):
+                if not writeoff_acc_id:
+                    raise osv.except_osv(_('Warning!'), _('You have to provide an account '
+                                                          'for the write off entry.'))
+                if writeoff > 0:
+                    debit = writeoff
+                    credit = 0.0
+                    self_credit = writeoff
+                    self_debit = 0.0
+                else:
+                    debit = 0.0
+                    credit = -writeoff
+                    self_credit = 0.0
+                    self_debit = -writeoff
+                # If comment exist in context, take it
+                if 'comment' in context and context['comment']:
+                    libelle = context['comment']
+                else:
+                    libelle = _('Write-Off')
+
+                # this code is dead anyway as the context keys are never set anywhere!!!
+                # cur_id = False
+                # amount_currency_writeoff = 0.0
+                # if context.get('company_currency_id',False) != context.get('currency_id',False):
+                #     cur_id = context.get('currency_id',False)
+                #     for line in unrec_lines:
+                #         if line.currency_id and line.currency_id.id == context.get('currency_id',False):
+                #             amount_currency_writeoff += line.amount_currency
+                #         else:
+                #             tmp_amount = currency_obj.compute(cr, uid,
+                #                                               line.account_id.company_id.currency_id.id,
+                #                                               context.get('currency_id',False),
+                #                                               abs(line.debit-line.credit),
+                #                                               context={'date': line.date})
+                #             amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
+
+
+                writeoff_lines = [
+                    (0, 0, {
+                        'name': libelle,
+                        'debit': self_debit,
+                        'credit': self_credit,
+                        'account_id': account_id,
+                        'date': date,
+                        'partner_id': partner_id,
+                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'amount_currency': -1 * amount_currency_writeoff
+                    }),
+                    (0, 0, {
+                        'name': libelle,
+                        'debit': debit,
+                        'credit': credit,
+                        'account_id': writeoff_acc_id,
+                        'analytic_account_id': context.get('analytic_id', False),
+                        'date': date,
+                        'partner_id': partner_id,
+                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'amount_currency': amount_currency_writeoff
+                    })
+                ]
+
+                writeoff_move_id = move_obj.create(cr, uid, {
+                    'period_id': writeoff_period_id,
+                    'journal_id': writeoff_journal_id,
+                    'date':date,
+                    'state': 'draft',
+                    'line_id': writeoff_lines
+                })
+
+                # when the write off is posted in the original account,
+                # the reconciliation block receives only the second computed line to add up to 0
+                # the other one is therefore left open
+                writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+                # the following case should never happen but still...
+                if account_id == writeoff_acc_id:
+                    writeoff_line_ids = [writeoff_line_ids[1]]
+                ids += writeoff_line_ids
+
+        r_id = move_rec_obj.create(cr, uid, {
+            'type': type,
+            'line_id': map(lambda x: (4, x, False), ids),
+            'line_partial_ids': map(lambda x: (3, x, False), ids)
+        })
+        wf_service = netsvc.LocalService("workflow")
+        # the id of the move.reconcile is written in the move.line (self) by the create method above
+        # because of the way the line_id are defined: (4, x, False)
+        for id in ids:
+            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+
+        if lines and lines[0]:
+            partner_id = lines[0].partner_id and lines[0].partner_id.id or False
+            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
+        return r_id

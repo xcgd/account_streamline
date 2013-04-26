@@ -45,11 +45,12 @@
                                            domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"
-                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id)"/>
+                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
+                                    <field name="currency_rate" readonly="1"/>
                                     <field name="debit_curr" sum="Total Debit"
-                                           on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id)"/>
+                                           on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
                                     <field name="credit_curr" sum="Total Credit"
-                                           on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id)"/>
+                                           on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
