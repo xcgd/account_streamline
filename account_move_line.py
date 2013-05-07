@@ -45,8 +45,10 @@ class account_move_line(osv.osv):
         move_state=fields.related("move_id", "state",
                                   type="char", string="status", readonly=True),
 
-        debit_curr=fields.float('Debit', digits_compute=dp.get_precision('Account')),
-        credit_curr=fields.float('Credit', digits_compute=dp.get_precision('Account')),
+        debit_curr=fields.float('Debit T', digits_compute=dp.get_precision('Account'),
+                                help="This is the debit amount in transaction currency"),
+        credit_curr=fields.float('Credit T', digits_compute=dp.get_precision('Account'),
+                                help="This is the credit amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
     )
 
