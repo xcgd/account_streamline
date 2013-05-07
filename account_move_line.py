@@ -136,7 +136,8 @@ class account_move_line(osv.osv):
 
         #compute actual rate ONLY when amounts in BOTH base and transaction curr are given
         if not amount_trans == 0.0 and currency_trans and not amount_base == 0.0:
-            vals['currency_rate'] = cur_obj.round(cr, uid, cur_browse, abs(amount_trans / amount_base))
+            #vals['currency_rate'] = cur_obj.round(cr, uid, cur_browse, abs(amount_trans / amount_base))
+            vals['currency_rate'] = abs(amount_trans / amount_base)
 
         #make sure the secondary currency is always present by copying the base amount and currency
         if 'account_id' in vals:
