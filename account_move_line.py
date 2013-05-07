@@ -124,10 +124,15 @@ class account_move_line(osv.osv):
         account_obj = self.pool.get('account.account')
         cur_obj = self.pool.get('res.currency')
         amount_trans = vals.get('amount_currency', 0.0)
+        amount_curr = vals.get('debit_curr', 0.0) - vals.get('credit_curr', 0.0)
         amount_base = vals.get('debit', 0.0) - vals.get('credit', 0.0)
         currency_trans = vals.get('currency_id', False)
 
         cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
+
+        #report net currency amount if necessary
+        if amount_trans == 0.0 and not amount_curr == 0.0:
+            amount_trans = vals['amount_currency'] = amount_curr
 
         #compute actual rate ONLY when amounts in BOTH base and transaction curr are given
         if not amount_trans == 0.0 and currency_trans and not amount_base == 0.0:
