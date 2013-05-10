@@ -153,9 +153,6 @@ class account_move_line(osv.osv):
                 vals['currency_rate'] = 1.0
 
         #TODO : create proper tests!!!
-        print '*'*35
-        print vals
-        print '*'*35
 
         #compute debit and credit in transaction currency when not provided
         #this should happen only with generated transaction, not with manual entries
@@ -248,8 +245,6 @@ class account_move_line(osv.osv):
         creating new account.move.line inside and already posted account.move
         """
         #TODO : write proper tests!!!
-        print '*'*35
-        print vals
         move_id = vals.get('move_id', False)
         if move_id and self.is_move_posted(cr, uid, move_id, context=context):
             raise osv.except_osv(_('Error!'), msg_invalid_move)
