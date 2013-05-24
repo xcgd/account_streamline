@@ -5,26 +5,28 @@
             <field name="name">account.move.line.tree.global</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree string="Journal" create="false" version="7.0">
+                <tree string="Journal Items" create="false" version="7.0">
 	     	        <field name="state"/>
+                    <field name="partner_id"/>
+                    <field name="period_id"/>
+                        <field name="journal_id"/>
+                    <field name="internal_sequence_number"/>
+                    <field name="ref"/>
+                    <field name="date"/>
+                    <field name="date_maturity"/>
+                    <field name="date_created"/>
+                        <field name="invoice"/>
+                    <field name="account_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="name"/>
+                    <field name="narration"/>
+                    <field name="debit_curr"/>
+                    <field name="credit_curr"/>
+                    <field name="currency_id"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="account_tax_id"/>
                 </tree>
-            </field>
-        </record>
-            
-        <record id="view_move_line_search_global" model="ir.ui.view">
-            <field name="name">Journal - Search</field>
-            <field name="model">account.move.line</field>
-            <field name="arch" type="xml">
-                <search string="Journal Search">
-                    <field name="account_id" />
-                    <field name="period_id" />
-                    <field name="journal_id" />
-                    <field name="internal_sequence_number" />
-                    <field name="analytic_account_id"
-                           invisible="context.get('analytic_journal', True)" />
-                    <field name="reconcile_id"
-                           invisible="context.get('reconcile_journal', True)" />
-                </search>
             </field>
         </record>
 
