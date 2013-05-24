@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--record id="view_move_line_form_inherit_xcg" model="ir.ui.view">
+            <field name="name">account.move.line.form.inherit.xcg</field>
+	        <field name="model">acount.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                
+            </field>
+        </record-->
+            
+        <record id="action_move_line_tree_complete" model="ir.actions.act_window">
+            <field name="name">Journal Complete</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_move_line_tree_simple" model="ir.actions.act_window">
+            <field name="name">Journal Simple</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
+            <field name="name">Journal Analytic</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record id="action_move_line_tree_reconcile" model="ir.actions.act_window">
+            <field name="name">Journal Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem
+            action="action_move_line_tree_complete"
+            id="menu_action_account_move_line_complete"
+            parent="account.menu_finance_entries"
+            sequence="12"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_simple"
+            id="menu_action_account_move_line_simple"
+            parent="account.menu_finance_entries"
+            sequence="13"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_analytic"
+            id="menu_action_account_move_line_analytic"
+            parent="account.menu_finance_entries"
+            sequence="14"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_reconcile"
+            id="menu_action_account_move_line_reconcile"
+            parent="account.menu_finance_entries"
+            sequence="14"
+            groups="account.group_account_user"
+        />
+    </data>
+</openerp>
