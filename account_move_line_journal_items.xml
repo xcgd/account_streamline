@@ -30,6 +30,23 @@
             </field>
         </record>
 
+        <record id="view_move_line_search_global" model="ir.ui.view">
+            <field name="name">Journal - Search</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <search string="Journal Search">
+                    <field name="account_id" />
+                    <field name="period_id" />
+                    <field name="journal_id" />
+                    <field name="internal_sequence_number" />
+                    <field name="analytic_account_id"
+                           invisible="context.get('analytic_journal', True)" />
+                    <field name="reconcile_id"
+                           invisible="context.get('reconcile_journal', True)" />
+                </search>
+            </field>
+        </record>
+
         <record id="action_move_line_tree_complete" model="ir.actions.act_window">
             <field name="name">Journal Complete</field>
             <field name="res_model">account.move.line</field>
