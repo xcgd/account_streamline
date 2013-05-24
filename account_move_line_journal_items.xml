@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!--record id="view_move_line_form_inherit_xcg" model="ir.ui.view">
-            <field name="name">account.move.line.form.inherit.xcg</field>
-	        <field name="model">acount.move.line</field>
-            <field name="inherit_id" ref="account.view_move_line_form"/>
-            <field eval="1" name="priority"/>
+        <record id="view_move_line_tree_global" model="ir.ui.view">
+            <field name="name">account.move.line.tree.global</field>
+	    <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                
+	     	    <field name="state"/>
             </field>
-        </record-->
+        </record>
             
         <record id="action_move_line_tree_complete" model="ir.actions.act_window">
             <field name="name">Journal Complete</field>
