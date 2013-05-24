@@ -3,38 +3,63 @@
     <data>
         <record id="view_move_line_tree_global" model="ir.ui.view">
             <field name="name">account.move.line.tree.global</field>
-	    <field name="model">account.move.line</field>
+            <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-	     	    <field name="state"/>
+                <tree string="Journal" create="false" version="7.0">
+	     	        <field name="state"/>
+                </tree>
             </field>
         </record>
             
+        <record id="view_move_line_search_global" model="ir.ui.view">
+            <field name="name">Journal - Search</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <search string="Journal Search">
+                    <field name="account_id" />
+                    <field name="period_id" />
+                    <field name="journal_id" />
+                    <field name="internal_sequence_number" />
+                    <field name="analytic_account_id"
+                           invisible="context.get('analytic_journal', True)" />
+                    <field name="reconcile_id"
+                           invisible="context.get('reconcile_journal', True)" />
+                </search>
+            </field>
+        </record>
+
         <record id="action_move_line_tree_complete" model="ir.actions.act_window">
             <field name="name">Journal Complete</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <record id="action_move_line_tree_simple" model="ir.actions.act_window">
             <field name="name">Journal Simple</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
             <field name="name">Journal Analytic</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree</field>
+            <field name="context">{'analytic_journal': False}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <record id="action_move_line_tree_reconcile" model="ir.actions.act_window">
             <field name="name">Journal Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree</field>
+            <field name="context">{'reconcile_journal': 'False}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <menuitem
