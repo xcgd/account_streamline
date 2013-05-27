@@ -83,10 +83,16 @@
             <field name="view_mode">tree</field>
         </record>
 
+        <menuitem id="menu_payments"
+                  name="Payments"
+                  parent="account.menu_finance"
+                  sequence="5"
+                  groups="account.group_account_user,account.group_account_manager" />
+
         <menuitem
             action="action_move_line_tree_readonly"
             id="menu_action_account_move_line_readonly"
-            parent="account.menu_finance_entries"
+            parent="menu_payments"
             sequence="10"
             groups="account.group_account_user"
         />
@@ -94,7 +100,7 @@
         <menuitem
                 action="action_move_line_tree_payment"
                 id="menu_action_account_move_line_payment"
-                parent="account.menu_finance_entries"
+                parent="menu_payments"
                 sequence="11"
                 groups="account.group_account_user"
         />

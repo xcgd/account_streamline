@@ -78,7 +78,7 @@
             <field name="name">Journal Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'reconcile_journal': 'False}</field>
+            <field name="context">{'reconcile_journal': False}</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>

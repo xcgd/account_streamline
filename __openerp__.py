@@ -22,6 +22,7 @@
         'partner_view.xml',
         'payment_selection.xml',
         'account_move_line_journal_items.xml',
+        'account_menu_entries.xml'
     ],
     #'demo_xml': [],
     'test': [],

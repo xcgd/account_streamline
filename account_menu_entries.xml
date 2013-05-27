@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_item_account_move_line_journal_inquiries"
+                  name="Journal Inquiries"
+                  parent="account.menu_finance"
+                  sequence="6"
+                  groups="account.group_account_user,account.group_account_manager" />
+
+        <menuitem id="account.menu_action_account_moves_all"
+                  action="account.action_account_moves_all_a"
+                  icon="STOCK_JUSTIFY_FILL"
+                  sequence="1"
+                  parent="menu_item_account_move_line_journal_inquiries"
+                  groups="account.group_account_user" />
+        <menuitem id="account.menu_action_move_journal_line_form"
+                  action="account.action_move_journal_line"
+                  icon="STOCK_JUSTIFY_FILL"
+                  sequence="5"
+                  parent="menu_item_account_move_line_journal_inquiries"
+                  groups="account.group_account_user" />
+        <menuitem id="account_voucher.menu_encode_entries_by_voucher"
+                  action="account_voucher.action_voucher_list"
+                  sequence="6"
+                  parent="menu_item_account_move_line_journal_inquiries"
+                  groups="base.group_no_one" />
+    </data>
+</openerp>
