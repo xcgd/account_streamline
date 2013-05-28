@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_move_line_tree_global" model="ir.ui.view">
+            <field name="name">account.move.line.tree.global</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Items" create="false" version="7.0">
+                    <field name="state"/>
+                    <field name="partner_id" invisible="context.get('global_cont', True)" />
+                    <field name="period_id"/>
+                    <field name="journal_id" invisible="context.get('journal_cont', True)" />
+                    <field name="internal_sequence_number" invisible="context.get('global_cont', True)" />
+                    <field name="ref"/>
+                    <field name="date"/>
+                    <field name="date_maturity" invisible="context.get('global_cont', True)" />
+                    <field name="date_created" invisible="context.get('global_cont', True)" />
+                    <field name="invoice" invisible="context.get('analytic_cont', False)" />
+                    <field name="account_id" invisible="context.get('analytic_cont', False)" />
+                    <field name="analytic_account_id"/>
+                    <field name="name"/>
+                    <field name="narration"/>
+                    <field name="debit_curr"/>
+                    <field name="credit_curr"/>
+                    <field name="currency_id" invisible="context.get('analytic_cont', False)" />
+                    <field name="debit" invisible="context.get('analytic_cont', False)" />
+                    <field name="credit" invisible="context.get('analytic_cont', False)" />
+                    <field name="account_tax_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_line_search_global" model="ir.ui.view">
+            <field name="name">Journal - Search</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <search string="Journal Search">
+                    <field name="account_id" />
+                    <field name="period_id" />
+                    <field name="journal_id" />
+                    <field name="internal_sequence_number" />
+                    <field name="analytic_account_id"
+                           invisible="context.get('analytic_journal', True)" />
+                    <field name="reconcile_id"
+                           invisible="context.get('reconcile_journal', True)" />
+                </search>
+            </field>
+        </record>
+
+        <record id="action_move_line_tree_complete" model="ir.actions.act_window">
+            <field name="name">Journal Complete</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'global_cont': False}</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
+        </record>
+
+        <record id="action_move_line_tree_simple" model="ir.actions.act_window">
+            <field name="name">Journal Simple</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'journal_cont': False}</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
+        </record>
+
+        <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
+            <field name="name">Journal Analytic</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="context">{'analytic_journal': False, 'analytic_cont' : True}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
+        </record>
+
+        <record id="action_move_line_tree_reconcile" model="ir.actions.act_window">
+            <field name="name">Journal Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="context">{'reconcile_journal': False}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
+        </record>
+
+        <menuitem
+            action="action_move_line_tree_complete"
+            id="menu_action_account_move_line_complete"
+            parent="account.menu_finance_entries"
+            sequence="12"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_simple"
+            id="menu_action_account_move_line_simple"
+            parent="account.menu_finance_entries"
+            sequence="13"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_analytic"
+            id="menu_action_account_move_line_analytic"
+            parent="account.menu_finance_entries"
+            sequence="14"
+            groups="account.group_account_user"
+        />
+
+        <menuitem
+            action="action_move_line_tree_reconcile"
+            id="menu_action_account_move_line_reconcile"
+            parent="account.menu_finance_entries"
+            sequence="14"
+            groups="account.group_account_user"
+        />
+    </data>
+</openerp>
