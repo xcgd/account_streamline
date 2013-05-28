@@ -24,6 +24,12 @@
         'account_move_line_journal_items.xml',
         'account_menu_entries.xml'
     ],
+    'js': [
+        'static/src/js/account_streamline_move_reconcile.js',
+    ],
+    'qweb' : [
+        'static/src/xml/account_streamline_move_reconcile.xml',
+    ],
     #'demo_xml': [],
     'test': [],
     'installable': True,

@@ -17,7 +17,6 @@
                     <field name="date_created" invisible="context.get('global_cont', True)" />
                     <field name="invoice" invisible="context.get('analytic_cont', False)" />
                     <field name="account_id" invisible="context.get('analytic_cont', False)" />
-                    <field name="analytic_account_id"/>
                     <field name="name"/>
                     <field name="narration"/>
                     <field name="debit_curr"/>
@@ -27,6 +26,31 @@
                     <field name="credit" invisible="context.get('analytic_cont', False)" />
                     <field name="account_tax_id"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_account_streamline_move_line_tree_reconcile" model="ir.ui.view">
+            <field name="name">account.streamline.move.line.tree.reconciliation</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree_account_streamline_reconciliation colors="red:state == 'draft';black:state == 'valid'"
+                                             string="Lettrage Ecritures Compatble"
+                                             create="false"
+                                             version="7.0">
+                    <field name="state" />
+                    <field name="period_id" />
+                    <field name="internal_sequence_number" />
+                    <field name="ref" />
+                    <field name="account_id" />
+                    <field name="date" />
+                    <field name="debit" />
+                    <field name="credit" />
+                    <field name="currency_id" />
+                    <field name="debit_curr" />
+                    <field name="credit_curr" />
+                    <field name="reconcile_id" />
+                    <field name="reconcile_partial_id" />
+                </tree_account_streamline_reconciliation>
             </field>
         </record>
 
@@ -48,7 +72,7 @@
         </record>
 
         <record id="action_move_line_tree_complete" model="ir.actions.act_window">
-            <field name="name">Journal Complete</field>
+            <field name="name">Vue Complete</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
@@ -57,7 +81,7 @@
         </record>
 
         <record id="action_move_line_tree_simple" model="ir.actions.act_window">
-            <field name="name">Journal Simple</field>
+            <field name="name">Vue Simple</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
@@ -66,7 +90,7 @@
         </record>
 
         <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
-            <field name="name">Journal Analytic</field>
+            <field name="name">Vue Analytique</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="context">{'analytic_journal': False, 'analytic_cont' : True}</field>
@@ -74,19 +98,29 @@
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
-        <record id="action_move_line_tree_reconcile" model="ir.actions.act_window">
-            <field name="name">Journal Reconcile</field>
+        <record id="action_move_line_tree_reconciliation" model="ir.actions.act_window">
+            <field name="name">Ecritures Lettrage</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'reconcile_journal': False}</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_move_line_search_global"/>
+            <field name="view_id" ref="view_account_streamline_move_line_tree_reconcile"/>
+            <field name="view_mode">tree_account_streamline_reconciliation</field>
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
         </record>
+
+        <menuitem id="menu_finance_entries"
+                  name="Ecritures Comptable"
+                  sequence="5"
+                  parent="account.menu_finance"
+                  groups="account.group_account_user,account.group_account_manager" />
 
         <menuitem
             action="action_move_line_tree_complete"
             id="menu_action_account_move_line_complete"
-            parent="account.menu_finance_entries"
+            parent="menu_finance_entries"
             sequence="12"
             groups="account.group_account_user"
         />
@@ -94,7 +128,7 @@
         <menuitem
             action="action_move_line_tree_simple"
             id="menu_action_account_move_line_simple"
-            parent="account.menu_finance_entries"
+            parent="menu_finance_entries"
             sequence="13"
             groups="account.group_account_user"
         />
@@ -102,16 +136,16 @@
         <menuitem
             action="action_move_line_tree_analytic"
             id="menu_action_account_move_line_analytic"
-            parent="account.menu_finance_entries"
+            parent="menu_finance_entries"
             sequence="14"
             groups="account.group_account_user"
         />
 
         <menuitem
-            action="action_move_line_tree_reconcile"
+            action="action_move_line_tree_reconciliation"
             id="menu_action_account_move_line_reconcile"
-            parent="account.menu_finance_entries"
-            sequence="14"
+            parent="menu_finance_entries"
+            sequence="15"
             groups="account.group_account_user"
         />
     </data>
