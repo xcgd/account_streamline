@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Accounts -->
+        <record id="view_account_form_analytic_structure" model="ir.ui.view">
+            <field name="name">account.account.analytic.structure.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='note']" position="before">
+                    <separator string="Static Analytic"/>
+                    <group col="2" colspan="2">
+                        <field name="a1_id"/>
+                        <field name="a2_id"/>
+                        <field name="a3_id"/>
+                        <field name="a4_id"/>
+                        <field name="a5_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
