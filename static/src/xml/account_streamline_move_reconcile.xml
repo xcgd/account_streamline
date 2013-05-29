@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template id="template" xml:space="preserve">
     <t t-name="AccountStreamlineReconciliation">
-        <t t-if="widget.current_partner === null">
+        <!--t t-if="widget.current_partner === null">
             <div class="oe_view_nocontent">
                 <p>
                     No Content
                 </p>
             </div>
-        </t>
+        </t-->
         <div class="oe_account_streamline_reconciliation">
-            <t t-if="widget.current_partner !== null">
-                <div>
-                    <div>
-                        <button class="oe_account_streamline_recon_previous oe_button"
-                                href="javascript:void(0)">&lt;</button>
-                        <button class="oe_account_streamline_recon_next oe_button"
-                                href="javascript:void(0)">&gt;</button>
-                    </div>
-                </div>
+            <!--t t-if="widget.current_partner !== null"-->
                 <div>
                     <button class="oe_account_streamline_recon_reconcile oe_button oe_highlight"
                             href="javascript:void(0)"
                             disabled="">Reconcile</button>
-                    <button class="oe_account_streamline_recon_mark_as_reconciled oe_button"
-                            href="javascript:void(0)">Nothing more to reconcile</button>
+                    <button class="oe_account_streamline_search_wizard oe_button"
+                            href="javascript:void(0)">Filters</button>
                 </div>
-            </t>
+            <!--/t-->
         </div>
     </t>
 </template>

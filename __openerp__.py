@@ -16,6 +16,7 @@
     "data": [
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',
+        'wizard/account_reconcile_search_view.xml',
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
         'account_move_view.xml',
