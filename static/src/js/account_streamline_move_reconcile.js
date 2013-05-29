@@ -48,7 +48,6 @@ openerp.account_streamline = function(instance)
                     result.flags.new_window = true;
                     return self.do_action(result, {
                         on_close: function () {
-                            self.last_context['filter_on'] = 1;
                             self.do_search(self.last_domain, self.last_context, self.last_group_by);
                         }
                     });
@@ -92,11 +91,16 @@ openerp.account_streamline = function(instance)
             this.last_context = context;
             this.last_group_by = group_by;
             //this.old_search = _.bind(this._super, this);
-            return (this._super.apply(this, arguments));
-            //var mod = new instance.web.Model("account.move.line", context, domain);
+            var account_move_line_mod = new instance.web.Model("account.move.line", context, domain);
+            var account_streamline_mod = new instance.web.Model("account.streamline.reconcile_filter", context, domain);
             //console.log(this.old_search);
             //return (this.old_search);
-            //return mod.call("list_partners_to_reconcile", []).then(function(result) { // call python method
+            account_move_line_mod.call("list_partners_to_reconcile", []).then(function(result) {// call python method
+                account_streamline_mod.call("search_partners_to_reconcile", [result, this.last_context]).then(function(result2) {
+                    
+                });
+            });
+            return (this._super.apply(this, arguments));
             //                                                                          // then work with result
             //    var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
             //    self.partners = result;
