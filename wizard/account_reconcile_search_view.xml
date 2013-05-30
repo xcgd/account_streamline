@@ -7,18 +7,21 @@
             <field name="arch" type="xml">
                 <form string="Search" version="7.0">
                     <group col="4" string="Filter By">
-                        <field name="obj_list"/>
                         <field name="id_from" />
                         <field name="id_to" />
-			<field name="filter_type"/>
-                        <field name="search_type"/>
-			<button name="launch_search"> CLICK </button>
-
+			            <field name="filter_type" />
+                        <field name="search_type" />
                     </group>
                     <footer>
-                        <button string="Search" name="launch_search" type="object" default_focus="1" class="oe_highlight"/>
+                        <button string="Search"
+                                name="launch_search"
+                                type="object"
+                                default_focus="1"
+                                class="oe_highlight"/>
                         or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel"
+                                class="oe_link"
+                                special="cancel"/>
                     </footer>
                 </form>
             </field>

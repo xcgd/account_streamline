@@ -87,21 +87,19 @@ openerp.account_streamline = function(instance)
         do_search: function(domain, context, group_by)
         {
             var self = this;
+            var advanced_filter_mod = new instance.web.Model("account.streamline.advanced_filter", context, domain);
+            
             this.last_domain = domain;
+            console.log(domain);
             this.last_context = context;
             this.last_group_by = group_by;
-            var account_move_line_mod = new instance.web.Model("account.move.line", context, domain);
-            var account_streamline_mod = new instance.web.Model("account.streamline.reconcile_filter", context, domain);
-
-            var mysearch = _.bind(this._super, this);
-            console.log(mysearch(domain, context, group_by));
-            return (mysearch);
-            //account_streamline_mod.call("search_partners_to_reconcile",
-             //                           [search, this.last_context]).then(function(result)
-            //{
-            //    console.log(result);
-            //    return result;
-            //});
+            self.old_search = _.bind(this._super, this);
+            return advanced_filter_mod.call("get_elements_filtered", []).then(function(result)
+            {
+                var new_domain = new instance.web.CompoundDomain(self.last_domain, [["id", "in", result]]);
+                console.log(new_domain);
+                return self.old_search(new_domain, self.last_context, self.last_group_by);
+            });
         },
         do_select: function (ids, records)
         {
