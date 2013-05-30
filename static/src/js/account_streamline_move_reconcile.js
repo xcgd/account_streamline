@@ -90,33 +90,17 @@ openerp.account_streamline = function(instance)
             this.last_domain = domain;
             this.last_context = context;
             this.last_group_by = group_by;
-            //this.old_search = _.bind(this._super, this);
             var account_move_line_mod = new instance.web.Model("account.move.line", context, domain);
             var account_streamline_mod = new instance.web.Model("account.streamline.reconcile_filter", context, domain);
-            //console.log(this.old_search);
-            //return (this.old_search);
-            account_move_line_mod.call("list_partners_to_reconcile", []).then(function(result) {// call python method
-                account_streamline_mod.call("search_partners_to_reconcile", [result, this.last_context]).then(function(result2) {
-                    
-                });
-            });
-            return (this._super.apply(this, arguments));
-            //                                                                          // then work with result
-            //    var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
-            //    self.partners = result;
-            //    var index = _.find(_.range(self.partners.length), function(el) {    //
-            //        if (current === self.partners[el][0])                           /// return current partner
-            //            return true;                                                //
-            //   });
-                //if (index !== undefined)
-                //{
-                //    self.current_partner = index;
-                //}
-                //else
-                //{
-                //    self.search_by_partner();
-                //}
-                //self.search_by_partner();
+
+            var mysearch = _.bind(this._super, this);
+            console.log(mysearch(domain, context, group_by));
+            return (mysearch);
+            //account_streamline_mod.call("search_partners_to_reconcile",
+             //                           [search, this.last_context]).then(function(result)
+            //{
+            //    console.log(result);
+            //    return result;
             //});
         },
         do_select: function (ids, records)

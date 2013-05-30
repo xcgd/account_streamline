@@ -12,7 +12,7 @@ class advanced_filter(osv.Model):
     }
 
     def create_new_filter(self, cr, uid, ids, args=None, context=None):
-        if args is None and args['obj_type'] is None and args['field_filter'] is None and args['id_filter_from'] is None and args['id_filter_to']: return
+        if args is None: return
         self.create(cr, uid, {'id_user' : uid,
                               'obj_type' : args['obj_type'],
                               'field_filter' : args['field_filter'],
