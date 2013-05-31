@@ -5,9 +5,9 @@ class advanced_filter(osv.Model):
     _columns = {
         'id_user'           : fields.integer("id_user"),
         'obj_type'          : fields.char("obj_type", size=256),
-        'field_filter'      : fields.char("field_filter", size=256),
-        'id_filter_from'    : fields.integer("id_filter_from"),
-        'id_filter_to'      : fields.integer("id_filter_to"),
+        'field_filter'      : fields.integer("field_filter"),
+        'id_filter_from'    : fields.char("id_filter_from", size=256),
+        'id_filter_to'      : fields.char("id_filter_to", size=256),
         'is_active'         : fields.boolean("is_active"),
     }
 
@@ -28,32 +28,25 @@ class advanced_filter(osv.Model):
         return True
 
     def get_elements_filtered(self, cr, uid, context=None):
-        filter_id = self.search(cr, uid, [('is_active', '=', True)], context=context)
-        if not filter_id:
-            return {}
-        active_filter = self.browse(cr, uid, filter_id, context=context)
+        filter_ids = self.search(cr, uid, [('is_active', '=', True)], context=context)
+        if not filter_ids:
+            return []
+        active_filter = self.browse(cr, uid, filter_ids, context=context)
         if not active_filter:
-            return {}
+            return []
         obj_osv = self.pool.get(active_filter[0].obj_type)
         if not obj_osv:
-            return {}
-        print "*" * 35
-        print "From : "
-        print active_filter[0].id_filter_from
-        print "To : "
-        print active_filter[0].id_filter_to
-        print "*" * 35
+            return []
+        field_osv = self.pool.get('ir.model.fields')
+        field_ids = field_osv.search(cr, uid, [('id', '=', active_filter[0].field_filter)], context=context)
+        if not field_ids:
+            return []
+        active_field = field_osv.browse(cr, uid, field_ids, context=context)
         obj_ids = obj_osv.search(cr, uid,
-                                 [(active_filter[0].field_filter, '>=',
-                                   active_filter[0].id_filter_from),
-                                  (active_filter[0].field_filter, '<=',
-                                   active_filter[0].id_filter_to)],
-                                 order=active_filter[0].field_filter,
+                                 [(active_field[0].name, '>=', active_filter[0].id_filter_from),
+                                  (active_field[0].name, '<=', active_filter[0].id_filter_to)],
+                                 order=active_field[0].name,
                                  context=context)
-       # temp = obj_osv.name_get(cr, uid, obj_ids, context=context)
-        print "*" * 35
-        print obj_ids
-        print "*" * 35
         return obj_ids
             
 
