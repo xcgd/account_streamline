@@ -9,8 +9,7 @@
                     <group col="4" string="Filter By">
                         <field name="id_from" />
                         <field name="id_to" />
-			            <field name="filter_type" />
-                        <field name="search_type" />
+                        <field name="field_filter" domain="[('model_id','=','account.move.line'),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
                     </group>
                     <footer>
                         <button string="Search"
