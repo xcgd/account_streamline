@@ -5,8 +5,15 @@ class account_reconcile_filter(osv.TransientModel):
     _columns = {
         'id_from'       : fields.many2one('account.account', 'From'),
         'id_to'         : fields.many2one('account.account', 'To'),
-	    'filter_type'   : fields.many2one('account.streamline.filter', 'Search by'),
+	'filter_type'   : fields.many2one('account.streamline.filter', 'Search by'),
         'search_type'   : fields.char('search by', name="Search", method=True),
+	'account_from' : fields.many2one('account.account', 'Account From'),
+        'account_to' : fields.many2one('account.account', 'Account To'),
+        'journal_from' : fields.many2one('account.journal', 'Journal From'),
+        'journal_to' : fields.many2one('account.journal', 'Journal To'),
+        'dateField_from' : fields.date('Date From'),
+        'dateField_to' : fields.date('Date To'),
+
     }
 
     def launch_search(self, cr, uid, ids, context=None):
@@ -25,9 +32,18 @@ class account_reconcile_filter(osv.TransientModel):
                                                  context=context)
         return {'type': 'ir.actions.act_window_close'}
 
+    def onchange_filter(self, cr, uid, ids, value):
+	if value:
+	    filter_curr = self.pool.get('account.streamline.filter').browse(cr, uid, value)
+	    return {'value': {'search_type': filter_curr.move_line_column_name}}
+	return {'value':{'search_type': "empty"}}
+
+
 class account_filter(osv.TransientModel):
     _name = 'account.streamline.filter'
     _columns = {
         'name' : fields.char('Filtre', size=250),
+	'move_line_column_name' : fields.char('Move Line Column Name'),
+
      }
 
