@@ -4,15 +4,16 @@ class account_reconcile_filter(osv.TransientModel):
     _name = 'account.streamline.reconcile_filter'
 
     _columns = {
-        'id_from'       : fields.char('From', size=256),
-        'id_to'         : fields.char('To', size=256),
-        'field_filter'  : fields.many2one('ir.model.fields', 'Search Field'),
+        'id_from'           : fields.char('From', size=256),
+        'id_to'             : fields.char('To', size=256),
+        'field_filter'      : fields.many2one('ir.model.fields', 'Search Field'),
+        'dateField_from'    : fields.date('Date From'),
+        'dateField_to'      : fields.date('Date To'),
     }
 
     def launch_search(self, cr, uid, ids, context=None):
         filter_ids = self.browse(cr, uid, ids, context=context)
         args = dict()
-
         args['obj_type'] = 'account.move.line'
         args['field_filter'] = filter_ids[0].field_filter.id
         args['id_filter_from'] = filter_ids[0].id_from
@@ -31,4 +32,5 @@ class account_reconcile_filter(osv.TransientModel):
                        self).fields_view_get(cr, uid, view_id, view_type,
                                              context=context, toolbar=toolbar)
         return result
+
 
