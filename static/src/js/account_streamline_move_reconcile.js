@@ -90,14 +90,17 @@ openerp.account_streamline = function(instance)
             var advanced_filter_mod = new instance.web.Model("account.streamline.advanced_filter", context, domain);
             
             this.last_domain = domain;
-            console.log(domain);
             this.last_context = context;
             this.last_group_by = group_by;
             self.old_search = _.bind(this._super, this);
             return advanced_filter_mod.call("get_elements_filtered", []).then(function(result)
             {
-                var new_domain = new instance.web.CompoundDomain(self.last_domain, [["id", "in", result]]);
-                console.log(new_domain);
+                var new_domain
+                
+                if (result)
+                    new_domain = new instance.web.CompoundDomain(self.last_domain, [["id", "in", result]]);
+                else
+                    new_domain = self.last_domain;
                 return self.old_search(new_domain, self.last_context, self.last_group_by);
             });
         },
