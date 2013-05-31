@@ -59,9 +59,6 @@ openerp.account_streamline = function(instance)
             var self = this;
             var ids = this.get_selected_ids();
 
-            console.log("Trying to reconcile...")
-            console.log(ids);
-
             new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_view_account_move_line_reconcile"]).then(function(result)
             {
                 var additional_context = _.extend({

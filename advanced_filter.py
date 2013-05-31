@@ -18,17 +18,23 @@ class advanced_filter(osv.Model):
                               'field_filter' : args['field_filter'],
                               'id_filter_from' : args['id_filter_from'],
                               'id_filter_to' : args['id_filter_to'],
-                              'is_active' : self._set_as_active(cr, uid, ids, context=context)},
-                              context=context)
+                              'is_active' : self._set_as_active(cr, uid, ids,
+                                                              context=context)},
+                    context=context)
 
     def _set_as_active(self, cr, uid, ids, context=None):
-        filter_id = self.search(cr, uid, [('is_active', '=', True)], context=context)
+        filter_id = self.search(cr, uid,
+                                [('is_active', '=', True)],
+                                context=context)
         if filter_id:
-            self.write(cr, uid, filter_id, {'is_active': False}, context=context)
+            self.write(cr, uid, filter_id,
+                       {'is_active': False}, context=context)
         return True
 
     def get_elements_filtered(self, cr, uid, context=None):
-        filter_ids = self.search(cr, uid, [('is_active', '=', True)], context=context)
+        filter_ids = self.search(cr, uid,
+                                 [('is_active', '=', True)],
+                                 context=context)
         if not filter_ids:
             return []
         active_filter = self.browse(cr, uid, filter_ids, context=context)
@@ -38,15 +44,16 @@ class advanced_filter(osv.Model):
         if not obj_osv:
             return []
         field_osv = self.pool.get('ir.model.fields')
-        field_ids = field_osv.search(cr, uid, [('id', '=', active_filter[0].field_filter)], context=context)
+        field_ids = field_osv.search(cr, uid,
+                            [('id', '=', active_filter[0].field_filter)],
+                            context=context)
         if not field_ids:
             return []
         active_field = field_osv.browse(cr, uid, field_ids, context=context)
         obj_ids = obj_osv.search(cr, uid,
-                                 [(active_field[0].name, '>=', active_filter[0].id_filter_from),
-                                  (active_field[0].name, '<=', active_filter[0].id_filter_to)],
-                                 order=active_field[0].name,
-                                 context=context)
+                 [(active_field[0].name, '>=', active_filter[0].id_filter_from),
+                  (active_field[0].name, '<=', active_filter[0].id_filter_to)],
+                 order=active_field[0].name,
+                 context=context)
         return obj_ids
-            
 

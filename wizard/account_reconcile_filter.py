@@ -6,7 +6,8 @@ class account_reconcile_filter(osv.TransientModel):
     _columns = {
         'id_from'           : fields.char('From', size=256),
         'id_to'             : fields.char('To', size=256),
-        'field_filter'      : fields.many2one('ir.model.fields', 'Search Field'),
+        'field_filter'      : fields.many2one('ir.model.fields',
+                                              'Search Field'),
         'dateField_from'    : fields.date('Date From'),
         'dateField_to'      : fields.date('Date To'),
     }
