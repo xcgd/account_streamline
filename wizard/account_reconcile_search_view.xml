@@ -7,12 +7,24 @@
             <field name="arch" type="xml">
                 <form string="Search" version="7.0">
                     <group col="4" string="Filter By">
-                        <field name="id_from" />
-                        <field name="id_to" />
-			            <field name="filter_type" />
-                        <field name="search_type" />
+                        <field name="filter_type" on_change="onchange_filter(filter_type)"/>
+                        <field name="search_type" invisible="True"/>
                     </group>
-                    <footer>
+                    <group string="Range" attrs="{'invisible':[('search_type', '=','empty')]}">
+                        <group attrs="{'invisible':[('search_type','!=','account_id')]}">
+                            <field name="account_from" widget="selection"/>
+                            <field name="account_to" widget="selection"/>
+                        </group>
+                        <group attrs="{'invisible':[('search_type','!=','date')]}">
+                            <field name="dateField_from"/>
+                            <field name="dateField_to"/>
+                        </group>
+                        <group attrs="{'invisible':[('search_type','!=','journal_id')]}">
+                            <field name="journal_from" widget="selection"/>
+                            <field name="journal_to" widget="selection"/>
+                        </group>
+                    </group>
+		    <footer>
                         <button string="Search"
                                 name="launch_search"
                                 type="object"
