@@ -1,7 +1,7 @@
 from openerp.osv import osv, fields
 
 class advanced_filter(osv.Model):
-    _name = "account.streamline.advanced_filter"
+    _name = "account.numergy.advanced_filter"
     _columns = {
         'id_user'           : fields.integer("id_user"),
         'obj_type'          : fields.char("obj_type", size=256),

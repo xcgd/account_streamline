@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <record id="view_move_form_streamline" model="ir.ui.view">
-            <field name="name">account.move.form.streamline</field>
+        <record id="view_move_form_numergy" model="ir.ui.view">
+            <field name="name">account.move.form.numergy</field>
             <field name="model">account.move</field>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">

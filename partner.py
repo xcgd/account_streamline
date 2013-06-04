@@ -47,13 +47,13 @@ class res_partner_needaction(osv.Model):
 
     _track = {
         'property_account_payable': {
-            'account_streamline.mt_partner_supplier': lambda self,
+            'account_numergy.mt_partner_supplier': lambda self,
                                                              cr, uid, obj, ctx=None:
             not self.pool.get('account.account').browse(cr, uid,
                                                         obj['property_account_payable']).type == 'payable',
         },
         'property_account_receivable': {
-            'account_streamline.mt_partner_customer': lambda self,
+            'account_numergy.mt_partner_customer': lambda self,
                                                              cr, uid, obj, ctx=None:
             not self.pool.get('account.account').browse(cr, uid,
                                                         obj['property_account_receivable']).type == 'receivable',
@@ -80,10 +80,10 @@ class res_partner_needaction(osv.Model):
             cr, uid, values, context=context)
 
         obj = self.pool.get('ir.model.data')
-        followers = [follower.id for follower in obj.get_object(cr, uid, 'account_streamline',
+        followers = [follower.id for follower in obj.get_object(cr, uid, 'account_numergy',
                                    'group_account_creators').message_follower_ids]
-        msg_cust = obj.get_object(cr, uid, 'account_streamline', 'mt_partner_customer').id
-        msg_supp = obj.get_object(cr, uid, 'account_streamline', 'mt_partner_supplier').id
+        msg_cust = obj.get_object(cr, uid, 'account_numergy', 'mt_partner_customer').id
+        msg_supp = obj.get_object(cr, uid, 'account_numergy', 'mt_partner_supplier').id
         subtypes = [msg_cust, msg_supp]
 
         self.message_subscribe(cr, uid, [cur_id], followers, subtypes,
@@ -93,7 +93,7 @@ class res_partner_needaction(osv.Model):
                                                        values['property_account_payable']).type == 'payable':
             self.message_post(
                 cr, uid, cur_id,
-                subtype='account_streamline.mt_partner_supplier',
+                subtype='account_numergy.mt_partner_supplier',
                 body=_("Supplier created, please check related account."),
                 context=context)
 
@@ -101,7 +101,7 @@ class res_partner_needaction(osv.Model):
                                                        values['property_account_receivable']).type == 'receivable':
             self.message_post(
                 cr, uid, cur_id,
-                subtype='account_streamline.mt_partner_customer',
+                subtype='account_numergy.mt_partner_customer',
                 body=_("Customer created, please check related account."),
                 context=context)
 
@@ -115,7 +115,7 @@ class res_partner_needaction(osv.Model):
         dom = super(res_partner_needaction, self)._needaction_domain_get(
             cr, uid, context=context)
         obj = self.pool.get('ir.model.data')
-        followers = obj.get_object(cr, uid, 'account_streamline', 'group_account_creators').message_follower_ids
+        followers = obj.get_object(cr, uid, 'account_numergy', 'group_account_creators').message_follower_ids
 
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
