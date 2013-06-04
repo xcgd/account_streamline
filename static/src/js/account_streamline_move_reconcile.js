@@ -1,12 +1,12 @@
-openerp.account_numergy = function(instance)
+openerp.account_streamline = function(instance)
 {
     var _t = instance.web._t;
     var _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
-    instance.web.account_numergy = instance.web.account_numergy || {};
-    instance.web.views.add('tree_account_numergy_reconciliation', 'instance.web.account_numergy.ReconcileListView');
+    instance.web.account_streamline = instance.web.account_streamline || {};
+    instance.web.views.add('tree_account_streamline_reconciliation', 'instance.web.account_streamline.ReconcileListView');
 
-    instance.web.account_numergy.ReconcileListView = instance.web.ListView.extend({
+    instance.web.account_streamline.ReconcileListView = instance.web.ListView.extend({
         init: function()
         {
             this._super.apply(this, arguments);
@@ -14,10 +14,10 @@ openerp.account_numergy = function(instance)
             this.current_partner = null;
             this.on('record_selected', this, function() {
                 if (self.get_selected_ids().length >= 2) {
-                    self.$(".oe_account_numergy_recon_reconcile").removeAttr("disabled");
+                    self.$(".oe_account_streamline_recon_reconcile").removeAttr("disabled");
                     console.log("Button Clickable");
                 } else {
-                    self.$(".oe_account_numergy_recon_reconcile").attr("disabled", "");
+                    self.$(".oe_account_streamline_recon_reconcile").attr("disabled", "");
                     console.log("Button Unclickable");
                 }
             });
@@ -26,12 +26,12 @@ openerp.account_numergy = function(instance)
         {
             var self = this;
             var tmp = this._super.apply(this, arguments);
-            this.$el.prepend(QWeb.render("AccountnumergyReconciliation", {widget: this}));
-            this.$(".oe_account_numergy_recon_reconcile").click(function() {
+            this.$el.prepend(QWeb.render("AccountStreamlineReconciliation", {widget: this}));
+            this.$(".oe_account_streamline_recon_reconcile").click(function() {
                 console.log("RECON RECONCILE");
                 self.reconcile();
             });
-            this.$(".oe_account_numergy_search_wizard").click(function() {
+            this.$(".oe_account_streamline_search_wizard").click(function() {
                 self.call_search_wizard();
             });
             return tmp;
@@ -39,7 +39,7 @@ openerp.account_numergy = function(instance)
         call_search_wizard: function()
         {
             var self = this;
-            new instance.web.Model("ir.model.data").call("get_object_reference", ["account_numergy", "action_view_account_numergy_filter"]).then(function(result)
+            new instance.web.Model("ir.model.data").call("get_object_reference", ["account_streamline", "action_view_account_streamline_filter"]).then(function(result)
             {
                 return self.rpc("/web/action/load", {
                     action_id: result[1]
@@ -84,7 +84,7 @@ openerp.account_numergy = function(instance)
         do_search: function(domain, context, group_by)
         {
             var self = this;
-            var advanced_filter_mod = new instance.web.Model("account.numergy.advanced_filter", context, domain);
+            var advanced_filter_mod = new instance.web.Model("account.streamline.advanced_filter", context, domain);
             
             this.last_domain = domain;
             this.last_context = context;

@@ -2,13 +2,13 @@
 <openerp>
     <data>
         <!-- Partner related subtypes for messaging / Chatter -->
-        <record id="account_numergy.mt_partner_supplier" model="mail.message.subtype">
+        <record id="account_streamline.mt_partner_supplier" model="mail.message.subtype">
             <field name="name">Supplier</field>
             <field name="res_model">res.partner</field>
             <field name="description">Check Supplier Account</field>
             <field eval="False" name="default"/>
         </record>
-        <record id="account_numergy.mt_partner_customer" model="mail.message.subtype">
+        <record id="account_streamline.mt_partner_customer" model="mail.message.subtype">
             <field name="name">Customer</field>
             <field name="res_model">res.partner</field>
             <field name="description">Check Customer Account</field>

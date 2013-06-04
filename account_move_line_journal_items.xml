@@ -7,59 +7,50 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" version="7.0">
                     <field name="state"/>
-                    <field name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True)" />
+                    <field name="partner_id" invisible="context.get('global_cont', True)" />
                     <field name="period_id"/>
-                    <field name="journal_id" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="internal_sequence_number" invisible="context.get('complete_view', True)" />
+                    <field name="journal_id" invisible="context.get('journal_cont', True)" />
+                    <field name="internal_sequence_number" invisible="context.get('global_cont', True)" />
                     <field name="ref"/>
                     <field name="date"/>
-                    <field name="date_maturity" invisible="context.get('complete_view', True)" />
-                    <field name="date_created" invisible="context.get('complete_view', True)" />
-                    <field name="invoice"/>
-                    <field name="account_id"/>
+                    <field name="date_maturity" invisible="context.get('global_cont', True)" />
+                    <field name="date_created" invisible="context.get('global_cont', True)" />
+                    <field name="invoice" invisible="context.get('analytic_cont', False)" />
+                    <field name="account_id" invisible="context.get('analytic_cont', False)" />
                     <field name="name"/>
                     <field name="narration"/>
                     <field name="debit_curr"/>
                     <field name="credit_curr"/>
-                    <field name="currency_id" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="debit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="credit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True)" />
-                    <field name="a1_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a2_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a3_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a4_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a5_id" invisible="context.get('analytic_view', True)" />
+                    <field name="currency_id" invisible="context.get('analytic_cont', False)" />
+                    <field name="debit" invisible="context.get('analytic_cont', False)" />
+                    <field name="credit" invisible="context.get('analytic_cont', False)" />
+                    <field name="account_tax_id"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_account_numergy_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="name">account.numergy.move.line.tree.reconciliation</field>
+        <record id="view_account_streamline_move_line_tree_reconcile" model="ir.ui.view">
+            <field name="name">account.streamline.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree_account_numergy_reconciliation colors="red:state == 'draft';black:state == 'valid'"
+                <tree_account_streamline_reconciliation colors="red:state == 'draft';black:state == 'valid'"
                                              string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field name="state" />
                     <field name="period_id" />
+                    <field name="internal_sequence_number" />
                     <field name="ref" />
-                    <field name="invoice" />
                     <field name="account_id" />
-                    <field name="name" />
-                    <field name="narration" />
                     <field name="date" />
-                    <field name="debit_curr" />
-                    <field name="credit_curr" />
-                    <field name="currency_id" />
                     <field name="debit" />
                     <field name="credit" />
-                    <field name="move_state" />
+                    <field name="currency_id" />
+                    <field name="debit_curr" />
+                    <field name="credit_curr" />
                     <field name="reconcile_id" />
                     <field name="reconcile_partial_id" />
-
-                </tree_account_numergy_reconciliation>
+                </tree_account_streamline_reconciliation>
             </field>
         </record>
 
@@ -85,7 +76,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'complete_view':False}</field>
+            <field name="context">{'global_cont': False}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -94,7 +85,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'simple_view':False}</field>
+            <field name="context">{'journal_cont': False}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -102,7 +93,7 @@
             <field name="name">Vue Analytique</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False}</field>
+            <field name="context">{'analytic_journal': False, 'analytic_cont' : True}</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
@@ -110,9 +101,9 @@
         <record id="action_move_line_tree_reconciliation" model="ir.actions.act_window">
             <field name="name">Ecritures Lettrage</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_account_numergy_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_account_numergy_reconciliation</field>
-            <field name="context">{'reconcile_view':False}</field>
+            <field name="view_id" ref="view_account_streamline_move_line_tree_reconcile"/>
+            <field name="view_mode">tree_account_streamline_reconciliation</field>
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.

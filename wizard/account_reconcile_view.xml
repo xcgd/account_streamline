@@ -2,8 +2,8 @@
 <openerp>
     <data noupdate="0">
 
-        <record id="view_account_move_line_reconcile_full_numergy" model="ir.ui.view">
-            <field name="name">account.move.line.reconcile.full.form.numergy</field>
+        <record id="view_account_move_line_reconcile_full_streamline" model="ir.ui.view">
+            <field name="name">account.move.line.reconcile.full.form.streamline</field>
             <field name="model">account.move.line.reconcile</field>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
@@ -38,7 +38,7 @@
         </record>
 
         <record id="account.action_view_account_move_line_reconcile" model="ir.actions.act_window">
-            <field name="view_id" ref="view_account_move_line_reconcile_full_numergy"/>
+            <field name="view_id" ref="view_account_move_line_reconcile_full_streamline"/>
         </record>
 
     </data>

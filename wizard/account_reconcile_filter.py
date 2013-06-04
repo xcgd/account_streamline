@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 
 class account_reconcile_filter(osv.TransientModel):
-    _name = 'account.numergy.reconcile_filter'
+    _name = 'account.streamline.reconcile_filter'
 
     _columns = {
         'id_from'           : fields.char('From', size=256),
@@ -19,7 +19,7 @@ class account_reconcile_filter(osv.TransientModel):
         args['field_filter'] = filter_ids[0].field_filter.id
         args['id_filter_from'] = filter_ids[0].id_from
         args['id_filter_to'] = filter_ids[0].id_to
-        adv_filter_osv = self.pool.get("account.numergy.advanced_filter")
+        adv_filter_osv = self.pool.get("account.streamline.advanced_filter")
         if adv_filter_osv:
             adv_filter_osv.create_new_filter(cr, uid,
                                              ids, args=args,

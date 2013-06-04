@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_account_numergy_filter" model="ir.ui.view">
-            <field name="name">account.numergy.filter</field>
-            <field name="model">account.numergy.reconcile_filter</field>
+        <record id="view_account_streamline_filter" model="ir.ui.view">
+            <field name="name">account.streamline.filter</field>
+            <field name="model">account.streamline.reconcile_filter</field>
             <field name="arch" type="xml">
                 <form string="Search" version="7.0">
                     <group col="4" string="Filter By">
+                        <field name="id_from" />
+                        <field name="id_to" />
                         <field name="field_filter" domain="[('model_id','=','account.move.line'),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
                     </group>
                     <group string="Range">
                         <group>
-                            <field name="id_from" />
-                            <field name="id_to" />
+                            <field name="dateField_from"/>
+                            <field name="dateField_to"/>
                         </group>
                     </group>
                     <footer>
@@ -30,13 +32,13 @@
             </field>
         </record>
 
-        <record id="action_view_account_numergy_filter"
+        <record id="action_view_account_streamline_filter"
                 model="ir.actions.act_window">
             <field name="name">Filter View</field>
-            <field name="res_model">account.numergy.reconcile_filter</field>
+            <field name="res_model">account.streamline.reconcile_filter</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_account_numergy_filter" />
+            <field name="view_id" ref="view_account_streamline_filter" />
             <field name="target">new</field>
         </record>
     </data>

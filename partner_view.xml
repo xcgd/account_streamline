@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <record id="view_partner_form_account_numergy" model="ir.ui.view">
-            <field name="name">res.partner.form.inherit.account.numergy</field>
+        <record id="view_partner_form_account_streamline" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.account.streamline</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
@@ -42,8 +42,8 @@
             </field>
         </record>
 
-        <record id="view_res_partner_filter_account_numergy" model="ir.ui.view">
-            <field name="name">res.partner.select.inherit.account.numergy</field>
+        <record id="view_res_partner_filter_account_streamline" model="ir.ui.view">
+            <field name="name">res.partner.select.inherit.account.streamline</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">

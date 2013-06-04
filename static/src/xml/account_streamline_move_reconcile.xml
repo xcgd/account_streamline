@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template id="template" xml:space="preserve">
-    <t t-name="AccountnumergyReconciliation">
+    <t t-name="AccountStreamlineReconciliation">
         <!--t t-if="widget.current_partner === null">
             <div class="oe_view_nocontent">
                 <p>
@@ -8,13 +8,13 @@
                 </p>
             </div>
         </t-->
-        <div class="oe_account_numergy_reconciliation">
+        <div class="oe_account_streamline_reconciliation">
             <!--t t-if="widget.current_partner !== null"-->
                 <div>
-                    <button class="oe_account_numergy_recon_reconcile oe_button oe_highlight"
+                    <button class="oe_account_streamline_recon_reconcile oe_button oe_highlight"
                             href="javascript:void(0)"
                             disabled="">Reconcile</button>
-                    <button class="oe_account_numergy_search_wizard oe_button"
+                    <button class="oe_account_streamline_search_wizard oe_button"
                             href="javascript:void(0)">Filters</button>
                 </div>
             <!--/t-->
