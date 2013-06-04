@@ -74,7 +74,6 @@ class account_analytic_structure(osv.Model):
                 doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '4' in ans_dict).lower())
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
-                #res['fields'][field]['invisible'] = not '5' in ans_dict
                 doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '5' in ans_dict).lower())
 
         res['arch'] = etree.tostring(doc)
