@@ -10,8 +10,7 @@
                 <xpath expr="//tree[@string='Journal Items']" position="replace">
                     <tree colors="red:move_state == 'draft';black:move_state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
                         <field name="state" invisible="1" />
-                        <field name="move_id" required="0"
-                               domain="[('state', '=', 'draft'), ('journal_id', '=', context.get('journal_id')), ('period_id', '=', context.get('period_id'))]"/>
+                        <field name="move_id" required="0" domain="[('state', '=', 'draft'), ('journal_id', '=', context.get('journal_id')), ('period_id', '=', context.get('period_id'))]"/>
                         <field name="move_state" />
                         <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
                         <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
@@ -24,7 +23,6 @@
                         <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                         <field name="debit" sum="Total Debit"/>
                         <field name="credit" sum="Total Credit"/>
-
                         <field name="statement_id" invisible="1"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                         <field name="reconcile" invisible="1"/>
@@ -36,7 +34,6 @@
                 </xpath>
             </field>
         </record>
-
         <record id="view_move_line_tree_readonly" model="ir.ui.view">
             <field name="name">account.move.line.tree.readonly</field>
             <field name="model">account.move.line</field>
@@ -54,7 +51,6 @@
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
-
                     <field name="move_id" required="0" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
@@ -67,14 +63,12 @@
                 </tree>
             </field>
         </record>
-
         <record id="action_move_line_tree_readonly" model="ir.actions.act_window">
             <field name="name">Journal Items Listing</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_readonly"/>
             <field name="view_mode">tree,form</field>
         </record>
-
         <record id="action_move_line_tree_payment" model="ir.actions.act_window">
             <field name="name">Payments Selection</field>
             <field name="res_model">account.move.line</field>
@@ -82,28 +76,21 @@
             <field name="domain">[('account_id.type', '=', 'payable'), ('reconcile_id', '=', False), ('partner_id.supplier', '=', 1), ('move_id.state', '=', 'posted')]</field>
             <field name="view_mode">tree</field>
         </record>
-
         <menuitem id="menu_payments"
                   name="Payments"
                   parent="account.menu_finance"
                   sequence="5"
                   groups="account.group_account_user,account.group_account_manager" />
+        <menuitem action="action_move_line_tree_readonly"
+                  id="menu_action_account_move_line_readonly"
+                  parent="menu_payments"
+                  sequence="10"
+                  groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_tree_readonly"
-            id="menu_action_account_move_line_readonly"
-            parent="menu_payments"
-            sequence="10"
-            groups="account.group_account_user"
-        />
-
-        <menuitem
-                action="action_move_line_tree_payment"
-                id="menu_action_account_move_line_payment"
-                parent="menu_payments"
-                sequence="11"
-                groups="account.group_account_user"
-        />
-
+        <menuitem action="action_move_line_tree_payment"
+                  id="menu_action_account_move_line_payment"
+                  parent="menu_payments"
+                  sequence="11"
+                  groups="account.group_account_user" />
     </data>
 </openerp>

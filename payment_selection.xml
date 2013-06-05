@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!-- the wizard which will launch the refresh -->
         <record id="view_account_move_line_goodtopay" model="ir.ui.view">
             <field name="name">account.move.line.goodtopay.form</field>
@@ -20,7 +19,6 @@
                </form>
             </field>
         </record>
-
         <!-- a simple action that pops a new wizard up for payment selection -->
         <record id="action_mark_as_good_to_pay" model="ir.actions.act_window">
             <field name="name">Mark as good to pay</field>
@@ -30,7 +28,6 @@
             <field name="view_id" ref="view_account_move_line_goodtopay"/>
             <field name="target">new</field>
         </record>
-
         <!-- contextual menu for account.move.line to make them as good to pay -->
         <record id="value_contextual_action_payment_selection" model="ir.values">
             <field name="model_id" ref="model_account_move_line" />
@@ -40,6 +37,5 @@
             <field name="key">action</field>
             <field name="model">account.move.line</field>
         </record>
-
     </data>
 </openerp>

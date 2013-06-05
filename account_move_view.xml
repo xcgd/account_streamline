@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="view_move_form_streamline" model="ir.ui.view">
             <field name="name">account.move.form.streamline</field>
             <field name="model">account.move</field>
@@ -45,7 +44,7 @@
                                            domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"
-                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
+                                           on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
                                     <field name="currency_rate" readonly="1"/>
                                     <field name="debit_curr" sum="Total Debit"
                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
@@ -68,6 +67,5 @@
                 </form>
             </field>
         </record>
-
     </data>
 </openerp>

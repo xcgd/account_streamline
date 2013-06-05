@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>        
-         <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
+        <record id="view_account_move_line_filter_inherit"
+                model="ir.ui.view">
              <field name="name">Journal Items Inherited</field>
              <field name="model">account.move.line</field>
-             <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+             <field name="inherit_id" 
+                    ref="account.view_account_move_line_filter"/>
              <field name="arch" type="xml">
-                 <xpath expr="//filter[@name='unreconciled']" position="before">
-                     <filter string="Reconciled" domain="[('reconcile_id','!=',False), ('account_id.reconcile','=',True)]" help="Reconciled Journal Items" name="reconciled"/>
+                 <xpath expr="//filter[@name='unreconciled']"
+                        position="before">
+                     <filter string="Reconciled"
+                             domain="[('reconcile_id','!=',False),
+                                      ('account_id.reconcile','=',True)]"
+                             help="Reconciled Journal Items"
+                             name="reconciled"/>
                  </xpath>
              </field>
          </record>

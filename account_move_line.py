@@ -24,7 +24,6 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import netsvc
 import time
-from datetime import datetime
 from lxml import etree
 
 # fields that are considered as forbidden once the move_id has been posted
@@ -42,40 +41,39 @@ class account_move_line(osv.osv):
 
     _columns = dict(
         currency_id=fields.many2one('res.currency', 'Currency', help="The mandatory currency code"),
-
         move_state=fields.related("move_id", "state",
                                   type="char", string="status", readonly=True),
-
         debit_curr=fields.float('Debit T', digits_compute=dp.get_precision('Account'),
                                 help="This is the debit amount in transaction currency"),
         credit_curr=fields.float('Credit T', digits_compute=dp.get_precision('Account'),
-                                help="This is the credit amount in transaction currency"),
+                                 help="This is the credit amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                                       ('nd_id.ns_id.ordering', '=', '1')]),
+                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                                      ('nd_id.ns_id.ordering', '=', '1')]),
         a2_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                                       ('nd_id.ns_id.ordering', '=', '2')]),
+                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                                      ('nd_id.ns_id.ordering', '=', '2')]),
         a3_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                                       ('nd_id.ns_id.ordering', '=', '3')]),
+                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                                      ('nd_id.ns_id.ordering', '=', '3')]),
         a4_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                                       ('nd_id.ns_id.ordering', '=', '4')]),
+                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                                      ('nd_id.ns_id.ordering', '=', '4')]),
         a5_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                                       ('nd_id.ns_id.ordering', '=', '5')]),
+                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                                      ('nd_id.ns_id.ordering', '=', '5')]),
     )
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        res = super(account_move_line, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context is None:
+            context = {}
+        res = super(account_move_line, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         ans_obj = self.pool.get('analytic.structure')
 
         #display analysis codes only when present on a related structure, with dimension name as label
         ans_ids = ans_obj.search(cr, uid, [('model_name', '=', 'account_move_line')], context=context)
-        ans_br = ans_obj.browse(cr, uid, ans_ids,context=context)
+        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
         ans_dict = dict()
         for ans in ans_br:
             ans_dict[ans.ordering] = ans.nd_id.name
@@ -85,34 +83,19 @@ class account_move_line(osv.osv):
         for field in res['fields']:
             if field == 'a1_id':
                 res['fields'][field]['string'] = ans_dict.get('1', 'A1')
-                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"tree_invisible": %s}' %
-                                    str(((not 'analytic_view' in context) and
-                                        (not 'complete_view' in context)) or
-                                        (not '1' in ans_dict)).lower())
+                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '1' in ans_dict)).lower())
             if field == 'a2_id':
                 res['fields'][field]['string'] = ans_dict.get('2', 'A2')
-                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"tree_invisible": %s}' %
-                                    str(((not 'analytic_view' in context) and
-                                        (not 'complete_view' in context)) or
-                                        (not '2' in ans_dict)).lower())
+                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '2' in ans_dict)).lower())
             if field == 'a3_id':
                 res['fields'][field]['string'] = ans_dict.get('3', 'A3')
-                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"tree_invisible": %s}' %
-                                    str(((not 'analytic_view' in context) and
-                                        (not 'complete_view' in context)) or
-                                        (not '3' in ans_dict)).lower())
+                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '3' in ans_dict)).lower())
             if field == 'a4_id':
                 res['fields'][field]['string'] = ans_dict.get('4', 'A4')
-                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"tree_invisible": %s}' %
-                                    str(((not 'analytic_view' in context) and
-                                        (not 'complete_view' in context)) or
-                                        (not '4' in ans_dict)).lower())
+                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '4' in ans_dict)).lower())
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
-                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"tree_invisible": %s}' %
-                                    str(((not 'analytic_view' in context) and
-                                        (not 'complete_view' in context)) or
-                                        (not '5' in ans_dict)).lower())
+                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '5' in ans_dict)).lower())
         res['arch'] = etree.tostring(doc)
         return res
 
@@ -208,9 +191,9 @@ class account_move_line(osv.osv):
             currency_base = account_obj.browse(cr, uid, vals['account_id'], context=context).company_id.currency_id.id
             if amount_trans == 0.0 and (currency_trans == currency_base or not currency_trans):
                 amount_trans = vals['amount_currency'] = cur_obj.compute(cr, uid, currency_base,
-                                                        currency_base,
-                                                        vals.get('debit', 0.0) - vals.get('credit', 0.0),
-                                                        context=context)
+                                                                         currency_base,
+                                                                         vals.get('debit', 0.0) - vals.get('credit', 0.0),
+                                                                         context=context)
 
                 currency_trans = vals['currency_id'] = currency_base
                 cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
@@ -287,8 +270,8 @@ class account_move_line(osv.osv):
             # if the user is trying to move an acm into an account_move
             #  which is posted
             if target_move_id and not target_move_id == current_move_id and \
-                    self.is_move_posted(
-                            cr, uid, target_move_id, context=context):
+                    self.is_move_posted(cr, uid, target_move_id,
+                                        context=context):
                 raise osv.except_osv(_('Error!'), msg_invalid_move)
 
             # we don't allow switching from one journal_id (journal type)
@@ -353,21 +336,21 @@ class account_move_line(osv.osv):
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled lines
             # we compute allocation totals in both currencies
-            if line.state <> 'valid':
+            if line.state != 'valid':
                 raise osv.except_osv(_('Error!'),
-                        _('Entry "%s" is not valid !') % line.name)
+                                     _('Entry "%s" is not valid !') % line.name)
 
             # control on second currency : must always be the same to authorise reconciliation on second currency
             #TODO : the context key should be given by the reconciliation wizard
             if context.get('reconcile_second_currency', True) and \
                     currency_id and not currency_id == line['currency_id']['id']:
                 raise osv.except_osv(_('Error!'),
-                        _('All entries must have the same second currency! Reconcile on company currency otherwise.'))
+                                     _('All entries must have the same second currency! Reconcile on company currency otherwise.'))
             # control on account : reconciliation must be on one account only
             # TODO : check accuracy of this control
             if account_id and not account_id == line['account_id']['id']:
                 raise osv.except_osv(_('Error!'),
-                        _('All entries must have the same account to be reconciled.'))
+                                     _('All entries must have the same account to be reconciled.'))
 
             credit += line['credit']
             credit_curr += line['credit_curr']
@@ -470,14 +453,17 @@ class account_move_line(osv.osv):
                 exchange_diff_move_id = move_obj.create(cr, uid, {
                     'period_id': writeoff_period_id,
                     'journal_id': writeoff_journal_id,
-                    'date':date,
+                    'date': date,
                     'state': 'draft',
                     'line_id': exchange_diff_lines
                 })
 
                 # The generated transaction needs to be added to the allocation block
                 exchange_diff_line_ids = self.search(cr, uid,
-                                            [('move_id', '=', exchange_diff_move_id), ('account_id', '=', account_id)])
+                                                     [('move_id', '=',
+                                                       exchange_diff_move_id),
+                                                      ('account_id', '=',
+                                                       account_id)])
                 # the following case should never happen but still...
                 if account_id == exchange_diff_acc_id:
                     exchange_diff_line_ids = [exchange_diff_line_ids[1]]
@@ -520,7 +506,6 @@ class account_move_line(osv.osv):
                 #                                               context={'date': line.date})
                 #             amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
 
-
                 writeoff_lines = [
                     (0, 0, {
                         'name': libelle,
@@ -548,7 +533,7 @@ class account_move_line(osv.osv):
                 writeoff_move_id = move_obj.create(cr, uid, {
                     'period_id': writeoff_period_id,
                     'journal_id': writeoff_journal_id,
-                    'date':date,
+                    'date': date,
                     'state': 'draft',
                     'line_id': writeoff_lines
                 })

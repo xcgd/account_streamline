@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 from lxml import etree
+
 
 class account_analytic_structure(osv.Model):
     _name = 'account.account'
@@ -29,30 +29,45 @@ class account_analytic_structure(osv.Model):
 
     _columns = dict(
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_account'),
-                                       ('nd_id.ns_id.ordering', '=', '1')]),
+                              domain=[('nd_id.ns_id.model_name',
+                                       '=', 'account_account'),
+                                      ('nd_id.ns_id.ordering', '=', '1')]),
         a2_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_account'),
-                                       ('nd_id.ns_id.ordering', '=', '2')]),
+                              domain=[('nd_id.ns_id.model_name',
+                                       '=', 'account_account'),
+                                      ('nd_id.ns_id.ordering', '=', '2')]),
         a3_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_account'),
-                                       ('nd_id.ns_id.ordering', '=', '3')]),
+                              domain=[('nd_id.ns_id.model_name',
+                                       '=', 'account_account'),
+                                      ('nd_id.ns_id.ordering', '=', '3')]),
         a4_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_account'),
-                                       ('nd_id.ns_id.ordering', '=', '4')]),
+                              domain=[('nd_id.ns_id.model_name',
+                                       '=', 'account_account'),
+                                      ('nd_id.ns_id.ordering', '=', '4')]),
         a5_id=fields.many2one('analytic.code', "Analysis Code 1",
-                               domain=[('nd_id.ns_id.model_name', '=', 'account_account'),
-                                       ('nd_id.ns_id.ordering', '=', '5')]),
+                              domain=[('nd_id.ns_id.model_name',
+                                       '=', 'account_account'),
+                                      ('nd_id.ns_id.ordering', '=', '5')]),
     )
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        res = super(account_analytic_structure, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(account_analytic_structure,
+                    self).fields_view_get(cr, uid, view_id=view_id,
+                                          view_type=view_type,
+                                          context=context,
+                                          toolbar=toolbar,
+                                          submenu=False)
         ans_obj = self.pool.get('analytic.structure')
 
-        #display analysis codes only when present on a related structure, with dimension name as label
-        ans_ids = ans_obj.search(cr, uid, [('model_name', '=', 'account_account')], context=context)
-        ans_br = ans_obj.browse(cr, uid, ans_ids,context=context)
+        #display analysis codes only when present on a related structure,
+        #with dimension name as label
+        ans_ids = ans_obj.search(cr, uid,
+                                 [('model_name', '=', 'account_account')],
+                                 context=context)
+        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
         ans_dict = dict()
         for ans in ans_br:
             ans_dict[ans.ordering] = ans.nd_id.name

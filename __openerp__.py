@@ -3,16 +3,21 @@
 #
 ##############################################################################
 {
-    "name" : "Account Streamline",
-    "version" : "0.1",
-    "author" : "XCG Consulting",
+    "name": "Account Streamline",
+    "version": "0.1",
+    "author": "XCG Consulting",
     "category": 'Accounting',
     "description": """Enhancements to the account module to streamline its
     usage.
     """,
     'website': 'http://www.openerp-experts.com',
     'init_xml': [],
-    "depends" : ['base', 'account_accountant', 'account_voucher', 'account_sequence', 'analytic_structure'],
+    "depends": [
+        'base',
+        'account_accountant',
+        'account_voucher',
+        'account_sequence',
+        'analytic_structure'],
     "data": [
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',

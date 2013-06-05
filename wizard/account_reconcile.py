@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
+
 
 class account_move_line_reconcile(osv.TransientModel):
     """
@@ -31,7 +31,7 @@ class account_move_line_reconcile(osv.TransientModel):
     _inherit = "account.move.line.reconcile"
 
     _columns = {
-        'force_by_base' : fields.boolean('Reconcile by base currency'),
+        'force_by_base': fields.boolean('Reconcile by base currency'),
         'company_currency_id': fields.many2one('res.currency', 'Company Currency', readonly=True),
         'trans_currency_id': fields.many2one('res.currency', 'Transaction Currency', readonly=True),
         'credit_curr': fields.float('Credit amount', readonly=True, digits_compute=dp.get_precision('Account')),
@@ -63,11 +63,17 @@ class account_move_line_reconcile(osv.TransientModel):
                     force = True
                 else:
                     trans_currency_id = line.currency_id.id
-        res = {'trans_nbr': count, 'account_id': account_id, 'force_by_base': force,
-                'company_currency_id': company_currency_id,
-                'trans_currency_id': trans_currency_id,
-                'credit': credit, 'debit': debit, 'writeoff': debit - credit,
-                'credit_curr': credit_curr, 'debit_curr': debit_curr, 'writeoff_curr': debit_curr - credit_curr,}
+        res = {'trans_nbr': count,
+               'account_id': account_id,
+               'force_by_base': force,
+               'company_currency_id': company_currency_id,
+               'trans_currency_id': trans_currency_id,
+               'credit': credit,
+               'debit': debit,
+               'writeoff': debit - credit,
+               'credit_curr': credit_curr,
+               'debit_curr': debit_curr,
+               'writeoff_curr': debit_curr - credit_curr, }
         return res
 
     def default_get(self, cr, uid, fields, context=None):
@@ -108,4 +114,3 @@ class account_move_line_reconcile(osv.TransientModel):
         else:
             context['reconcile_second_currency'] = False
         return super(account_move_line_reconcile, self).trans_rec_reconcile_full(cr, uid, ids, context=context)
-

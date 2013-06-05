@@ -93,7 +93,7 @@ class good_to_pay(osv.osv_memory):
                                 msg_define_dc_on_journal % journal.name)
 
                         account_id = journal.default_credit_account_id.id or \
-                                     journal.default_debit_account_id.id
+                            journal.default_debit_account_id.id
 
                         vals['account_id'] = account_id
 

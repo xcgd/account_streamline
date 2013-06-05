@@ -14,12 +14,10 @@
             <field name="description">Check Customer Account</field>
             <field eval="False" name="default"/>
         </record>
-
         <!-- Discussion groups -->
         <record model="mail.group" id="group_account_creators">
             <field name="name">Accounts</field>
             <field name="description">Discussion about accounts creation</field>
         </record>
-
     </data>
 </openerp>
