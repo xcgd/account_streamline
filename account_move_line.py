@@ -40,39 +40,57 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     _columns = dict(
-        currency_id=fields.many2one('res.currency', 'Currency', help="The mandatory currency code"),
+        currency_id=fields.many2one('res.currency',
+                                    'Currency',
+                                    help="The mandatory currency code"),
         move_state=fields.related("move_id", "state",
                                   type="char", string="status", readonly=True),
-        debit_curr=fields.float('Debit T', digits_compute=dp.get_precision('Account'),
-                                help="This is the debit amount in transaction currency"),
-        credit_curr=fields.float('Credit T', digits_compute=dp.get_precision('Account'),
-                                 help="This is the credit amount in transaction currency"),
+        debit_curr=fields.float('Debit T',
+                                digits_compute=dp.get_precision('Account'),
+                                help="This is the debit amount "
+                                     "in transaction currency"),
+        credit_curr=fields.float('Credit T',
+                                 digits_compute=dp.get_precision('Account'),
+                                 help="This is the credit "
+                                      "amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                              domain=[('nd_id.ns_id.model_name', '=',
+                                       'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '1')]),
         a2_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                              domain=[('nd_id.ns_id.model_name', '=',
+                                       'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '2')]),
         a3_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                              domain=[('nd_id.ns_id.model_name', '=',
+                                       'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '3')]),
         a4_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                              domain=[('nd_id.ns_id.model_name', '=',
+                                       'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '4')]),
         a5_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                              domain=[('nd_id.ns_id.model_name', '=',
+                                       'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '5')]),
     )
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        res = super(account_move_line, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        res = super(account_move_line, self).\
+            fields_view_get(cr, uid, view_id=view_id,
+                            view_type=view_type, context=context,
+                            toolbar=toolbar, submenu=False)
         ans_obj = self.pool.get('analytic.structure')
 
-        #display analysis codes only when present on a related structure, with dimension name as label
-        ans_ids = ans_obj.search(cr, uid, [('model_name', '=', 'account_move_line')], context=context)
+        #display analysis codes only when present on a related structure,
+        #with dimension name as label
+        ans_ids = ans_obj.search(cr, uid,
+                                 [('model_name', '=', 'account_move_line')],
+                                 context=context)
         ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
         ans_dict = dict()
         for ans in ans_br:
@@ -83,31 +101,53 @@ class account_move_line(osv.osv):
         for field in res['fields']:
             if field == 'a1_id':
                 res['fields'][field]['string'] = ans_dict.get('1', 'A1')
-                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '1' in ans_dict)).lower())
+                doc.xpath("//field[@name='a1_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '1' in ans_dict or
+                            not 'complete_view' in context and
+                            not 'analytic_view' in context).lower())
             if field == 'a2_id':
                 res['fields'][field]['string'] = ans_dict.get('2', 'A2')
-                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '2' in ans_dict)).lower())
+                doc.xpath("//field[@name='a2_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '2' in ans_dict or
+                            not 'complete_view' in context and
+                            not 'analytic_view' in context).lower())
             if field == 'a3_id':
                 res['fields'][field]['string'] = ans_dict.get('3', 'A3')
-                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '3' in ans_dict)).lower())
+                doc.xpath("//field[@name='a3_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '3' in ans_dict or
+                            not 'complete_view' in context and
+                            not 'analytic_view' in context).lower())
             if field == 'a4_id':
                 res['fields'][field]['string'] = ans_dict.get('4', 'A4')
-                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '4' in ans_dict)).lower())
+                doc.xpath("//field[@name='a4_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '4' in ans_dict or
+                            not 'complete_view' in context and
+                            not 'analytic_view' in context).lower())
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
-                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"tree_invisible": %s}' % str(((not 'analytic_view' in context) and (not 'complete_view' in context)) or (not '5' in ans_dict)).lower())
+                doc.xpath("//field[@name='a5_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '5' in ans_dict or
+                            not 'complete_view' in context and
+                            not 'analytic_view' in context).lower())
         res['arch'] = etree.tostring(doc)
         return res
 
     def _get_currency(self, cr, uid, context=None):
         """
-        override default so the currency is always present (coming from company)
+        override default so the currency is
+        always present (coming from company)
         """
         if context is None:
             context = {}
         if not context.get('journal_id', False):
             return False
-        jrn = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+        jrn = self.pool.get('account.journal').browse(cr, uid,
+                                                      context['journal_id'])
         cur = jrn.currency and jrn.currency.id or jrn.company_id.currency_id.id
         return cur or False
 
@@ -120,21 +160,25 @@ class account_move_line(osv.osv):
     def _check_currency_company(self, cr, uid, ids, context=None):
         """
         disable check constraint on secondary currency.
-        The idea is to always have a currency and a rate on every single move line.
+        The idea is to always have a currency and a
+        rate on every single move line.
         """
         return True
 
     _constraints = [
         (_check_currency_company,
          "If you see this, the constraint redefined "
-         "in account_streamline.account_move_line._check_currency_company is not working!",
+         "in account_streamline.account_move_line._check_currency_company "
+         "is not working!",
          ['currency_id']),
     ]
 
     def _default_get(self, cr, uid, fields, context=None):
         """add other default values related to multicurrency
         """
-        data = super(account_move_line, self)._default_get(cr, uid, fields, context=context)
+        data = super(account_move_line, self)._default_get(cr, uid,
+                                                           fields,
+                                                           context=context)
 
         move_obj = self.pool.get('account.move')
         if context.get('journal_id'):

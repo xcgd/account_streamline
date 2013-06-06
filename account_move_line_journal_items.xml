@@ -25,11 +25,11 @@
                     <field name="debit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
                     <field name="credit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
                     <field name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True)" />
-                    <field name="a1_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a2_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a3_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a4_id" invisible="context.get('analytic_view', True)" />
-                    <field name="a5_id" invisible="context.get('analytic_view', True)" />
+                    <field name="a1_id" />
+                    <field name="a2_id" />
+                    <field name="a3_id" />
+                    <field name="a4_id" />
+                    <field name="a5_id" />
                 </tree>
             </field>
         </record>
