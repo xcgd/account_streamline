@@ -16,8 +16,10 @@
         'base',
         'account_accountant',
         'account_voucher',
+        'account_payment',
         'account_sequence',
-        'analytic_structure'],
+        'analytic_structure',
+        'advanced_filter'],
     "data": [
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',

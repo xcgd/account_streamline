@@ -34,11 +34,11 @@
             </field>
         </record>
 
-        <record id="view_account_numergy_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="name">account.numergy.move.line.tree.reconciliation</field>
+        <record id="view_account_move_line_tree_reconcile" model="ir.ui.view">
+            <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree_xcg_advanced_filter colors="red:state == 'draft';black:state == 'valid'"
+                <tree colors="red:state == 'draft';black:state == 'valid'"
                                              string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
@@ -59,7 +59,7 @@
                     <field name="reconcile_id" />
                     <field name="reconcile_partial_id" />
 
-                </tree_xcg_advanced_filter>
+                </tree>
             </field>
         </record>
 
@@ -81,7 +81,7 @@
         </record>
 
         <record id="action_move_line_tree_complete" model="ir.actions.act_window">
-            <field name="name">Vue Complete</field>
+            <field name="name">Full view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
@@ -90,7 +90,7 @@
         </record>
 
         <record id="action_move_line_tree_simple" model="ir.actions.act_window">
-            <field name="name">Vue Simple</field>
+            <field name="name">Simple view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
@@ -99,7 +99,7 @@
         </record>
 
         <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
-            <field name="name">Vue Analytique</field>
+            <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="context">{'analytic_view':False}</field>
@@ -108,10 +108,10 @@
         </record>
 
         <record id="action_move_line_tree_reconciliation" model="ir.actions.act_window">
-            <field name="name">Ecritures Lettrage</field>
+            <field name="name">Account Allocation</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_account_numergy_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_xcg_advanced_filter</field>
+            <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
+            <field name="view_mode">tree</field>
             <field name="context">{'reconcile_view':False,'model_id':'account_move_line'}</field>
             <field name="help" type="html">
                 <p>
@@ -120,42 +120,5 @@
             </field>
         </record>
 
-        <menuitem id="menu_finance_entries"
-                  name="Ecritures Comptable"
-                  sequence="5"
-                  parent="account.menu_finance"
-                  groups="account.group_account_user,account.group_account_manager" />
-
-        <menuitem
-            action="action_move_line_tree_complete"
-            id="menu_action_account_move_line_complete"
-            parent="menu_finance_entries"
-            sequence="12"
-            groups="account.group_account_user"
-        />
-
-        <menuitem
-            action="action_move_line_tree_simple"
-            id="menu_action_account_move_line_simple"
-            parent="menu_finance_entries"
-            sequence="13"
-            groups="account.group_account_user"
-        />
-
-        <menuitem
-            action="action_move_line_tree_analytic"
-            id="menu_action_account_move_line_analytic"
-            parent="menu_finance_entries"
-            sequence="14"
-            groups="account.group_account_user"
-        />
-
-        <menuitem
-            action="action_move_line_tree_reconciliation"
-            id="menu_action_account_move_line_reconcile"
-            parent="menu_finance_entries"
-            sequence="15"
-            groups="account.group_account_user"
-        />
     </data>
 </openerp>
