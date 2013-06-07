@@ -7,29 +7,29 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" version="7.0">
                     <field name="state"/>
-                    <field name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True)" />
+                    <field name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
                     <field name="period_id"/>
-                    <field name="journal_id" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="internal_sequence_number" invisible="context.get('complete_view', True)" />
+                    <field name="journal_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
+                    <field name="internal_sequence_number" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
                     <field name="ref"/>
                     <field name="date"/>
-                    <field name="date_maturity" invisible="context.get('complete_view', True)" />
-                    <field name="date_created" invisible="context.get('complete_view', True)" />
+                    <field name="date_maturity" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
+                    <field name="date_created" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
                     <field name="invoice"/>
                     <field name="account_id"/>
                     <field name="name"/>
                     <field name="narration"/>
                     <field name="debit_curr"/>
                     <field name="credit_curr"/>
-                    <field name="currency_id" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="debit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="credit" invisible="context.get('complete_view', True) and context.get('simple_view', True)" />
-                    <field name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True)" />
-                    <field name="a1_id" />
-                    <field name="a2_id" />
-                    <field name="a3_id" />
-                    <field name="a4_id" />
-                    <field name="a5_id" />
+                    <field name="currency_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
+                    <field name="debit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
+                    <field name="credit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
+                    <field name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
+                    <field name="a1_id"/>
+                    <field name="a2_id"/>
+                    <field name="a3_id"/>
+                    <field name="a4_id"/>
+                    <field name="a5_id"/>
                 </tree>
             </field>
         </record>
@@ -118,6 +118,30 @@
                     No journal items found.
                 </p>
             </field>
+        </record>
+
+        <record id="action_move_line_accounting_items_complete_tree" model="ir.actions.act_window">
+            <field name="name">Full View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="context">{'item_complete_view':False}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_move_line_accounting_items_simple_tree" model="ir.actions.act_window">
+        <field name="name">Simple View</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_id" ref="view_move_line_tree_global"/>
+        <field name="context">{'item_simple_view':False}</field>
+        <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_move_line_accounting_items_analytic_tree" model="ir.actions.act_window">
+            <field name="name">Analytical View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_global"/>
+            <field name="context">{'item_analytic_view':False}</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
     </data>

@@ -103,37 +103,48 @@ class account_move_line(osv.osv):
                 res['fields'][field]['string'] = ans_dict.get('1', 'A1')
                 doc.xpath("//field[@name='a1_id']")[0].\
                     set('modifiers', '{"tree_invisible": %s}' %
-                        str(not '1' in ans_dict or
-                            not 'complete_view' in context and
-                            not 'analytic_view' in context).lower())
+                        str(((not 'analytic_view' in context) and
+                             (not 'complete_view' in context) and
+                             (not 'item_complete_view' in context) and
+                             (not 'item_analytic_view' in context)) or
+                            (not '1' in ans_dict)).lower())
             if field == 'a2_id':
                 res['fields'][field]['string'] = ans_dict.get('2', 'A2')
                 doc.xpath("//field[@name='a2_id']")[0].\
                     set('modifiers', '{"tree_invisible": %s}' %
-                        str(not '2' in ans_dict or
-                            not 'complete_view' in context and
-                            not 'analytic_view' in context).lower())
+                        str(((not 'analytic_view' in context) and
+                             (not 'complete_view' in context) and
+                             (not 'item_complete_view' in context) and
+                             (not 'item_analytic_view' in context)) or
+                            (not '2' in ans_dict)).lower())
             if field == 'a3_id':
                 res['fields'][field]['string'] = ans_dict.get('3', 'A3')
                 doc.xpath("//field[@name='a3_id']")[0].\
                     set('modifiers', '{"tree_invisible": %s}' %
-                        str(not '3' in ans_dict or
-                            not 'complete_view' in context and
-                            not 'analytic_view' in context).lower())
+                        str(((not 'analytic_view' in context) and
+                             (not 'complete_view' in context) and
+                             (not 'item_complete_view' in context) and
+                             (not 'item_analytic_view' in context)) or
+                            (not '3' in ans_dict)).lower())
             if field == 'a4_id':
                 res['fields'][field]['string'] = ans_dict.get('4', 'A4')
                 doc.xpath("//field[@name='a4_id']")[0].\
                     set('modifiers', '{"tree_invisible": %s}' %
-                        str(not '4' in ans_dict or
-                            not 'complete_view' in context and
-                            not 'analytic_view' in context).lower())
+                        str(((not 'analytic_view' in context) and
+                             (not 'complete_view' in context) and
+                             (not 'item_complete_view' in context) and
+                             (not 'item_analytic_view' in context)) or
+                            (not '4' in ans_dict)).lower())
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
                 doc.xpath("//field[@name='a5_id']")[0].\
                     set('modifiers', '{"tree_invisible": %s}' %
-                        str(not '5' in ans_dict or
-                            not 'complete_view' in context and
-                            not 'analytic_view' in context).lower())
+                        str(((not 'analytic_view' in context) and
+                             (not 'complete_view' in context) and
+                             (not 'item_complete_view' in context) and
+                             (not 'item_analytic_view' in context)) or
+                            (not '5' in ans_dict)).lower())
+
         res['arch'] = etree.tostring(doc)
         return res
 

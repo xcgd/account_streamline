@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-                <menuitem action="action_move_line_tree_readonly"
+        <menuitem action="action_move_line_tree_readonly"
                   id="menu_action_account_move_line_readonly"
                   parent="account_payment.menu_main_payment"
                   sequence="10"
@@ -20,7 +19,7 @@
                   sequence="5"
                   groups="account.group_account_user,account.group_account_manager" />
 
-                <menuitem
+        <menuitem
             action="action_move_line_tree_complete"
             id="menu_action_account_move_line_complete"
             parent="menu_item_journal_inquiries"
@@ -51,6 +50,34 @@
             sequence="15"
             groups="account.group_account_user"
         />
+
+        <menuitem id="menu_accounting_items"
+                  name="Accounting Item"
+                  sequence="6"
+                  parent="account.menu_finance"
+                  groups="account.group_account_user,account.group_account_manager" />
+
+        <menuitem
+            action="action_move_line_accounting_items_complete_tree"
+            id="menu_action_move_line_accounting_items_complete"
+            parent="menu_accounting_items"
+            sequence="16"
+        />
+
+        <menuitem
+            action="action_move_line_accounting_items_simple_tree"
+            id="menu_action_move_line_accounting_items_simple"
+            parent="menu_accounting_items"
+            sequence="17"
+        />
+
+        <menuitem
+            action="action_move_line_accounting_items_analytic_tree"
+            id="menu_action_move_line_accounting_items_analytic"
+            parent="menu_accounting_items"
+            sequence="18"
+        />
+ 
 
     </data>
 </openerp>
