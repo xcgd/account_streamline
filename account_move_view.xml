@@ -67,5 +67,22 @@
                 </form>
             </field>
         </record>
+
+	<record id="account_move_line_analytic_form" model="ir.ui.view">
+	    <field name="name">account.move.line.analytic.form</field>
+	    <field name="model">account.move.line</field>
+	    <field name="inherit_id" ref="account.view_move_line_form"/>
+	    <field name="arch" type="xml">
+		<xpath expr="//group[@string='Reconciliation']" position="after">
+                    <group string="Analytic Static">
+                        <field name="a1_id"/>
+                        <field name="a2_id"/>
+                        <field name="a3_id"/>
+                        <field name="a4_id"/>
+                        <field name="a5_id"/>
+                    </group>
+		</xpath>
+	    </field>
+	</record>
     </data>
 </openerp>
