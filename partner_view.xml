@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="view_partner_tree_analytic" model="ir.ui.view">
+            <field name="name">res.partner.tree.analytic</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='parent_id']" position="after">
+                    <field name="a1_id"/>
+                    <field name="a2_id"/>
+                    <field name="a3_id"/>
+                    <field name="a4_id"/>
+                    <field name="a5_id"/>
+                </xpath>
+            </field>
+        </record>
         <record id="view_partner_form_account_streamline" model="ir.ui.view">
             <field name="name">res.partner.form.inherit.account.streamline</field>
             <field name="model">res.partner</field>
