@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_move_line_tree_inherit" model="ir.ui.view">
+            <field name="name">Journal Items</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='credit']"
+                       position="after">
+                       <field name="a1_id"/>
+                       <field name="a2_id"/>
+                       <field name="a3_id"/>
+                       <field name="a4_id"/>
+                       <field name="a5_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_move_line_accounting_items_complete_tree"
+                model="ir.actions.act_window">
+            <field name="name">Full View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_inherit"/>
+            <field name="context">{'item_complete_view':False}</field>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Select the period and the journal you wnat to fill.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_move_line_accounting_items_simple_tree"
+                model="ir.actions.act_window">
+            <field name="name">Simple View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_inherit"/>
+            <field name="context">{'item_simple_view':False}</field>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Select the period and the journal you wnat to fill.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_move_line_accounting_items_analytic_tree"
+                model="ir.actions.act_window">
+            <field name="name">Analytical View</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_inherit"/>
+            <field name="context">{'item_analytic_view':False}</field>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Select the period and the journal you wnat to fill.
+                </p>
+            </field>
+        </record>
+    </data>
+</openerp>

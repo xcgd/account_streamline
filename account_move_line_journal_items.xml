@@ -120,29 +120,5 @@
             </field>
         </record>
 
-        <record id="action_move_line_accounting_items_complete_tree" model="ir.actions.act_window">
-            <field name="name">Full View</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'item_complete_view':False}</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <record id="action_move_line_accounting_items_simple_tree" model="ir.actions.act_window">
-        <field name="name">Simple View</field>
-        <field name="res_model">account.move.line</field>
-        <field name="view_id" ref="view_move_line_tree_global"/>
-        <field name="context">{'item_simple_view':False}</field>
-        <field name="view_mode">tree,form</field>
-        </record>
-
-        <record id="action_move_line_accounting_items_analytic_tree" model="ir.actions.act_window">
-            <field name="name">Analytical View</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'item_analytic_view':False}</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
     </data>
 </openerp>

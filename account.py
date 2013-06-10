@@ -74,22 +74,31 @@ class account_analytic_structure(osv.Model):
 
         doc = etree.XML(res['arch'])
 
-        for field in res['fields']:
-            if field == 'a1_id':
-                res['fields'][field]['string'] = ans_dict.get('1', 'A1')
-                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '1' in ans_dict).lower())
-            if field == 'a2_id':
-                res['fields'][field]['string'] = ans_dict.get('2', 'A2')
-                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '2' in ans_dict).lower())
-            if field == 'a3_id':
-                res['fields'][field]['string'] = ans_dict.get('3', 'A3')
-                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '3' in ans_dict).lower())
-            if field == 'a4_id':
-                res['fields'][field]['string'] = ans_dict.get('4', 'A4')
-                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '4' in ans_dict).lower())
-            if field == 'a5_id':
-                res['fields'][field]['string'] = ans_dict.get('5', 'A5')
-                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '5' in ans_dict).lower())
+        if 'a1_id' in res['fields']:
+            res['fields']['a1_id']['string'] = ans_dict.get('1', 'A1')
+            doc.xpath("//field[@name='a1_id']")[0].\
+                set('modifiers', '{"tree_invisible": %s}' %
+                    str(not '1' in ans_dict).lower())
+        if 'a2_id' in res['fields']:
+            res['fields']['a2_id']['string'] = ans_dict.get('2', 'A2')
+            doc.xpath("//field[@name='a2_id']")[0].\
+                set('modifiers', '{"tree_invisible": %s}' %
+                    str(not '2' in ans_dict).lower())
+        if 'a3_id' in res['fields']:
+            res['fields']['a3_id']['string'] = ans_dict.get('3', 'A3')
+            doc.xpath("//field[@name='a3_id']")[0].\
+                set('modifiers', '{"tree_invisible": %s}' %
+                    str(not '3' in ans_dict).lower())
+        if 'a4_id' in res['fields']:
+            res['fields']['a4_id']['string'] = ans_dict.get('4', 'A4')
+            doc.xpath("//field[@name='a4_id']")[0].\
+                set('modifiers', '{"tree_invisible": %s}' %
+                    str(not '4' in ans_dict).lower())
+        if 'a5_id' in res['fields']:
+            res['fields']['a5_id']['string'] = ans_dict.get('5', 'A5')
+            doc.xpath("//field[@name='a5_id']")[0].\
+                set('modifiers', '{"tree_invisible": %s}' %
+                    str(not '5' in ans_dict).lower())
 
         res['arch'] = etree.tostring(doc)
 

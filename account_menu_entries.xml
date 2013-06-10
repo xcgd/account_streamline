@@ -53,20 +53,26 @@
 
         <menuitem
             action="action_move_line_accounting_items_complete_tree"
+            icon="STOCK_JUSTIFY_FILL"
             id="menu_action_move_line_accounting_items_complete"
             parent="menu_accounting_items"
+            groups="account.group_account_user"
         />
 
         <menuitem
             action="action_move_line_accounting_items_simple_tree"
+            icon="STOCK_JUSTIFY_FILL"
             id="menu_action_move_line_accounting_items_simple"
             parent="menu_accounting_items"
+            groups="account.group_account_user"
         />
 
         <menuitem
             action="action_move_line_accounting_items_analytic_tree"
+            icon="STOCK_JUSTIFY_FILL"
             id="menu_action_move_line_accounting_items_analytic"
             parent="menu_accounting_items"
+            groups="account.group_account_user"
         />
  
 
