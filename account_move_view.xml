@@ -59,6 +59,11 @@
                                     <field name="state"/>
                                     <field name="reconcile_id"/>
                                     <field name="reconcile_partial_id"/>
+                                    <field name="a1_id"/>
+                                    <field name="a2_id"/>
+                                    <field name="a3_id"/>
+                                    <field name="a4_id"/>
+                                    <field name="a5_id"/>
                                 </tree>
                             </field>
                         </page>
