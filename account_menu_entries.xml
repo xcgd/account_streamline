@@ -41,7 +41,7 @@
         <menuitem
             action="action_move_line_tree_reconciliation"
             id="menu_action_account_move_line_reconcile"
-            parent="menu_item_journal_inquiries"
+            parent="account.periodical_processing_reconciliation"
             groups="account.group_account_user"
         />
 
