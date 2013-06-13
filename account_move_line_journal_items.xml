@@ -19,11 +19,11 @@
                     <field name="account_id"/>
                     <field name="name"/>
                     <field name="narration"/>
-                    <field name="debit_curr"/>
-                    <field name="credit_curr"/>
+                    <field name="debit_curr" sum="Total Debit T"/>
+                    <field name="credit_curr" sum="Total Credit T"/>
                     <field name="currency_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
-                    <field name="debit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
-                    <field name="credit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
+                    <field name="debit" sum="Total Debit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
+                    <field name="credit" sum="Total Credit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
                     <field name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
                     <field name="a1_id"/>
                     <field name="a2_id"/>
