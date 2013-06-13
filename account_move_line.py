@@ -102,7 +102,7 @@ class account_move_line(osv.osv):
             if field == 'a1_id':
                 res['fields'][field]['string'] = ans_dict.get('1', 'A1')
                 doc.xpath("//field[@name='a1_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s}' %
+                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                         str(((not 'analytic_view' in context) and
                              (not 'complete_view' in context) and
                              (not 'item_complete_view' in context) and
@@ -111,7 +111,7 @@ class account_move_line(osv.osv):
             if field == 'a2_id':
                 res['fields'][field]['string'] = ans_dict.get('2', 'A2')
                 doc.xpath("//field[@name='a2_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s}' %
+                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                         str(((not 'analytic_view' in context) and
                              (not 'complete_view' in context) and
                              (not 'item_complete_view' in context) and
@@ -120,7 +120,7 @@ class account_move_line(osv.osv):
             if field == 'a3_id':
                 res['fields'][field]['string'] = ans_dict.get('3', 'A3')
                 doc.xpath("//field[@name='a3_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s}' %
+                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                         str(((not 'analytic_view' in context) and
                              (not 'complete_view' in context) and
                              (not 'item_complete_view' in context) and
@@ -129,7 +129,7 @@ class account_move_line(osv.osv):
             if field == 'a4_id':
                 res['fields'][field]['string'] = ans_dict.get('4', 'A4')
                 doc.xpath("//field[@name='a4_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s}' %
+                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                         str(((not 'analytic_view' in context) and
                              (not 'complete_view' in context) and
                              (not 'item_complete_view' in context) and
@@ -138,7 +138,7 @@ class account_move_line(osv.osv):
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
                 doc.xpath("//field[@name='a5_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s}' %
+                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                         str(((not 'analytic_view' in context) and
                              (not 'complete_view' in context) and
                              (not 'item_complete_view' in context) and
