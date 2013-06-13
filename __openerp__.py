@@ -32,9 +32,6 @@
         'account_move_line_journal_items.xml',
         'account_move_line_journal_view.xml',
         'account_menu_entries.xml',
-        'data/analytic.code.csv',
-        'data/analytic.dimension.csv',
-        'data/analytic.structure.csv'
     ],
     #'demo_xml': [],
     'test': [],
