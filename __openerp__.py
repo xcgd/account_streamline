@@ -18,7 +18,6 @@
         'account_voucher',
         'account_payment',
         'account_sequence',
-        'account_numergy',
         'analytic_structure',
         'advanced_filter'],
     "data": [
