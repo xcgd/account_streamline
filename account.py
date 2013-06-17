@@ -77,27 +77,27 @@ class account_analytic_structure(osv.Model):
         if 'a1_id' in res['fields']:
             res['fields']['a1_id']['string'] = ans_dict.get('1', 'A1')
             doc.xpath("//field[@name='a1_id']")[0].\
-                set('modifiers', '{"tree_invisible": %s}' %
+                set('modifiers', '{"invisible": %s}' %
                     str(not '1' in ans_dict).lower())
         if 'a2_id' in res['fields']:
             res['fields']['a2_id']['string'] = ans_dict.get('2', 'A2')
             doc.xpath("//field[@name='a2_id']")[0].\
-                set('modifiers', '{"tree_invisible": %s}' %
+                set('modifiers', '{"invisible": %s}' %
                     str(not '2' in ans_dict).lower())
         if 'a3_id' in res['fields']:
             res['fields']['a3_id']['string'] = ans_dict.get('3', 'A3')
             doc.xpath("//field[@name='a3_id']")[0].\
-                set('modifiers', '{"tree_invisible": %s}' %
+                set('modifiers', '{"invisible": %s}' %
                     str(not '3' in ans_dict).lower())
         if 'a4_id' in res['fields']:
             res['fields']['a4_id']['string'] = ans_dict.get('4', 'A4')
             doc.xpath("//field[@name='a4_id']")[0].\
-                set('modifiers', '{"tree_invisible": %s}' %
+                set('modifiers', '{"invisible": %s}' %
                     str(not '4' in ans_dict).lower())
         if 'a5_id' in res['fields']:
             res['fields']['a5_id']['string'] = ans_dict.get('5', 'A5')
             doc.xpath("//field[@name='a5_id']")[0].\
-                set('modifiers', '{"tree_invisible": %s}' %
+                set('modifiers', '{"invisible": %s}' %
                     str(not '5' in ans_dict).lower())
 
         res['arch'] = etree.tostring(doc)
