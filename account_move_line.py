@@ -39,6 +39,29 @@ class account_move_line(osv.osv):
     _name = "account.move.line"
     _inherit = "account.move.line"
 
+    def get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
+        reconcile_osv = self.pool.get("account.move.reconcile")
+        move_line_osv = self.pool.get("account.move.line")
+        if (not reconcile_osv) or (not move_line_osv):
+            return None
+        move_line_br = move_line_osv.browse(cr, uid, ids, context=context)
+        if not move_line_br:
+            return None
+        reconcile_ids = []
+        for move_line in move_line_br:
+            print move_line.id
+            reconcile_ids.append(move_line.reconcile_id.id)
+        print reconcile_ids
+        reconcile_br = reconcile_osv.browse(cr, uid,
+                                            reconcile_ids,
+                                            context=context)
+        if not reconcile_br:
+            return None
+        result = dict()
+        for reconcile in reconcile_br:
+            result[reconcile.id] = reconcile.create_date
+        return result
+
     _columns = dict(
         currency_id=fields.many2one('res.currency',
                                     'Currency',
@@ -54,6 +77,11 @@ class account_move_line(osv.osv):
                                  help="This is the credit "
                                       "amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
+        date_reconcile=fields.function(get_reconcile_date,
+                                       method=True,
+                                       string="Reconcile Date",
+                                       type='datetime',
+                                       store=False),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),

@@ -12,7 +12,7 @@
                     <field readonly="1" name="journal_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
                     <field readonly="1" name="internal_sequence_number" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
                     <field readonly="1" name="ref"/>
-                    <field readonly="1" name="date"/>
+                    <field readonly="1" name="date" invisible="context.get('analytic_view', True)"/>
                     <field readonly="1" name="date_maturity" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
                     <field readonly="1" name="date_created" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
                     <field readonly="1" name="invoice"/>
@@ -38,8 +38,7 @@
             <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'"
-                                             string="Lettrage Ecritures Compatble"
+                <tree string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field readonly="1" name="state" />
@@ -58,7 +57,7 @@
                     <field readonly="1" name="move_state" />
                     <field readonly="1" name="reconcile_id" />
                     <field readonly="1" name="reconcile_partial_id" />
-
+                    <field readonly="1" name="date_reconcile" />
                 </tree>
             </field>
         </record>
@@ -85,7 +84,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'complete_view':False}</field>
+            <field name="context">{'complete_view':False, 'filter_wizard':'account'}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -94,7 +93,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'simple_view':False}</field>
+            <field name="context">{'simple_view':False, 'filter_wizard':'account'}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -102,7 +101,7 @@
             <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False}</field>
+            <field name="context">{'analytic_view':False, 'filter_wizard':'account'}</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
@@ -111,8 +110,8 @@
             <field name="name">Account Allocation</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
-            <field name="view_mode">tree</field>
-            <field name="context">{'reconcile_view':False,'model_id':'account_move_line'}</field>
+            <field name="view_mode">tree_advanced_filter</field>
+            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard':'account'}</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.
