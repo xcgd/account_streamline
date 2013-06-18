@@ -6,7 +6,7 @@
             <field name="name">view.move.line.tree.inherits</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="false" version="7.0" editable="bottom">
+                <tree string="Journal Items" create="false" version="7.0" editable="bottom">
                    <field name="a1_id" position="after"/>
                    <field name="a2_id" position="after"/>
                    <field name="a3_id" position="after"/>
