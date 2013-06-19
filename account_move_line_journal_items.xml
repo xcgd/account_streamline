@@ -5,7 +5,7 @@
             <field name="name">account.move.line.tree.global</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
+                <tree_advanced_filter string="Journal Items" editable="bottom" create="false" version="7.0">
                     <field readonly="1" name="state"/>
                     <field readonly="1" name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
                     <field readonly="1" name="period_id"/>
@@ -30,7 +30,7 @@
                     <field readonly="1" name="a3_id"/>
                     <field readonly="1" name="a4_id"/>
                     <field readonly="1" name="a5_id"/>
-                </tree>
+                </tree_advanced_filter>
             </field>
         </record>
 
@@ -38,10 +38,11 @@
             <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree string="Lettrage Ecritures Compatble"
+                <tree_advanced_filter string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field readonly="1" name="state" />
+                    <field name="reconcile_id" string="reconcile"/>
                     <field readonly="1" name="period_id" />
                     <field readonly="1" name="ref" />
                     <field readonly="1" name="invoice" />
@@ -58,7 +59,7 @@
                     <field readonly="1" name="reconcile_id" />
                     <field readonly="1" name="reconcile_partial_id" />
                     <field readonly="1" name="date_reconcile" />
-                </tree>
+                </tree_advanced_filter>
             </field>
         </record>
 
@@ -83,8 +84,8 @@
             <field name="name">Full view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'complete_view':False, 'filter_wizard':'account'}</field>
+            <field name="view_mode">tree_advanced_filter</field>
+            <field name="context">{'complete_view':False, 'model_id': 'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -92,8 +93,8 @@
             <field name="name">Simple view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'simple_view':False, 'filter_wizard':'account'}</field>
+            <field name="view_mode">tree_advanced_filter</field>
+            <field name="context">{'simple_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -101,8 +102,8 @@
             <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False, 'filter_wizard':'account'}</field>
-            <field name="view_mode">tree,form</field>
+            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
+            <field name="view_mode">tree_advanced_filter</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
@@ -111,7 +112,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
             <field name="view_mode">tree_advanced_filter</field>
-            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard':'account'}</field>
+            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account_allocation'}</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.
