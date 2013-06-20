@@ -17,6 +17,15 @@
                         <field name="a4_id"/>
                         <field name="a5_id"/>
                     </group>
+                    <separator string="Dynamic Analytic"/>
+                    <group col="2" colspan="2">
+                        <field name="t1_ctl"/>
+                        <field name="t2_ctl"/>
+                        <field name="t3_ctl"/>
+                        <field name="t4_ctl"/>
+                        <field name="t5_ctl"/>
+                    </group>
+                    <separator/>
                 </xpath>
             </field>
         </record>
