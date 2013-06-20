@@ -370,10 +370,8 @@ class account_move_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
-        """
-        add a security check to ensure no one is
-        creating new account.move.line inside and already posted account.move
-        """
+        #add a security check to ensure no one is
+        #creating new account.move.line inside and already posted account.move
         #TODO : write proper tests!!!
         move_id = vals.get('move_id', False)
         if move_id and self.is_move_posted(cr, uid, move_id, context=context):
