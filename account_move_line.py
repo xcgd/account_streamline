@@ -59,7 +59,8 @@ class account_move_line(osv.osv):
             return None
         result = dict()
         for reconcile in reconcile_br:
-            result[reconcile.id] = reconcile.create_date
+            if reconcile.id !=0:
+                result[reconcile.id] = reconcile.create_date
         return result
 
     _columns = dict(

@@ -41,8 +41,9 @@
                 <tree_advanced_filter string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
+                    <field readonly="1" name="journal_id" invisible="1"/>
+                    <field readonly="1" name="internal_sequence_number" invisible="1"/>
                     <field readonly="1" name="state" />
-                    <field name="reconcile_id" string="reconcile"/>
                     <field readonly="1" name="period_id" />
                     <field readonly="1" name="ref" />
                     <field readonly="1" name="invoice" />
@@ -102,7 +103,7 @@
             <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
+            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
