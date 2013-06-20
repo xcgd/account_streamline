@@ -68,7 +68,7 @@
             <field name="name">Analytical View</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_journal_tree_global"/>
-            <field name="context">{'item_analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_journal'}</field>
+            <field name="context">{'item_analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
