@@ -102,7 +102,7 @@
             <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
+            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
@@ -112,7 +112,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
             <field name="view_mode">tree_advanced_filter</field>
-            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account_allocation'}</field>
+            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.
