@@ -87,7 +87,7 @@
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="context">{'complete_view':False, 'model_id': 'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
-            <field name="search_view_id" ref="view_move_line_search_global"/>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
         <record id="action_move_line_tree_simple" model="ir.actions.act_window">
@@ -96,7 +96,7 @@
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="context">{'simple_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
-            <field name="search_view_id" ref="view_move_line_search_global"/>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
         <record id="action_move_line_tree_analytic" model="ir.actions.act_window">
@@ -105,7 +105,7 @@
             <field name="view_id" ref="view_move_line_tree_global"/>
             <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
             <field name="view_mode">tree_advanced_filter</field>
-            <field name="search_view_id" ref="view_move_line_search_global"/>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
         <record id="action_move_line_tree_reconciliation" model="ir.actions.act_window">
@@ -114,6 +114,7 @@
             <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
             <field name="view_mode">tree_advanced_filter</field>
             <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account_allocation'}</field>
+            <field name="search_view_id" ref="account.view_account_move_line_filter"/>
             <field name="help" type="html">
                 <p>
                     No journal items found.
