@@ -34,7 +34,6 @@
                 </tree_advanced_filter>
             </field>
         </record>
-
         <record id="action_move_line_accounting_items_complete_tree"
                 model="ir.actions.act_window">
             <field name="name">Full View</field>
@@ -42,6 +41,7 @@
             <field name="view_id" ref="view_journal_tree_global"/>
             <field name="context">{'item_complete_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_journal'}</field>
             <field name="view_mode">tree_advanced_filter</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <record id="action_move_line_accounting_items_simple_tree"
@@ -51,6 +51,7 @@
             <field name="view_id" ref="view_journal_tree_global"/>
             <field name="context">{'item_simple_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_journal'}</field>
             <field name="view_mode">tree_advanced_filter</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
 
         <record id="action_move_line_accounting_items_analytic_tree"
@@ -60,6 +61,7 @@
             <field name="view_id" ref="view_journal_tree_global"/>
             <field name="context">{'item_analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
             <field name="view_mode">tree_advanced_filter</field>
+            <field name="search_view_id" ref="view_move_line_search_global"/>
         </record>
     </data>
 </openerp>

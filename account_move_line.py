@@ -40,31 +40,15 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
-        '''
-        function to calc reconciliation date.
-        '''
-        return {}
-        print "JE SUIS DANS LA FONCTION"
         reconcile_osv = self.pool.get("account.move.reconcile")
-        if not reconcile_osv:
-            print "Fail get reconcile_obj"
+        move_line_osv = self.pool.get("account.move.line")
+        result = {}
+        if (not reconcile_osv) or (not move_line_osv):
             return None
-        move_line_br = self.browse(cr, uid, ids, context=context)
-        if not move_line_br:
-            print "Fail get move_line_br"
-            return None
-        reconcile_ids = []
-        result = dict()
-        for move_line in move_line_br:
-            if move_line.reconcile_id.id:
-                reconcile_br = reconcile_osv.browse(cr, uid,
-                                                    move_line.reconcile_id.id,
-                                                    context=context)
-            if not reconcile_br:
-                print "FAIL"
-                return None
-            result[move_line.id] = reconcile.create_date
-        print result
+        move_lines = move_line_osv.browse(cr, uid, ids, context=context)
+        for move_line in move_lines:
+            result[move_line.id] = move_line.reconcile_id and move_line.reconcile_id.create_date or None
+
         return result
 
     _columns = dict(
@@ -86,7 +70,13 @@ class account_move_line(osv.osv):
                                        method=True,
                                        string="Reconcile Date",
                                        type='datetime',
-                                       store=True),
+                                       store={
+                                           'account.move.line': (
+                                               lambda cr, uid, ids, c={}: ids,
+                                               [''],
+                                               20
+                                           ),
+                                       }),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
