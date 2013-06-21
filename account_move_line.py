@@ -39,28 +39,31 @@ class account_move_line(osv.osv):
     _name = "account.move.line"
     _inherit = "account.move.line"
 
-    def get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
+    def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
+        '''
+        function to calc reconciliation date.
+        '''
+        print "JE SUIS DANS LA FONCTION"
         reconcile_osv = self.pool.get("account.move.reconcile")
-        move_line_osv = self.pool.get("account.move.line")
-        if (not reconcile_osv) or (not move_line_osv):
+        if not reconcile_osv:
+            print "Fail get reconcile_obj"
             return None
-        move_line_br = move_line_osv.browse(cr, uid, ids, context=context)
+        move_line_br = self.browse(cr, uid, ids, context=context)
         if not move_line_br:
+            print "Fail get move_line_br"
             return None
         reconcile_ids = []
-        for move_line in move_line_br:
-            print move_line.id
-            reconcile_ids.append(move_line.reconcile_id.id)
-        print reconcile_ids
-        reconcile_br = reconcile_osv.browse(cr, uid,
-                                            reconcile_ids,
-                                            context=context)
-        if not reconcile_br:
-            return None
         result = dict()
-        for reconcile in reconcile_br:
-            if reconcile.id !=0:
-                result[reconcile.id] = reconcile.create_date
+        for move_line in move_line_br:
+            if move_line.reconcile_id.id:
+                reconcile_br = reconcile_osv.browse(cr, uid,
+                                                    move_line.reconcile_id.id,
+                                                    context=context)
+            if not reconcile_br:
+                print "FAIL"
+                return None
+            result[move_line.id] = reconcile.create_date
+        print result
         return result
 
     _columns = dict(
@@ -78,35 +81,51 @@ class account_move_line(osv.osv):
                                  help="This is the credit "
                                       "amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
-        date_reconcile=fields.function(get_reconcile_date,
+        date_reconcile=fields.function(_get_reconcile_date,
                                        method=True,
                                        string="Reconcile Date",
                                        type='datetime',
-                                       store=False),
+                                       store=True),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '1')]),
-        a2_id=fields.many2one('analytic.code', "Analysis Code 1",
+        a2_id=fields.many2one('analytic.code', "Analysis Code 2",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '2')]),
-        a3_id=fields.many2one('analytic.code', "Analysis Code 1",
+        a3_id=fields.many2one('analytic.code', "Analysis Code 3",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '3')]),
-        a4_id=fields.many2one('analytic.code', "Analysis Code 1",
+        a4_id=fields.many2one('analytic.code', "Analysis Code 4",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '4')]),
-        a5_id=fields.many2one('analytic.code', "Analysis Code 1",
+        a5_id=fields.many2one('analytic.code', "Analysis Code 5",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
                                       ('nd_id.ns_id.ordering', '=', '5')]),
     )
 
+    def __modify_analysis_fields(self, doc, field, ans_dict, context):
+        '''
+        Factorization
+        '''
+        doc.xpath("//field[@name='%s']" % field)[0].\
+            set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
+                str(((not 'analytic_view' in context) and
+                     (not 'complete_view' in context) and
+                     (not 'item_complete_view' in context) and
+                     (not 'item_analytic_view' in context)) or
+                    (not '1' in ans_dict)).lower())
+
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
+        '''
+        Display analysis code in account move lines trees
+        '''
         if context is None:
             context = {}
         res = super(account_move_line, self).\
@@ -124,55 +143,24 @@ class account_move_line(osv.osv):
         ans_dict = dict()
         for ans in ans_br:
             ans_dict[ans.ordering] = ans.nd_id.name
-
         doc = etree.XML(res['arch'])
-
-        for field in res['fields']:
-            if field == 'a1_id':
-                res['fields'][field]['string'] = ans_dict.get('1', 'A1')
-                doc.xpath("//field[@name='a1_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                        str(((not 'analytic_view' in context) and
-                             (not 'complete_view' in context) and
-                             (not 'item_complete_view' in context) and
-                             (not 'item_analytic_view' in context)) or
-                            (not '1' in ans_dict)).lower())
-            if field == 'a2_id':
-                res['fields'][field]['string'] = ans_dict.get('2', 'A2')
-                doc.xpath("//field[@name='a2_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                        str(((not 'analytic_view' in context) and
-                             (not 'complete_view' in context) and
-                             (not 'item_complete_view' in context) and
-                             (not 'item_analytic_view' in context)) or
-                            (not '2' in ans_dict)).lower())
-            if field == 'a3_id':
-                res['fields'][field]['string'] = ans_dict.get('3', 'A3')
-                doc.xpath("//field[@name='a3_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                        str(((not 'analytic_view' in context) and
-                             (not 'complete_view' in context) and
-                             (not 'item_complete_view' in context) and
-                             (not 'item_analytic_view' in context)) or
-                            (not '3' in ans_dict)).lower())
-            if field == 'a4_id':
-                res['fields'][field]['string'] = ans_dict.get('4', 'A4')
-                doc.xpath("//field[@name='a4_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                        str(((not 'analytic_view' in context) and
-                             (not 'complete_view' in context) and
-                             (not 'item_complete_view' in context) and
-                             (not 'item_analytic_view' in context)) or
-                            (not '4' in ans_dict)).lower())
-            if field == 'a5_id':
-                res['fields'][field]['string'] = ans_dict.get('5', 'A5')
-                doc.xpath("//field[@name='a5_id']")[0].\
-                    set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                        str(((not 'analytic_view' in context) and
-                             (not 'complete_view' in context) and
-                             (not 'item_complete_view' in context) and
-                             (not 'item_analytic_view' in context)) or
-                            (not '5' in ans_dict)).lower())
+        if 'fields' in res:
+            field = res['fields']
+            if 'a1_id' in field:
+                field['a1_id']['string'] = ans_dict.get('1', 'A1')
+                self.__modify_analysis_fields(doc, 'a1_id', ans_dict, context)
+            if 'a2_id' in field:
+                field['a2_id']['string'] = ans_dict.get('2', 'A2')
+                self.__modify_analysis_fields(doc, 'a2_id', ans_dict, context)
+            if 'a3_id' in field:
+                field['a3_id']['string'] = ans_dict.get('3', 'A3')
+                self.__modify_analysis_fields(doc, 'a3_id', ans_dict, context)
+            if 'a4_id' in field:
+                field['a4_id']['string'] = ans_dict.get('4', 'A4')
+                self.__modify_analysis_fields(doc, 'a4_id', ans_dict, context)
+            if 'a5_id' in field:
+                field['a5_id']['string'] = ans_dict.get('5', 'A5')
+                self.__modify_analysis_fields(doc, 'a5_id', ans_dict, context)
 
         res['arch'] = etree.tostring(doc)
         return res
