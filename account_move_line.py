@@ -43,6 +43,7 @@ class account_move_line(osv.osv):
         '''
         function to calc reconciliation date.
         '''
+        return {}
         print "JE SUIS DANS LA FONCTION"
         reconcile_osv = self.pool.get("account.move.reconcile")
         if not reconcile_osv:
