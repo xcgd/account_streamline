@@ -88,19 +88,34 @@ class account_move(osv.Model):
         ans_dict = dict()
         for ans in ans_br:
             ans_dict[ans.ordering] = ans.nd_id.name
-        doc = etree.XML(res['arch'])
         if 'fields' in res and 'line_id' in res['fields']:
+            doc = etree.XML(res['fields']['line_id']['views']['tree']['arch'])
             line_fields = res['fields']['line_id']['views']['tree']['fields']
             if 'a1_id' in line_fields:
                 line_fields['a1_id']['string'] = ans_dict.get('1', 'A1')
+                doc.xpath("//field[@name='a1_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' % 
+                        str(not '1' in ans_dict).lower())
             if 'a2_id' in line_fields:
                 line_fields['a2_id']['string'] = ans_dict.get('2', 'A2')
+                doc.xpath("//field[@name='a2_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' % 
+                        str(not '2' in ans_dict).lower())
             if 'a3_id' in line_fields:
                 line_fields['a3_id']['string'] = ans_dict.get('3', 'A3')
+                doc.xpath("//field[@name='a3_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' % 
+                        str(not '3' in ans_dict).lower())
             if 'a4_id' in line_fields:
                 line_fields['a4_id']['string'] = ans_dict.get('4', 'A4')
+                doc.xpath("//field[@name='a4_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' % 
+                        str(not '4' in ans_dict).lower())
             if 'a5_id' in line_fields:
                 line_fields['a5_id']['string'] = ans_dict.get('5', 'A5')
-        res['arch'] = etree.tostring(doc)
+                doc.xpath("//field[@name='a5_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' % 
+                        str(not '5' in ans_dict).lower())
+            res['fields']['line_id']['views']['tree']['arch'] = etree.tostring(doc)
         return res
 

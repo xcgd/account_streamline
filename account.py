@@ -61,11 +61,11 @@ class account_analytic_structure(osv.Model):
     )
 
     _defaults = {
-        't1_ctl': 2,
-        't2_ctl': 2,
-        't3_ctl': 2,
-        't4_ctl': 2,
-        't5_ctl': 2,
+        't1_ctl': '2',
+        't2_ctl': '2',
+        't3_ctl': '2',
+        't4_ctl': '2',
+        't5_ctl': '2',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
