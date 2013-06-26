@@ -50,6 +50,7 @@
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                    <field name="tax_code_id" />
                                     <field name="date_maturity" invisible="1" />
                                     <field name="amount_currency" invisible="1" />
                                     <field name="state" invisible="1"/>
