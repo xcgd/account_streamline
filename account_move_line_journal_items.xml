@@ -5,7 +5,7 @@
             <field name="name">account.move.line.tree.global</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree_advanced_filter string="Journal Items" editable="bottom" create="false" version="7.0">
+                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
                     <field readonly="1" name="state"/>
                     <field readonly="1" name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
                     <field readonly="1" name="period_id"/>
@@ -31,7 +31,7 @@
                     <field readonly="1" name="a3_id"/>
                     <field readonly="1" name="a4_id"/>
                     <field readonly="1" name="a5_id"/>
-                </tree_advanced_filter>
+                </tree>
             </field>
         </record>
 
@@ -39,7 +39,7 @@
             <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree_advanced_filter string="Lettrage Ecritures Compatble"
+                <tree string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field readonly="1" name="journal_id" invisible="1"/>
@@ -61,7 +61,7 @@
                     <field readonly="1" name="reconcile_id" />
                     <field readonly="1" name="reconcile_partial_id" />
                     <field readonly="1" name="date_reconcile" />
-                </tree_advanced_filter>
+                </tree>
             </field>
         </record>
 
