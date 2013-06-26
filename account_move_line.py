@@ -51,6 +51,18 @@ class account_move_line(osv.osv):
 
         return result
 
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False, context=None):
+        '''
+        we override this function to set the date_maturity if it is not set
+        '''
+        res = super(account_move_line, self).onchange_partner_id(cr, uid, ids, move_id,
+                                                                 partner_id, account_id,
+                                                                 debit, credit, date, journal,
+                                                                 context)
+        if 'date_maturity' in res['value'] and not res['value']['date_maturity']:
+            res['value']['date_maturity'] = date
+        return res
+
     _columns = dict(
         currency_id=fields.many2one('res.currency',
                                     'Currency',
