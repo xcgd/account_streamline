@@ -168,20 +168,25 @@ class res_partner(osv.Model):
         for field in res['fields']:
             if field == 'a1_id':
                 res['fields'][field]['string'] = ans_dict.get('1', 'A1')
-                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '1' in ans_dict).lower())
+                doc.xpath("//field[@name='a1_id']")[0].set('modifiers', '{"invisible": %s, "tree_invisible": %s}' 
+                    % (str(not '1' in ans_dict).lower(), str(not '1' in ans_dict).lower()))
             if field == 'a2_id':
                 res['fields'][field]['string'] = ans_dict.get('2', 'A2')
-                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '2' in ans_dict).lower())
+                doc.xpath("//field[@name='a2_id']")[0].set('modifiers', '{"invisible": %s, "tree_invisible": %s}' 
+                    % (str(not '2' in ans_dict).lower(), str(not '2' in ans_dict).lower()))
             if field == 'a3_id':
                 res['fields'][field]['string'] = ans_dict.get('3', 'A3')
-                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '3' in ans_dict).lower())
+                doc.xpath("//field[@name='a3_id']")[0].set('modifiers', '{"invisible": %s, "tree_invisible": %s}' 
+                    % (str(not '3' in ans_dict).lower(), str(not '3' in ans_dict).lower()))
             if field == 'a4_id':
                 res['fields'][field]['string'] = ans_dict.get('4', 'A4')
-                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '4' in ans_dict).lower())
+                doc.xpath("//field[@name='a4_id']")[0].set('modifiers', '{"invisible": %s, "tree_invisible": %s}' 
+                    % (str(not '4' in ans_dict).lower(), str(not '4' in ans_dict).lower()))
             if field == 'a5_id':
                 res['fields'][field]['string'] = ans_dict.get('5', 'A5')
                 #res['fields'][field]['invisible'] = not '5' in ans_dict
-                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"invisible": %s}' % str(not '5' in ans_dict).lower())
+                doc.xpath("//field[@name='a5_id']")[0].set('modifiers', '{"invisible": %s, "tree_invisible": %s}' 
+                    % (str(not '5' in ans_dict).lower(), str(not '5' in ans_dict).lower()))
 
         res['arch'] = etree.tostring(doc)
 
