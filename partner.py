@@ -174,6 +174,12 @@ class res_partner(osv.Model):
     _inherit = 'res.partner'
 
     _columns = {
+        'siret': fields.char('SIRET', size=9),
+        'siren': fields.char('SIREN', size=9),
+        'turnover_1': fields.float('Turnover N-1'),
+        'turnover_2': fields.float('Turnover N-2'),
+        'workforce': fields.integer('Workforce'),
+
         'a1_id': fields.many2one(
             'analytic.code', "Analysis Code 1",
             domain=[
@@ -290,7 +296,8 @@ class res_partner(osv.Model):
                     'invisible': str(not '4' in ans_dict).lower()
                 }
             )
-
-        res['arch'] = etree.tostring(doc)
+        #bug when doc is converted in etree probably because of "pattern"
+        #currenlty all analytic structure are visible even if they are not existant
+        #res['arch'] = etree.tostring(doc)
 
         return res

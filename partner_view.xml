@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+         <!-- this changes the context for the called view to display pages only visible for partners -->
+        <record id="base.action_partner_supplier_form" model="ir.actions.act_window">
+            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1,'supplier_view': False}</field>
+        </record>
+
         <record id="view_partner_tree_analytic" model="ir.ui.view">
             <field name="name">res.partner.tree.analytic</field>
             <field name="model">res.partner</field>
@@ -17,32 +23,49 @@
             </field>
         </record>
 
-        <record id="view_partner_form_analytic" model="ir.ui.view">
+        <record id="view_partner_property_form_streamline" model="ir.ui.view">
             <field name="name">res.partner.form.analytic</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@string='History']" position="after">
-                    <page string="Analytic Static">
-                        <group>
-                            <field name="a1_id"/>
-                            <field name="a2_id"/>
-                            <field name="a3_id"/>
-                            <field name="a4_id"/>
-                            <field name="a5_id"/>
-                        </group>
-                    </page>
-		        </xpath>
+                <xpath expr="//field[@name='property_account_position']" position="before">
+                    <field name="siret"/>
+                    <field name="siren"/>
+                </xpath>
             </field>
         </record>
 
         <record id="view_partner_form_account_streamline" model="ir.ui.view">
-            <field name="name">res.partner.form.inherit.account.streamline</field>
+            <field name="name">res.partner.form.account.streamline</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
+                <!--<xpath expr="//field[@name='property_account_position']" position="before">
+                    <field name="siret"/>
+                    <field name="siren"/>
+                </xpath>-->
                 <data>
+                    <xpath expr="//notebook/page[@string='History']" position="after">
+                        <page string="Financial Inquiries" 
+                              invisible="context.get('supplier_view', True)">
+                            <group>
+                                <field name="turnover_1"/>
+                                <field name="turnover_2"/>
+                                <field name="workforce"/>
+                            </group>
+                        </page>
+                        <page string="Analytic Static">
+                            <group>
+                                <field name="a1_id"/>
+                                <field name="a2_id"/>
+                                <field name="a3_id"/>
+                                <field name="a4_id"/>
+                                <field name="a5_id"/>
+                            </group>
+                        </page>
+                    </xpath>
+
                     <xpath expr="//field[@name='property_account_receivable']" position="replace">
                         <field name="property_account_receivable" groups="account.group_account_invoice"
                                attrs="{'invisible': [('customer', '=', False)]}"/>
@@ -73,6 +96,17 @@
                         <field name="debit"
                                attrs="{'invisible': [('supplier', '=', False)]}"/>
                     </xpath>
+
+                    <!-- allow to define the title for an enterprise or a contact-->
+                    <xpath expr="//field[@name='title']" position="replace">
+                        <field name="title" domain="[('domain', '=', 'domain')]"/>
+                    </xpath>
+
+                    <!-- adding the title in the contact form-->
+                    <xpath expr="//field[@name='child_ids']/form/sheet/group/field[@name='function']" position="before">
+                        <field name="title" domain ="[('domain', '=', 'contact')]"/>
+                   </xpath>
+
                 </data>
             </field>
         </record>
