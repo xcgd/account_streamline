@@ -77,9 +77,11 @@ class res_partner_needaction(osv.Model):
 
     _columns = dict(
         supplier_account_check=fields.function(_check_supplier_account,
+                                               string='Check Supplier Account',
                                                type='boolean',
                                                store=True),
         customer_account_check=fields.function(_check_customer_account,
+                                               string='Check Customer Account',
                                                type='boolean',
                                                store=True),
     )
@@ -249,8 +251,8 @@ class res_partner(osv.Model):
 
         doc = etree.XML(res['arch'])
 
-        pattern = "{'invisible': %(invisible)s, "
-        "'tree_invisible': %(invisible)s}"
+        pattern = "{'invisible': %(invisible)s," \
+                  " 'tree_invisible': %(invisible)s}"
 
         if 'a1_id' in res['fields']:
             res['fields']['a1_id']['string'] = ans_dict.get('1', 'A1')
