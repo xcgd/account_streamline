@@ -251,8 +251,8 @@ class res_partner(osv.Model):
 
         doc = etree.XML(res['arch'])
 
-        pattern = "{'invisible': %(invisible)s," \
-                  " 'tree_invisible': %(invisible)s}"
+        pattern = '{"invisible": %(invisible)s,' \
+                  ' "tree_invisible": %(invisible)s}'
 
         if 'a1_id' in res['fields']:
             res['fields']['a1_id']['string'] = ans_dict.get('1', 'A1')
@@ -295,11 +295,10 @@ class res_partner(osv.Model):
             doc.xpath("//field[@name='a5_id']")[0].set(
                 'modifiers',
                 pattern % {
-                    'invisible': str(not '4' in ans_dict).lower()
+                    'invisible': str(not '5' in ans_dict).lower()
                 }
             )
-        #bug when doc is converted in etree probably because of "pattern"
-        #currenlty all analytic structure are visible even if they are not existant
-        #res['arch'] = etree.tostring(doc)
+
+        res['arch'] = etree.tostring(doc)
 
         return res
