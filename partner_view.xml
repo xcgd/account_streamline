@@ -87,7 +87,7 @@
 
                     <!-- allow to define the title for an enterprise or a contact-->
                     <xpath expr="//field[@name='title']" position="replace">
-                        <field name="title" domain="[('domain', '=', 'domain')]"/>
+                        <field name="title"/>
                     </xpath>
 
                     <!-- adding the title in the contact form-->
