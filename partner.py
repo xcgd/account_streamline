@@ -178,9 +178,6 @@ class res_partner(osv.Model):
     _columns = {
         'siret': fields.char('SIRET', size=9),
         'siren': fields.char('SIREN', size=9),
-        'turnover_1': fields.float('Turnover N-1'),
-        'turnover_2': fields.float('Turnover N-2'),
-        'workforce': fields.integer('Workforce'),
 
         'a1_id': fields.many2one(
             'analytic.code', "Analysis Code 1",
