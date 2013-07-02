@@ -41,20 +41,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <!--<xpath expr="//field[@name='property_account_position']" position="before">
-                    <field name="siret"/>
-                    <field name="siren"/>
-                </xpath>-->
                 <data>
                     <xpath expr="//notebook/page[@string='History']" position="after">
-                        <page string="Financial Inquiries" 
-                              invisible="context.get('supplier_view', True)">
-                            <group>
-                                <field name="turnover_1"/>
-                                <field name="turnover_2"/>
-                                <field name="workforce"/>
-                            </group>
-                        </page>
                         <page string="Analytic Static">
                             <group>
                                 <field name="a1_id"/>
