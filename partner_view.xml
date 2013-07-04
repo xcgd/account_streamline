@@ -72,7 +72,7 @@
                                attrs="{'invisible': [('supplier', '=', False)]}"/>
                     </xpath>
 
-                    <!-- allow to define the title for an enterprise or a contact-->
+                    <!-- allow to define the title for an enterprise or a contact we delete the invisible conditions of attrs attribute -->
                     <xpath expr="//field[@name='title']" position="replace">
                         <field name="title"/>
                     </xpath>
