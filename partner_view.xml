@@ -43,7 +43,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook/page[@string='History']" position="after">
-                        <page string="Analytic Static">
+                        <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
                             <group>
                                 <field name="a1_id"/>
                                 <field name="a2_id"/>
