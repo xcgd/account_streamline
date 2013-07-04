@@ -84,7 +84,51 @@ class res_partner_needaction(osv.Model):
                                                string='Check Customer Account',
                                                type='boolean',
                                                store=True),
+        siret=fields.char('SIRET', size=9),
+        siren=fields.char('SIREN', size=9),
+
+        a1_id=fields.many2one(
+            'analytic.code', "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'res_partner'),
+                ('nd_id.ns_id.ordering', '=', '1'),
+            ]
+        ),
+        a2_id=fields.many2one(
+            'analytic.code', "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'res_partner'),
+                ('nd_id.ns_id.ordering', '=', '2'),
+            ]
+        ),
+        a3_id=fields.many2one(
+            'analytic.code', "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'res_partner'),
+                ('nd_id.ns_id.ordering', '=', '3'),
+            ]
+        ),
+        a4_id=fields.many2one(
+            'analytic.code', "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'res_partner'),
+                ('nd_id.ns_id.ordering', '=', '4'),
+            ]
+        ),
+        a5_id=fields.many2one(
+            'analytic.code', "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'res_partner'),
+                ('nd_id.ns_id.ordering', '=', '5'),
+            ]
+        ),
     )
+    
+    ##################################################
+    # -------------------Override------------------- #
+    ##################################################
+    
+    # Needaction mechanism stuff
 
     def create(self, cr, uid, values, context=None):
         """ Override to control notifications """
@@ -170,59 +214,21 @@ class res_partner_needaction(osv.Model):
             dom = ['|'] + mydom + dom
 
         return dom
-
-
-class res_partner(osv.Model):
-    _inherit = 'res.partner'
-
-    _columns = {
-        'siret': fields.char('SIRET', size=9),
-        'siren': fields.char('SIREN', size=9),
-
-        'a1_id': fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '1'),
-            ]
-        ),
-        'a2_id': fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '2'),
-            ]
-        ),
-        'a3_id': fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '3'),
-            ]
-        ),
-        'a4_id': fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '4'),
-            ]
-        ),
-        'a5_id': fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '5'),
-            ]
-        ),
-    }
+    
+    # View stuff
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
+        """
+        Override filds_view_get to display analytic dimensions using
+        analytic structure on res_partner
+        """
+
         if context is None:
             context = {}
 
         res = super(
-            res_partner, self
+            res_partner_needaction, self
         ).fields_view_get(
             cr, uid, view_id=view_id,
             view_type=view_type, context=context,
@@ -299,3 +305,4 @@ class res_partner(osv.Model):
         res['arch'] = etree.tostring(doc)
 
         return res
+
