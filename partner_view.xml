@@ -23,19 +23,6 @@
             </field>
         </record>
 
-        <record id="view_partner_property_form_streamline" model="ir.ui.view">
-            <field name="name">res.partner.form.analytic</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="account.view_partner_property_form"/>
-            <field eval="5" name="priority"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='property_account_position']" position="before">
-                    <field name="siret"/>
-                    <field name="siren"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_partner_form_account_streamline" model="ir.ui.view">
             <field name="name">res.partner.form.account.streamline</field>
             <field name="model">res.partner</field>
@@ -98,6 +85,20 @@
                 </data>
             </field>
         </record>
+
+        <record id="view_partner_property_form_streamline" model="ir.ui.view">
+            <field name="name">res.partner.form.analytic</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_account_position']" position="before">
+                    <field name="siret"/>
+                    <field name="siren"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_res_partner_filter_account_streamline" model="ir.ui.view">
             <field name="name">res.partner.select.inherit.account.streamline</field>
             <field name="model">res.partner</field>
