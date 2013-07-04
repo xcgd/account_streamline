@@ -1,27 +1,492 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* account_move_line_listing
+#	* account_streamline
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-11 13:23+0000\n"
-"PO-Revision-Date: 2013-02-11 13:23+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2013-07-04 13:32+0000\n"
+"PO-Revision-Date: 2013-07-04 16:16+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
 
-#. module: account_move_line_listing
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Reconciliation"
+msgstr "Lettrage"
+
+#. module: account_streamline
+#: model:mail.message.subtype,description:account_streamline.mt_partner_customer
+#: field:res.partner,customer_account_check:0
+msgid "Check Customer Account"
+msgstr "Verifier compte client"
+
+#. module: account_streamline
+#: field:account.move.line,date_reconcile:0
+msgid "Reconcile Date"
+msgstr "Date de lettrage"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_complete_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_complete
+msgid "Full View"
+msgstr "Vue complète"
+
+#. module: account_streamline
+#: view:account.move:0
+msgid "Add an internal note..."
+msgstr "Ajouter une note interne"
+
+#. module: account_streamline
+#: constraint:res.partner:0
+msgid "You cannot create recursive Partner hierarchies."
+msgstr "Vous ne pouvez pas créer des hiérarichies de partenaires recursives"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+#: view:account.move.line.reconcile:0
+msgid "or"
+msgstr "ou"
+
+#. module: account_streamline
+#: field:res.partner,siren:0
+msgid "SIREN"
+msgstr ""
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+msgid "Payment method"
+msgstr "mode de paiement"
+
+#. module: account_streamline
+#: field:account.account,t1_ctl:0
+msgid "T1 control"
+msgstr "Contrôle T1"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_move_line_reconcile
+msgid "Account move line reconcile"
+msgstr "Bloc de lettrage"
+
+#. module: account_streamline
+#: model:ir.ui.menu,name:account_streamline.menu_journal_inquiries
+msgid "Journal Inquiries"
+msgstr "Recherche par journal"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,debit_curr:0
+msgid "Debit amount"
+msgstr "Montant Débit"
+
+#. module: account_streamline
+#: view:account.account:0
+msgid "Dynamic Analytic"
+msgstr "Analytique Dynamique"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+msgid "Are you sure?"
+msgstr "Etes-vous sûr(e) ?"
+
+#. module: account_streamline
+#: view:account.move.line:0
+msgid "Total Debit T"
+msgstr "Débit Total T"
+
+#. module: account_streamline
+#: view:account.move:0
+msgid "Cancel Entry"
+msgstr "Annuler écriture"
+
+#. module: account_streamline
+#: field:account.account,t4_ctl:0
+msgid "T4 control"
+msgstr "Contrôle T4"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,force_by_base:0
+msgid "Reconcile by base currency"
+msgstr "Lettrer par devise de base"
+
+#. module: account_streamline
+#: view:res.partner:0
+msgid "Unread"
+msgstr "Non-lu"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: account_streamline
+#: field:res.users,employee_id:0
+msgid "unknown"
+msgstr "inconnu"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,journal_id:0
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_streamline
+#: model:mail.message.subtype,description:account_streamline.mt_partner_supplier
+#: field:res.partner,supplier_account_check:0
+msgid "Check Supplier Account"
+msgstr "Vérifier le compte fournisseur"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_simple
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_simple
+msgid "Simple view"
+msgstr "Vue simple"
+
+#. module: account_streamline
+#: view:account.move.line:0
+msgid "Lettrage Ecritures Compatble"
+msgstr "Lettrage des Ecritures Comptables"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,help:account_streamline.action_move_line_tree_reconciliation
+msgid ""
+"<p>\n"
+"                    No journal items found.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    Pas de journaux trouvés.\n"
+"                </p>\n"
+"            "
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Write-Off"
+msgstr "Ecart de réglement"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,company_currency_id:0
+msgid "Company Currency"
+msgstr "Devise de l'entreprise"
+
+#. module: account_streamline
+#: field:account.move.line,credit_curr:0
+msgid "Credit T"
+msgstr "Crédit T"
+
+#. module: account_streamline
+#: field:account.account,t5_ctl:0
+msgid "T5 control"
+msgstr "Contrôle T5"
+
+#. module: account_streamline
+#: constraint:account.move.line:0
+msgid "If you see this, the constraint redefined in account_streamline.account_move_line._check_currency_company is not working!"
+msgstr "Si vous voyez ceci, la contrainte redéfinie dans account_streamline.account_move_line.check_currency_company ne marche pas !"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_analytic_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_analytic
+msgid "Analytical View"
+msgstr "Vue Analytique"
+
+#. module: account_streamline
+#: view:account.move:0
+#: view:account.move.line:0
+#: model:ir.model,name:account_streamline.model_account_move_line
+msgid "Journal Items"
+msgstr "Ecritures Journaux"
+
+#. module: account_streamline
+#: view:account.move:0
+msgid "Post"
+msgstr "Poster"
+
+#. module: account_streamline
+#: model:mail.message.subtype,name:account_streamline.mt_partner_supplier
+msgid "Supplier"
+msgstr "Fournisseur"
+
+#. module: account_streamline
+#: selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0
+#: selection:account.account,t5_ctl:0
+msgid "Optional"
+msgstr "Optionnel"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Reconcile With Write-Off"
+msgstr "Lettrer avec un écart de réglement"
+
+#. module: account_streamline
+#: model:mail.message.subtype,name:account_streamline.mt_partner_customer
+msgid "Customer"
+msgstr "Client"
+
+#. module: account_streamline
+#: model:ir.ui.menu,name:account_streamline.menu_account_inquiries
+msgid "Account Inquiries"
+msgstr "Recherche par compte"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_account
+msgid "Account"
+msgstr "Compte"
+
+#. module: account_streamline
+#: view:account.move.line:0
+msgid "Total Credit T"
+msgstr "Credit total T"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,credit_curr:0
+msgid "Credit amount"
+msgstr "Montant Crédit"
+
+#. module: account_streamline
+#: view:res.partner:0
+msgid "Show messages to read"
+msgstr "Affiche les messages à lire"
+
+#. module: account_streamline
+#: field:account.account,t2_ctl:0
+msgid "T2 control"
+msgstr "contrôle T2"
+
+#. module: account_streamline
+#: field:account.move.line,move_state:0
+msgid "status"
+msgstr "Etat"
+
+#. module: account_streamline
+#: view:account.move.line:0
+msgid "Journal Search"
+msgstr "Recherche journal"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Partial Reconcile"
+msgstr "Lettrage partiel"
+
+#. module: account_streamline
+#: help:account.move.line,debit_curr:0
+msgid "This is the debit amount in transaction currency"
+msgstr "Représente le montant débit dans une monnaie de transaction"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_readonly
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_readonly
+msgid "Journal Items Listing"
+msgstr "Liste des ecritures journaux"
+
+#. module: account_streamline
+#: view:account.move.line:0
+#: view:res.partner:0
+msgid "Analytic Static"
+msgstr "Statique Analytique"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_analytic
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_analytic
+msgid "Analytical view"
+msgstr "Vue Analytique"
+
+#. module: account_streamline
+#: field:res.partner,siret:0
+msgid "SIRET"
+msgstr ""
+
+#. module: account_streamline
+#: selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0
+#: selection:account.account,t5_ctl:0
+msgid "Mandatory"
+msgstr "Obligatoire"
+
+#. module: account_streamline
+#: field:account.move.line.reconcile,trans_currency_id:0
+msgid "Transaction Currency"
+msgstr "Devise de transaction"
+
+#. module: account_streamline
+#: view:account.move:0
+#: view:account.move.line:0
+msgid "Total Debit"
+msgstr "Total Débit"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+#: model:ir.actions.act_window,name:account_streamline.action_mark_as_good_to_pay
+msgid "Mark as good to pay"
+msgstr "Bon à payer"
+
+#. module: account_streamline
 #: view:account.move.line:0
 msgid "Reconciled"
 msgstr "Lettré"
 
-#. module: account_move_line_listing
+#. module: account_streamline
+#: field:account.move.line.reconcile,writeoff_curr:0
+msgid "Write-Off amount"
+msgstr "Ecart de réglement"
+
+#. module: account_streamline
+#: view:account.account:0
+msgid "Static Analytic"
+msgstr "Analytique statique"
+
+#. module: account_streamline
+#: view:account.move:0
+#: model:ir.model,name:account_streamline.model_account_move
+msgid "Account Entry"
+msgstr "Ecriture comptable"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Reconcile"
+msgstr "Lettrage"
+
+#. module: account_streamline
+#: view:account.move.line.reconcile:0
+msgid "Reconciliation Transactions"
+msgstr "transaction de lettrage"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_reconciliation
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_reconcile
+msgid "Account Allocation"
+msgstr "Attribution de compte"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_move_line_goodtopay
+msgid "Payment selection for good to pay"
+msgstr "selection de paiment bon à payer"
+
+#. module: account_streamline
+#: selection:account.account,t1_ctl:0
+#: selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0
+#: selection:account.account,t4_ctl:0
+#: selection:account.account,t5_ctl:0
+msgid "Forbidden"
+msgstr "Interdit"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_complete
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_complete
+msgid "Full view"
+msgstr "Vue complète"
+
+#. module: account_streamline
+#: field:account.move.line,currency_rate:0
+msgid "Used rate"
+msgstr "Taux utilisé"
+
+#. module: account_streamline
 #: view:account.move.line:0
 msgid "Reconciled Journal Items"
-msgstr "Ligne lettrées"
+msgstr "Lignes lettrées"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_voucher_line
+msgid "Voucher Lines"
+msgstr "Lignes d'ordre de paiement"
+
+#. module: account_streamline
+#: view:account.move:0
+#: view:account.move.line:0
+msgid "Total Credit"
+msgstr "Total Crédit"
+
+#. module: account_streamline
+#: field:account.move.line,debit_curr:0
+msgid "Debit T"
+msgstr "Débit T"
+
+#. module: account_streamline
+#: field:account.move.line.goodtopay,sure:0
+msgid "Check this box"
+msgstr "Cochez cette case"
+
+#. module: account_streamline
+#: field:account.account,t3_ctl:0
+msgid "T3 control"
+msgstr "Contrôle T3"
+
+#. module: account_streamline
+#: model:mail.group,name:account_streamline.group_account_creators
+msgid "Accounts"
+msgstr "Comptes"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_payment
+#: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_payment
+msgid "Payments Selection"
+msgstr "Selection de paiement"
+
+#. module: account_streamline
+#: help:account.move.line,credit_curr:0
+msgid "This is the credit amount in transaction currency"
+msgstr "Représente le montant du crédit dans une devise de transaction"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+#: view:account.move.line.reconcile:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_streamline
+#: model:ir.model,name:account_streamline.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: account_streamline
+#: field:account.account,a4_id:0
+#: field:account.move.line,a4_id:0
+msgid "Analysis Code 4"
+msgstr "Analytique Code 4"
+
+#. module: account_streamline
+#: field:account.account,a5_id:0
+#: field:account.move.line,a5_id:0
+msgid "Analysis Code 5"
+msgstr "Analytique Code 5"
+
+#. module: account_streamline
+#: field:account.account,a2_id:0
+#: field:account.move.line,a2_id:0
+msgid "Analysis Code 2"
+msgstr "Analytique Code 2"
+
+#. module: account_streamline
+#: field:account.account,a3_id:0
+#: field:account.move.line,a3_id:0
+msgid "Analysis Code 3"
+msgstr "Analytique Code 3"
+
+#. module: account_streamline
+#: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_simple_tree
+#: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_simple
+msgid "Simple View"
+msgstr "Vue simple"
+
+#. module: account_streamline
+#: field:account.account,a1_id:0
+#: field:account.move.line,a1_id:0
+#: field:res.partner,a1_id:0
+#: field:res.partner,a2_id:0
+#: field:res.partner,a3_id:0
+#: field:res.partner,a4_id:0
+#: field:res.partner,a5_id:0
+msgid "Analysis Code 1"
+msgstr "Analytique Code 1"
 
