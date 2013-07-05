@@ -1,6 +1,8 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
 #	* account_streamline
+#   * account
+#   * mail
 #
 msgid ""
 msgstr ""
@@ -14,6 +16,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
+
+
+#. module: mail
+#: field:res.partner,notification_email_send:0
+msgid "Receive Messages by Email"
+msgstr "Recevoir Messages par Email"
+
+#. module: mail
+#: field:mail.mail:0
+#: selection:res.partner,notification_email_send:0
+msgid "Never"
+msgstr "Jamais"
+
+#. module: mail
+#: field:mail.mail:0
+#: selection:res.partner,notification_email_send:0
+msgid "Incoming Emails only"
+msgstr "Emails entrant uniquement"
+
+#. module: mail
+#: field:mail.mail:0
+#: selection:res.partner,notification_email_send:0
+msgid "Incoming Emails and Discussions"
+msgstr "Emails entrant et Discussions"
+
+#. module: mail
+#: field:mail.mail:0
+#: selection:res.partner,notification_email_send:0
+msgid "All Messages (discussions, emails, followed system notifications)"
+msgstr "Tous les Messages (discussions, emails, suivi du système de notifications)"
+
+#. module: account
+#: field:res.partner,last_reconciliation_date:0
+msgid "Latest Full Reconciliation Date"
+msgstr "Date dernier lettrage complet"
 
 #. module: account_streamline
 #: view:account.move.line.reconcile:0
@@ -302,6 +339,8 @@ msgstr "Vue Analytique"
 #: field:res.partner,siret:0
 msgid "SIRET"
 msgstr ""
+
+
 
 #. module: account_streamline
 #: selection:account.account,t1_ctl:0
