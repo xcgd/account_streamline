@@ -84,7 +84,7 @@ class res_partner_needaction(osv.Model):
                                                string='Check Customer Account',
                                                type='boolean',
                                                store=True),
-        siret=fields.char('SIRET', size=9),
+        siret=fields.char('SIRET', size=14),
         siren=fields.char('SIREN', size=9),
 
         a1_id=fields.many2one(
@@ -124,6 +124,11 @@ class res_partner_needaction(osv.Model):
         ),
     )
     
+    #To prevent partner duplication
+    _sql_constraints = [ 
+        ('name', 'UNIQUE (name)', 'The name of the partner must be unique !') 
+    ] 
+
     ##################################################
     # -------------------Override------------------- #
     ##################################################
