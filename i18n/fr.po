@@ -21,7 +21,7 @@ msgstr ""
 #. module: mail
 #: field:res.partner,notification_email_send:0
 msgid "Receive Messages by Email"
-msgstr "Recevoir Messages par Email"
+msgstr "Recevoir des messages par email"
 
 #. module: mail
 #: field:mail.mail:0
