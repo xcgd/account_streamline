@@ -4,6 +4,7 @@
         <record id="view_move_line_tree_global" model="ir.ui.view">
             <field name="name">account.move.line.tree.global</field>
             <field name="model">account.move.line</field>
+            <field name="priority" eval="0"/>
             <field name="arch" type="xml">
                 <tree string="Journal Items" editable="bottom" create="false" version="7.0">
                     <field readonly="1" name="state"/>
