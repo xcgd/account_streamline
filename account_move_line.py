@@ -134,7 +134,7 @@ class account_move_line(osv.osv):
                 _test = False
                 break
         doc.xpath("//field[@name='%s']" % field)[0].\
-            set('modifiers', '{"tree_invisible": %s}' %
+            set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
                 str(_test).lower())
 
     def __render_columns(self, doc, arch, context):

@@ -7,31 +7,31 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <list string="Journal Items" editable="bottom" create="false" version="7.0">
-                    <field name="state" />
-                    <field name="partner_id"/>
-                    <field name="period_id"/>
-                    <field name="journal_id"/>
-                    <field name="internal_sequence_number"/>
-                    <field name="ref"/>
-                    <field name="date"/>
-                    <field name="date_maturity"/>
-                    <field name="date_created"/>
-                    <field name="invoice"/>
-                    <field name="account_id"/>
-                    <field name="name"/>
-                    <field name="date_reconcile"/>
-                    <field name="narration"/>
-                    <field name="debit_curr" sum="Total Debit T"/>
-                    <field name="credit_curr" sum="Total Credit T"/>
-                    <field name="currency_id"/>
-                    <field name="debit" sum="Total Debit"/>
-                    <field name="credit" sum="Total Credit"/>
-                    <field name="account_tax_id"/>
-                    <field name="a1_id"/>
-                    <field name="a2_id"/>
-                    <field name="a3_id"/>
-                    <field name="a4_id"/>
-                    <field name="a5_id"/>
+                    <field readonly="1" name="state" />
+                    <field readonly="1" name="partner_id"/>
+                    <field readonly="1" name="period_id"/>
+                    <field readonly="1" name="journal_id"/>
+                    <field readonly="1" name="internal_sequence_number"/>
+                    <field readonly="1" name="ref"/>
+                    <field readonly="1" name="date"/>
+                    <field readonly="1" name="date_maturity"/>
+                    <field readonly="1" name="date_created"/>
+                    <field readonly="1" name="invoice"/>
+                    <field readonly="1" name="account_id"/>
+                    <field readonly="1" name="name"/>
+                    <field readonly="1" name="date_reconcile"/>
+                    <field readonly="1" name="narration"/>
+                    <field readonly="1" name="debit_curr" sum="Total Debit T"/>
+                    <field readonly="1" name="credit_curr" sum="Total Credit T"/>
+                    <field readonly="1" name="currency_id"/>
+                    <field readonly="1" name="debit" sum="Total Debit"/>
+                    <field readonly="1" name="credit" sum="Total Credit"/>
+                    <field readonly="1" name="account_tax_id"/>
+                    <field readonly="1" name="a1_id"/>
+                    <field readonly="1" name="a2_id"/>
+                    <field readonly="1" name="a3_id"/>
+                    <field readonly="1" name="a4_id"/>
+                    <field readonly="1" name="a5_id"/>
                 </list>
             </field>
         </record>
