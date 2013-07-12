@@ -4,35 +4,35 @@
         <record id="view_move_line_tree_global" model="ir.ui.view">
             <field name="name">account.move.line.tree.global</field>
             <field name="model">account.move.line</field>
-            <field name="priority" eval="0"/>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
-                    <field readonly="1" name="state"/>
-                    <field readonly="1" name="partner_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="period_id"/>
-                    <field readonly="1" name="journal_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="internal_sequence_number" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
-                    <field readonly="1" name="ref"/>
-                    <field readonly="1" name="date" invisible="context.get('analytic_view', True)"/>
-                    <field readonly="1" name="date_maturity" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
-                    <field readonly="1" name="date_created" invisible="context.get('complete_view', True) and context.get('item_complete_view', True)" />
-                    <field readonly="1" name="invoice"/>
-                    <field readonly="1" name="account_id"/>
-                    <field readonly="1" name="name"/>
-                    <field readonly="1" name="date_reconcile"/>
-                    <field readonly="1" name="narration"/>
-                    <field readonly="1" name="debit_curr" sum="Total Debit T"/>
-                    <field readonly="1" name="credit_curr" sum="Total Credit T"/>
-                    <field readonly="1" name="currency_id" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="debit" sum="Total Debit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="credit" sum="Total Credit" invisible="context.get('complete_view', True) and context.get('simple_view', True) and context.get('item_complete_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="account_tax_id" invisible="context.get('complete_view', True) and context.get('analytic_view', True) and context.get('item_complete_view', True) and context.get('item_analytic_view', True) and context.get('item_simple_view', True)" />
-                    <field readonly="1" name="a1_id"/>
-                    <field readonly="1" name="a2_id"/>
-                    <field readonly="1" name="a3_id"/>
-                    <field readonly="1" name="a4_id"/>
-                    <field readonly="1" name="a5_id"/>
-                </tree>
+                <list string="Journal Items" editable="bottom" create="false" version="7.0">
+                    <field name="state" />
+                    <field name="partner_id"/>
+                    <field name="period_id"/>
+                    <field name="journal_id"/>
+                    <field name="internal_sequence_number"/>
+                    <field name="ref"/>
+                    <field name="date"/>
+                    <field name="date_maturity"/>
+                    <field name="date_created"/>
+                    <field name="invoice"/>
+                    <field name="account_id"/>
+                    <field name="name"/>
+                    <field name="date_reconcile"/>
+                    <field name="narration"/>
+                    <field name="debit_curr" sum="Total Debit T"/>
+                    <field name="credit_curr" sum="Total Credit T"/>
+                    <field name="currency_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="a1_id"/>
+                    <field name="a2_id"/>
+                    <field name="a3_id"/>
+                    <field name="a4_id"/>
+                    <field name="a5_id"/>
+                </list>
             </field>
         </record>
 
@@ -40,7 +40,7 @@
             <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree string="Lettrage Ecritures Compatble"
+                <list string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field readonly="1" name="journal_id" invisible="1"/>
@@ -62,7 +62,7 @@
                     <field readonly="1" name="reconcile_id" />
                     <field readonly="1" name="reconcile_partial_id" />
                     <field readonly="1" name="date_reconcile" />
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -87,8 +87,8 @@
             <field name="name">Full view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree_advanced_filter</field>
-            <field name="context">{'complete_view':False, 'model_id': 'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
+            <field name="view_mode">list</field>
+            <field name="context">{'advanced_filter':True, 'complete_view':False, 'model_id': 'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
             <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
@@ -96,8 +96,8 @@
             <field name="name">Simple view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="view_mode">tree_advanced_filter</field>
-            <field name="context">{'simple_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
+            <field name="view_mode">list</field>
+            <field name="context">{'advanced_filter':True, 'simple_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account'}</field>
             <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
@@ -105,8 +105,8 @@
             <field name="name">Analytical view</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_global"/>
-            <field name="context">{'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
-            <field name="view_mode">tree_advanced_filter</field>
+            <field name="context">{'advanced_filter':True, 'analytic_view':False, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_analytic'}</field>
+            <field name="view_mode">list</field>
             <field name="search_view_id" ref="account.view_account_move_line_filter"/>
         </record>
 
@@ -114,8 +114,8 @@
             <field name="name">Account Allocation</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_account_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_advanced_filter</field>
-            <field name="context">{'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account_allocation'}</field>
+            <field name="view_mode">list</field>
+            <field name="context">{'advanced_filter':True, 'reconcile_view':False,'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_account_allocation'}</field>
             <field name="search_view_id" ref="account.view_account_move_line_filter"/>
             <field name="help" type="html">
                 <p>

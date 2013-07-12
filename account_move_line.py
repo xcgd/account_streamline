@@ -123,6 +123,96 @@ class account_move_line(osv.osv):
                      (not 'item_analytic_view' in context)) or
                     (not '1' in ans_dict)).lower())
 
+    def __set_column_invisible_by_context(self, doc, arch,
+                                          field, list_test,
+                                          context):
+        if not field in arch:
+            return
+        _test = True
+        for test in list_test:
+            if test in context:
+                _test = False
+                break
+        doc.xpath("//field[@name='%s']" % field)[0].\
+            set('modifiers', '{"tree_invisible": %s}' %
+                str(_test).lower())
+
+    def __render_columns(self, doc, arch, context):
+        #Set the columns invisible depending on the context
+        self.__set_column_invisible_by_context(
+            doc, arch, 'partner_id',
+            ['complete_view',
+             'analytic_view',
+             'item_complete_view',
+             'item_analytic_view',
+             'item_simple_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'journal_id',
+            ['complete_view',
+             'simple_view',
+             'item_complete_view',
+             'item_analytic_view',
+             'item_simple_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'internal_sequence_number',
+            ['complete_view',
+             'item_complete_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'date',
+            ['analytic_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'date_maturity',
+            ['complete_view',
+             'item_complete_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'date_created',
+            ['complete_view',
+             'item_complete_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'currency_id',
+            ['complete_view',
+             'simple_view',
+             'item_complete_view',
+             'item_simple_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'debit',
+            ['complete_view',
+             'simple_view',
+             'item_complete_view',
+             'item_simple_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'credit',
+            ['complete_view',
+             'simple_view',
+             'item_complete_view',
+             'item_simple_view'],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'account_tax_id',
+            ['complete_view',
+             'analytic_view',
+             'item_complete_view',
+             'item_analytic_view',
+             'item_simple_view'],
+            context
+        )
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
@@ -164,6 +254,7 @@ class account_move_line(osv.osv):
             if 'a5_id' in field:
                 field['a5_id']['string'] = ans_dict.get('5', 'A5')
                 self.__modify_analysis_fields(doc, 'a5_id', ans_dict, context)
+            self.__render_columns(doc, res['fields'], context)
 
         res['arch'] = etree.tostring(doc)
         return res
