@@ -403,12 +403,12 @@ msgstr "transaction de lettrage"
 #: model:ir.actions.act_window,name:account_streamline.action_move_line_tree_reconciliation
 #: model:ir.ui.menu,name:account_streamline.menu_action_account_move_line_reconcile
 msgid "Account Allocation"
-msgstr "Attribution de compte"
+msgstr "Lettrage de Comptes"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_move_line_goodtopay
 msgid "Payment selection for good to pay"
-msgstr "selection de paiment bon à payer"
+msgstr "Sélection de paiment bon à payer"
 
 #. module: account_streamline
 #: selection:account.account,t1_ctl:0
