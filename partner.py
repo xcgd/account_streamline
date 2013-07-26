@@ -33,7 +33,8 @@ class res_partner_needaction(osv.Model):
         res = dict()
         for partner in self.browse(cr, uid, ids, context=context):
             account = account_osv.browse(
-                cr, uid, partner.property_account_payable.id)
+                cr, uid, partner.property_account_payable.id
+            )
 
             payable = account.type == 'payable'
             res[partner.id] = partner.supplier and not payable
@@ -123,16 +124,16 @@ class res_partner_needaction(osv.Model):
             ]
         ),
     )
-    
+
     #To prevent partner duplication
-    _sql_constraints = [ 
-        ('name', 'UNIQUE (name)', 'The name of the partner must be unique !') 
-    ] 
+    _sql_constraints = [
+        ('name', 'UNIQUE (name)', 'The name of the partner must be unique !')
+    ]
 
     ##################################################
     # -------------------Override------------------- #
     ##################################################
-    
+
     # Needaction mechanism stuff
 
     def create(self, cr, uid, values, context=None):
@@ -219,7 +220,7 @@ class res_partner_needaction(osv.Model):
             dom = ['|'] + mydom + dom
 
         return dom
-    
+
     # View stuff
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
