@@ -31,27 +31,42 @@ class res_partner_needaction(osv.Model):
     def _check_supplier_account(self, cr, uid, ids, name, args, context=None):
         account_osv = self.pool.get('account.account')
         res = dict()
-        for partner in self.browse(cr, uid, ids, context=context):
-            account = account_osv.browse(
-                cr, uid, partner.property_account_payable.id
-            )
+        partners = self.browse(cr, uid, ids, context=context)
 
-            payable = account.type == 'payable'
-            res[partner.id] = partner.supplier and not payable
+        for partner in partners:
+
+            acc_pay = partner.property_account_payable
+            if acc_pay and acc_pay.id:
+                account = account_osv.browse(
+                    cr, uid, acc_pay.id, context=context
+                )
+
+                payable = account.type == 'payable'
+                res[partner.id] = partner.supplier and not payable
+
+            else:
+                res[partner.id] = False
 
         return res
 
     def _check_customer_account(self, cr, uid, ids, name, args, context=None):
         account_osv = self.pool.get('account.account')
         res = dict()
-        for partner in self.browse(cr, uid, ids, context=context):
-            account = account_osv.browse(
-                cr, uid,
-                partner.property_account_receivable.id
-            )
+        partners = self.browse(cr, uid, ids, context=context)
 
-            receivable = account.type == 'receivable'
-            res[partner.id] = partner.customer and not receivable
+        for partner in partners:
+
+            acc_rec = partner.property_account_receivable
+            if acc_rec and acc_rec.id:
+                account = account_osv.browse(
+                    cr, uid, acc_rec.id
+                )
+
+                receivable = account.type == 'receivable'
+                res[partner.id] = partner.customer and not receivable
+
+            else:
+                res[partner.id] = False
 
         return res
 
@@ -311,4 +326,3 @@ class res_partner_needaction(osv.Model):
         res['arch'] = etree.tostring(doc)
 
         return res
-
