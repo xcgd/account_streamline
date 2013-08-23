@@ -369,7 +369,7 @@ class account_move_line(osv.osv):
 
         #compute debit and credit in transaction currency when not provided
         #this should happen only with generated transaction, not with manual entries
-        if not amount_trans == 0.0:
+        if not amount_trans == 0.0 and not vals.get('_manual_write', False):
             vals['debit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
             vals['credit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans < 0.0 and -amount_trans)
 
@@ -401,6 +401,7 @@ class account_move_line(osv.osv):
             ids = [ids]
 
         #processing vals to get complete multicurrency data
+        vals['_manual_write'] = True
         vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
         #enforce stricter security rules on
