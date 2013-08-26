@@ -96,6 +96,15 @@ class good_to_pay(osv.osv_memory):
                             journal.default_debit_account_id.id
 
                         vals['account_id'] = account_id
+                        
+                        bank_osv = self.pool.get("res.partner.bank")
+                        bank_id =  bank_osv.search(
+                            cr, uid, [('partner_id', '=', partner_id)],
+                            context=context
+                        )
+
+                        if bank_id:
+                            vals['partner_bank_id'] = bank_id[0]
 
                         voucher_id = voucher_osv.create(cr, uid, vals,
                                                         context=context)
