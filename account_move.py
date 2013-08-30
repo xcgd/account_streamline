@@ -44,7 +44,6 @@ class account_move(osv.Model):
                     #line_dict[aml.name.encode('utf8')] = dim_list
                     tmp = [aml.name.encode('utf8')]
                     tmp.append(dim_list)
-                    print tmp
                     lines += tmp
             #if lines:
                 #move_dict[move.ref.encode('utf8')] = line_dict
