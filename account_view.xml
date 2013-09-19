@@ -11,6 +11,9 @@
                 <xpath expr="//label[@for='note']" position="before">
                     <separator string="Static Analytic"/>
                     <group col="2" colspan="2">
+                        <field name="balance_curr"/>
+                        <field name="credit_curr"/>
+                        <field name="debit_curr"/>
                         <field name="a1_id"/>
                         <field name="a2_id"/>
                         <field name="a3_id"/>
@@ -19,6 +22,9 @@
                     </group>
                     <separator string="Dynamic Analytic"/>
                     <group col="2" colspan="2">
+                        <field name="balance_curr"/>
+                        <field name="credit_curr"/>
+                        <field name="debit_curr"/>
                         <field name="t1_ctl"/>
                         <field name="t2_ctl"/>
                         <field name="t3_ctl"/>
@@ -36,6 +42,9 @@
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="balance_curr"/>
+                    <field name="credit_curr"/>
+                    <field name="debit_curr"/>
                     <field name="a1_id"/>
                     <field name="a2_id"/>
                     <field name="a3_id"/>
