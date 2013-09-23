@@ -22,8 +22,6 @@
 from openerp.osv import fields, osv
 from lxml import etree
 
-import openerp.addons.decimal_precision as dp
-
 CTL_SELECTION = (
     ('1', 'Mandatory'),
     ('2', 'Optional'),
@@ -34,79 +32,7 @@ class account_analytic_structure(osv.Model):
     _name = 'account.account'
     _inherit = 'account.account'
 
-    # _compute_balance_curr imitates account.__compute
-    def _compute_balance_curr(self, cr, uid, ids, field_names, arg=None,
-            context=None, query='', query_params=()):
-        """ compute the balance, debit and/or credit for the provided
-        account ids
-        Arguments:
-        `ids`: account ids
-        `field_names`: the fields to compute (a list of any of
-                       'balance', 'debit' and 'credit')
-        `arg`: unused fields.function stuff
-        `query`: additional query filter (as a string)
-        `query_params`: parameters for the provided query string
-                        (__compute will handle their escaping) as a
-                        tuple
-        """
-        mapping = {
-            'balance_curr': "COALESCE(SUM(l.debit_curr),0) - COALESCE(SUM(l.credit_curr), 0) as balance_curr",
-            'debit_curr': "COALESCE(SUM(l.debit_curr), 0) as debit_curr",
-            'credit_curr': "COALESCE(SUM(l.credit_curr), 0) as credit_curr",
-        }
-        #get all the necessary accounts
-        children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
-        #compute for each account the balance/debit/credit from the move lines
-        accounts = {}
-        res = {}
-        null_result = dict((fn, 0.0) for fn in field_names)
-        if children_and_consolidated:
-            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-
-            wheres = [""]
-            if query.strip():
-                wheres.append(query.strip())
-            if aml_query.strip():
-                wheres.append(aml_query.strip())
-            filters = " AND ".join(wheres)
-            request = ("SELECT l.account_id as id, " +\
-                       ', '.join(mapping.values()) +
-                       " FROM account_move_line l" \
-                       " WHERE l.account_id IN %s " \
-                            + filters +
-                       " GROUP BY l.account_id")
-            params = (tuple(children_and_consolidated),) + query_params
-            cr.execute(request, params)
-
-            for row in cr.dictfetchall():
-                accounts[row['id']] = row
-
-            # consolidate accounts with direct children
-            children_and_consolidated.reverse()
-            brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
-            sums = {}
-            currency_obj = self.pool.get('res.currency')
-            while brs:
-                current = brs.pop(0)
-                for fn in field_names:
-                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                    for child in current.child_id:
-                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                            sums[current.id][fn] += sums[child.id][fn]
-                        else:
-                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-
-            for id in ids:
-                res[id] = sums.get(id, null_result)
-        else:
-            for id in ids:
-                res[id] = null_result
-        return res
-
     _columns = dict(
-        balance_curr=fields.function(_compute_balance_curr, digits_compute=dp.get_precision('Account'), string='Balance T', multi='balance_curr'),
-        credit_curr=fields.function(_compute_balance_curr, digits_compute=dp.get_precision('Account'), string='Credit T', multi='balance_curr'),
-        debit_curr=fields.function(_compute_balance_curr, digits_compute=dp.get_precision('Account'), string='Debit T', multi='balance_curr'),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name',
                                        '=', 'account_account'),
