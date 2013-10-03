@@ -298,7 +298,7 @@ Pour tout renseignement, merci de contacter Sandra Brunet, responsable des achat
         <report id="account_streamline.payment_notice"
                 name="payment.notice"
                 auto="False"
-                model="payment_notice"
+                model="account.voucher"
                 file="account_streamline/report/payment_notice.mako"
                 string="Payment Notice"
                 webkit_header="account_streamline.header_base_portrait_numergy"
