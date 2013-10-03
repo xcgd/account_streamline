@@ -33,6 +33,7 @@
         'account_move_line_journal_view.xml',
         'account_menu_entries.xml',
         'report/payment_notice.xml',
+        'res_company.xml',
     ],
     #'demo_xml': [],
     'test': [],

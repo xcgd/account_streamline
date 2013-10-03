@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_res_company_messages" model="ir.ui.view">
+            <field name="name">view.res_company_messages</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Configuration']" position="after">
+                    <page string="Messages">
+                        <separator string="Message for Payment Notice" colspan="4" />
+                        <field name="message_voucher_draft"/>
+                        <separator string="Message for Payment" colspan="4" />
+                        <field name="message_voucher_validate" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

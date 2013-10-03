@@ -8,3 +8,4 @@ import payment_selection
 import report
 import wizard
 import res_user
+import res_company
