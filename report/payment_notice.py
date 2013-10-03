@@ -18,9 +18,9 @@ class payment_notice_parser(report_sxw.rml_parse):
 
     def get_message(self, this_br):
        company = this_br.partner_id.bank_ids.company_id
-       if this_br.state = 'draft':
+       if this_br.state == 'draft':
            return company.message_voucher_draft
-       if this_br.state = 'posted':
+       if this_br.state == 'posted':
            return company.message_voucher_validate
 
     def sepa_generated(self, this_br):
