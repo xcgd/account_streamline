@@ -63,7 +63,7 @@ class good_to_pay(osv.osv_memory):
         """
         return {
             'type': 'ir.actions.report.xml',
-            'name': 'account_streamline.payment_notice',
+            'report_name': 'account_streamline.payment_notice',
             'data': {}
         }
 
@@ -76,7 +76,10 @@ class good_to_pay(osv.osv_memory):
         supplier_to_voucher_map = dict()
         voucher_amounts = dict()
 
+        action = {'type': 'ir.actions.act_window_close'}
+
         for form in self.read(cr, uid, ids, context=context):
+            auto = form['auto_validate']
             for aml in aml_osv.browse(
                     cr, uid, context['active_ids'], context=context):
 
@@ -162,7 +165,10 @@ class good_to_pay(osv.osv_memory):
                 voucher_osv.write(
                     cr, uid, [voucher_id],
                     {'amount': voucher_amounts[voucher_id]})
+            if auto:
+                voucher_brs = voucher_osv.browse(cr, uid, voucher_amounts.keys(), context)
+                for voucher_br in voucher_brs:
+                    voucher_br._workflow_signal('proforma_voucher')
+                action = self.generate_report(cr, uid, False, context)
 
-
-        self.generate_report(cr, uid, False, context)
-        return {'type': 'ir.actions.act_window_close'}
+        return action
