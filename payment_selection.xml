@@ -8,11 +8,12 @@
             <field name="arch" type="xml">
                 <form string="Mark as good to pay" version="7.0">
                     <group string="Are you sure?">
-                        <field name="sure"/>
-                        <field name="journal_id" string="Payment method"/>
+                        <field name="journal_id"/>
+                        <field name="auto_validate" />
+                        <field name="line_ids" />
                     </group>
                     <footer>
-                        <button string="Mark as good to pay" name="good_to_pay" type="object" class="oe_highlight"/>
+                        <button string="Validate" name="good_to_pay" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
