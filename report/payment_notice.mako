@@ -1,8 +1,8 @@
 <style type="text/css">
 ${css}
 
-thead {
-    text-align: left;
+.line td {
+    text-align: center;
 }
 
 .payment_notice_header_sep {
