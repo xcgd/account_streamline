@@ -1,6 +1,10 @@
 <style type="text/css">
 ${css}
 
+thead {
+    text-align: left;
+}
+
 .payment_notice_header_sep {
     clear: both;
     margin-top: 50px;
@@ -10,9 +14,9 @@ ${css}
 }
 
 .payment_notice_total {
-    margin-top: 50px;
+    margin-top: 30px;
     font-weight: bold;
-    font-size x-large;
+    font-size 50em;
 }
 
 </style>
@@ -41,13 +45,13 @@ ${css}
             <td>${ line.date_original }</td>
             <td>${ format_amount(line.amount, object) }</td>
             <td>${ line.type }</td>
-            <td>${ get_currency(line) }</td>
+            <td>${ line.currency_id.name }</td>
             <td>${ format_amount(line.untax_amount, object) }</td>
         </tr>
         %endfor
     </tbody>
 </table>
 
-<div class="payment_notice_total">${ format_amount(total, object) }</div>
+<div class="payment_notice_total">${ format_amount(object.amount, object) }</div>
 
 %endfor
