@@ -16,7 +16,7 @@ ${css}
 .payment_notice_total {
     margin-top: 30px;
     font-weight: bold;
-    font-size 50em;
+    font-size 150em;
 }
 
 </style>
@@ -44,7 +44,7 @@ ${css}
             <td>${ line.name }</td>
             <td>${ line.date_original }</td>
             <td>${ format_amount(line.amount, object) }</td>
-            <td>${ line.type }</td>
+            <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
             <td>${ format_amount(line.untax_amount, object) }</td>
         </tr>
@@ -52,6 +52,6 @@ ${css}
     </tbody>
 </table>
 
-<div class="payment_notice_total">${ format_amount(object.amount, object) }</div>
+<div class="payment_notice_total">${ _('Total:') } ${ format_amount(object.amount, object) }</div>
 
 %endfor

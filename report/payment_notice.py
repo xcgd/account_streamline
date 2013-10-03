@@ -12,10 +12,14 @@ class payment_notice_parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payment_notice_parser, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
+            'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'message': self.get_message,
             'sepa_generated': self.sepa_generated,
         })
+
+    def get_debit_credit(self, br):
+        return _('Debit') if br.type == 'debit' else _('Credit')
 
     def format_amount(self, amount, br):
         # little check
