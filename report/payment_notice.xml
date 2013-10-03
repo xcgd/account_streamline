@@ -62,72 +62,6 @@ table {
     padding: 10px;
 }
 
-/* order info */
-
-.orderinfo {
-    float: left;
-    font-weight: bold;
-    font-size: 12px;
-    margin: 10px;
-    margin-top: 30px;
-    text-align: center;
-    text-transform: uppercase;
-    width: 100%;
-}
-
-.orderinfo span.text {
-    padding: 10px;
-}
-
-/* address */
-
-.address {
-    clear: both;
-    float: left;
-    width: 100%;
-}
-
-.address table {
-    margin-left: 100px;
-    text-align: left;
-}
-
-.address table th {
-    font-size: 10px;
-    padding-bottom: 4px;
-}
-
-.address table td {
-    font-size: 12px;
-}
-
-.addressleft,
-.addressright {
-    width: 50%;
-    margin: 20px 0;
-}
-
-.addressleft {
-    float: left;
-}
-
-.addressright {
-    float: right;
-}
-
-.address .shipping,
-.address .invoice,
-.address .recipient {
-    margin-top: 10px;
-}
-
-.address td.addresstitle {
-    font-weight: bold;
-}
-
-.address td.name {
-}
-
 /* table */
 
 .basic_table {
@@ -266,7 +200,7 @@ ${css}
 <% setLang(order.partner_id.lang) %>
 <div class="header">
     <div class="logo">${helper.embed_logo_by_name('logo_numergy')|n}</div>
-    <div class="title">${ _(u'Order') }</div>
+    <div class="title">${ _(u'Payment Notice') }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
@@ -284,7 +218,9 @@ ${css}
 ${css}
 </style>
 <div class="note">
-Pour tout renseignement, merci de contacter Sandra Brunet, responsable des achats, &agrave; l&#x2019;email suivant purchase@numergy.com.<br/>Toute facture devra &ecirc;tre envoy&eacute;e &agrave; billing@numergy.com et comporter le num&eacute;ro de bon de commande Numergy.<br/>Toute facture ne comprenant pas cette information sera rejet&eacute;e.
+    Pour tout renseignement, merci de contacter le service comptabilit&eacute;, &agrave; l'email suivant : billing@numergy.com
+    <br/><br/>
+    Service comptabilit&eacute;
 </div>
 <p class="footer">${objects[0].partner_id.company_id.name} - ${objects[0].partner_id.company_id.company_registry} - ${objects[0].partner_id.company_id.vat}</p>
 <br/>
@@ -302,7 +238,7 @@ Pour tout renseignement, merci de contacter Sandra Brunet, responsable des achat
                 file="account_streamline/report/payment_notice.mako"
                 string="Payment Notice"
                 webkit_header="account_streamline.header_base_portrait_numergy"
-                attachment="'BDC-' + object.name"
+                attachment="'AR-' + object.name"
                 report_type="webkit"
                 attachment_use="True"
                 usage="default"/>

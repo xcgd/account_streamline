@@ -12,9 +12,17 @@ class payment_notice_parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payment_notice_parser, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
+            'get_currency': self.get_currency,
+            'format_amount': self.format_amount,
             'message': self.get_message,
             'sepa_generated': self.sepa_generated,
         })
+
+    def get_currency(self, br):
+        return 'EUR'  # TODO
+
+    def format_amount(self, amount, br):
+        return 1.23  # TODO
 
     def get_message(self, this_br):
        company = this_br.partner_id.bank_ids.company_id
