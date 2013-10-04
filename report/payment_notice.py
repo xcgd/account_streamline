@@ -41,10 +41,11 @@ class payment_notice_parser(report_sxw.rml_parse):
        company = this_br.company_id
        if not company:
            return ''
-       if this_br.state == 'draft':
-           return company.message_voucher_draft
+       iban = this_br.partner_bank_id.acc_number
+       date = this_br.date
        if this_br.state == 'posted':
-           return company.message_voucher_validate
+           return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
+       return ''
 
     def sepa_generated(self, this_br):
         if this_br.batch_id:

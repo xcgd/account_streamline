@@ -6,6 +6,10 @@ class res_company(osv.Model):
     _inherit = "res.company"
 
     _columns = {
-        'message_voucher_draft': fields.text('Message Voucher Draft'),
-        'message_voucher_validate': fields.text('Message Voucher Validate'),
+        'message_voucher_validate': fields.text(
+            'Message Voucher Validate',
+            help="""This message will be print in the voucher payment report.
+            You can print the iban using `$iban` and the date of the payment
+            with `$date`."""
+        ),
     }
