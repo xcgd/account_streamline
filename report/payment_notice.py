@@ -38,7 +38,7 @@ class payment_notice_parser(report_sxw.rml_parse):
         return amount.strip()
 
     def get_message(self, this_br):
-       company = this_br.partner_id.bank_ids[0].company_id
+       company = this_br.company_id
        if not company:
            return ''
        if this_br.state == 'draft':
