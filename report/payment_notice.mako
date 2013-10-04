@@ -18,7 +18,15 @@ ${css}
 
 .payment_notice_total {
     margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
     text-align: right;
+}
+
+.payment_notice_sepa {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
 }
 
 </style>
@@ -95,5 +103,13 @@ ${css}
 </table>
 
 <h2 class="payment_notice_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
+
+%if object.batch_id:
+<h2 class="payment_notice_sepa">
+    ${ _('Sepa:') }<br/>
+    ${ object.batch_id.wording }<br/>
+    ${ object.batch_id.execution_date }
+</h2>
+%endif
 
 %endfor
