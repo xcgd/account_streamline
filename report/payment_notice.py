@@ -16,7 +16,6 @@ class payment_notice_parser(report_sxw.rml_parse):
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'message': self.get_message,
-            'sepa_generated': self.sepa_generated,
         })
 
     def get_debit_credit(self, br):
@@ -47,10 +46,6 @@ class payment_notice_parser(report_sxw.rml_parse):
            return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
        return ''
 
-    def sepa_generated(self, this_br):
-        if this_br.batch_id:
-            return True
-        return False
 
 class payment_notice_report(WebKitParser):
     def remove_previous(self, cr, uid, ids, context=None):
