@@ -11,6 +11,9 @@ ${css}
 }
 
 .payment_notice_message {
+    clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .payment_notice_total {
@@ -20,11 +23,51 @@ ${css}
 
 </style>
 
+%for object in objects:
+<% setLang(object.partner_id.lang) %>
+
 <div class="payment_notice_header_sep">&nbsp;</div>
 
-%for object in objects:
+<div class="address">
+    <div class="addressright">
+        <table class="recipient">
+            <tr><th class="addresstitle">${ _("Supplier address") } :</th></tr>
+            %if object.partner_id.parent_id:
+            <tr><td class="name">${object.partner_id.parent_id.name or ''}</td></tr>
+            <% address_lines = object.partner_id.contact_address.split("\n")[1:] %>
+            %else:
+            <% address_lines = object.partner_id.contact_address.split("\n") %>
+            %endif
+            <tr><td class="name">${object.partner_id.title and object.partner_id.title.name or ''} ${object.partner_id.name }</td></tr>
+            %for part in address_lines:
+                %if part:
+                <tr><td>${part}</td></tr>
+                %endif
+            %endfor
+        </table>
+    </div>
+    <div class="addressleft">
+        <table class="shipping">
+            <tr><th class="addresstitle">${ _("Shipping address") } :</th></tr>
+            %if object.company_id.partner_id.parent_id:
+            <tr><td class="name">${object.company_id.partner_id.parent_id.name or ''}</td></tr>
+            <% address_lines = object.company_id.partner_id.contact_address.split("\n")[1:] %>
+            %else:
+            <% address_lines = object.company_id.partner_id.contact_address.split("\n") %>
+            %endif
+            <tr><td class="name">${object.company_id.partner_id.title and object.company_id.partner_id.title.name or ''} ${object.company_id.partner_id.name }</td></tr>
+            %for part in address_lines:
+                %if part:
+                <tr><td>${ part }</td></tr>
+                %endif
+            %endfor
+            <tr><td>${object.partner_id.email}</td></tr>
+       </table>
+    </div>
+</div>
 
-<div class="payment_notice_message">${ message(object) }</div>
+<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
+<h2 class="payment_notice_message">${ message(object) }</h2>
 
 <table class="list_table">
     <thead>
@@ -51,7 +94,6 @@ ${css}
     </tbody>
 </table>
 
-<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_notice_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
 
 %endfor
