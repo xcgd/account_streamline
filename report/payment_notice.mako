@@ -15,8 +15,7 @@ ${css}
 
 .payment_notice_total {
     margin-top: 30px;
-    font-weight: bold;
-    font-size 150em;
+    text-align: right;
 }
 
 </style>
@@ -52,6 +51,7 @@ ${css}
     </tbody>
 </table>
 
-<div class="payment_notice_total">${ _('Total:') } ${ format_amount(object.amount, object) }</div>
+<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
+<h2 class="payment_notice_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
 
 %endfor
