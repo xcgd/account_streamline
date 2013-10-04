@@ -25,7 +25,7 @@ class payment_notice_parser(report_sxw.rml_parse):
     def format_amount(self, amount, br):
         # little check
         if not amount:
-            return ''
+            return '0.00'
         # shortcut
         position = br.currency_id.position
         symbol = br.currency_id.symbol
