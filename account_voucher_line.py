@@ -25,7 +25,7 @@ import openerp.addons.decimal_precision as dp
 
 class account_voucher_line(osv.osv):
     """override the store=True on amount_original and amount_unreconciled
-    to make sure that even if a line if changed or the invoice partially paid
+    to make sure that even if a line is changed or the invoice partially paid
     the voucher calculation is up to date (this makes the supplier payment
     process work as expected even if another voucher partially or totally paid
     the invoice before a voucher tries to pay the same invoice.
