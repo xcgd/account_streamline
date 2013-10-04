@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <!-- the wizard which will launch the refresh -->
         <record id="view_account_move_line_goodtopay" model="ir.ui.view">
             <field name="name">account.move.line.goodtopay.form</field>
