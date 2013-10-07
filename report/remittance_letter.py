@@ -12,16 +12,14 @@ class remittance_letter_parser(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(remittance_letter_parser, self).__init__(cr, uid, name, context=context)
-#         self.__check_vouchers(cr, uid, context['active_ids'], context)
-        # TODO __check_vouchers doesn't work from other classes that don't
-        # fill context['active_ids']
+        self.__check_vouchers(cr, uid, context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'message': self.get_message,
         })
 
-    def __check_vouchers(self, cr, uid, ids, context=None):
+    def __check_vouchers(self, cr, uid, context=None):
         """ This function check if the message for payment
         is set in the company settings and raise in the other case.
         """
