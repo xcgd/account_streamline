@@ -5,7 +5,7 @@ from openerp.tools.translate import _
 
 class account_voucher(osv.Model):
     _inherit = "account.voucher"
-    
+
     def email_remittance_letters(self, cr, uid, ids, context=None):
         ''' Send one email for each selected voucher; the email template
         should generate attachments automagically. '''
@@ -57,7 +57,7 @@ class account_voucher(osv.Model):
             'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False, })
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher.line_ids:
-            #create one move line per voucher line where amount is not 0.0
+            # create one move line per voucher line where amount is not 0.0
             # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
             if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
                 continue
@@ -155,7 +155,7 @@ class account_voucher(osv.Model):
                     'move_id': move_id,
                     'partner_id': line.voucher_id.partner_id.id,
                     'currency_id': line.move_line_id.currency_id.id,
-                    'amount_currency': -1 * foreign_currency_diff,
+                    'amount_currency':-1 * foreign_currency_diff,
                     'quantity': 1,
                     'credit': 0.0,
                     'debit': 0.0,
