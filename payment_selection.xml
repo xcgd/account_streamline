@@ -8,9 +8,9 @@
             <field name="model">account.move.line.goodtopay</field>
             <field name="arch" type="xml">
                 <form string="Mark as good to pay" version="7.0">
-                    <group string="Are you sure?">
+                    <group string="Are you sure?" cols="2" colspan="4">
                         <field name="journal_id" />
-                        <!--FEATURE> <field name="auto_validate" / -->
+                        <field name="generate_report" />
                         <field name="line_ids" />
                     </group>
                     <footer>

@@ -46,7 +46,7 @@ class good_to_pay(osv.osv_memory):
             'good_to_pay_id',
             _('Lines'),
         ),
-        'auto_validate': fields.boolean('Good To Pay'),
+        'generate_report': fields.boolean('Generate Report'),
     }
 
     def default_get(self, cr, uid, field_list=None, context=None):
@@ -57,14 +57,15 @@ class good_to_pay(osv.osv_memory):
         vals['line_ids'] = move_lines
         return vals
 
-    def generate_report(self, cr, uid, report_type, context=None):
+    def _generate_report(self, cr, uid, active_ids, context=None):
         """ function to generate report with some parameters
         to select the sentence to print in the report
         """
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_streamline.remittance_letter',
-            'data': {}
+            'datas': {'ids': active_ids,
+                     'model': 'account.voucher'},
         }
 
     def good_to_pay(self, cr, uid, ids, context=None):
@@ -79,7 +80,7 @@ class good_to_pay(osv.osv_memory):
         action = {'type': 'ir.actions.act_window_close'}
 
         for form in self.read(cr, uid, ids, context=context):
-            auto = form['auto_validate']
+            auto = form['generate_report']
             for aml in aml_osv.browse(
                     cr, uid, context['active_ids'], context=context):
 
@@ -166,9 +167,6 @@ class good_to_pay(osv.osv_memory):
                     cr, uid, [voucher_id],
                     {'amount': voucher_amounts[voucher_id]})
             if auto:
-                voucher_brs = voucher_osv.browse(cr, uid, voucher_amounts.keys(), context)
-                for voucher_br in voucher_brs:
-                    voucher_br._workflow_signal('proforma_voucher')
-                action = self.generate_report(cr, uid, False, context)
+                action = self._generate_report(cr, uid, voucher_amounts.keys(), context)
 
         return action
