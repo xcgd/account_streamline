@@ -12,11 +12,25 @@ class payment_notice_parser(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(payment_notice_parser, self).__init__(cr, uid, name, context=context)
+        self.__check_vouchers(cr, uid, context['active_ids'], context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'message': self.get_message,
         })
+
+    def __check_vouchers(self, cr, uid, ids, context=None):
+        """ This function check if the message for payment
+        is set in the company settings and raise in the other case.
+        """
+        voucher_osv = self.pool.get('account.voucher')
+        voucher_br = voucher_osv.browse(cr, uid, ids[0], context)
+        if not voucher_br.company_id.message_voucher_validate:
+            raise osv.except_osv(
+                _('Error'),
+                _('Please set the message for payments'
+                  ' in your company settings.')
+            )
 
     def get_debit_credit(self, br):
         return _('Debit') if br.type == 'debit' else _('Credit')
