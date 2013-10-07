@@ -15,8 +15,8 @@ class account_voucher(osv.Model):
         template_ids = email_template_obj.search(cr, uid,
             [('report_name', '=', 'RemittanceLetter.pdf')], context=context)
         if not template_ids:
-            raise osv.except_osv('Error', 'No email template found which'
-                                 'generates RemittanceLetter reports')
+            raise osv.except_osv(_('Error'), _('No email template found '
+                'which generates RemittanceLetter reports'))
 
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
