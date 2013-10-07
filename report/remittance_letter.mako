@@ -29,6 +29,12 @@ ${css}
     border: 1px #000000 solid;
 }
 
+.remittance_letter_voucher_name {
+	clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
 </style>
 
 %for object in objects:
@@ -75,10 +81,11 @@ ${css}
 </div>
 
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
-<h2 class="remittance_letter_message">
-	${ object.name }<br/>
-	${ message(object) }
-</h2>
+<h2 class="remittance_letter_voucher_name">${ object.name }</h2>
+
+%if object.state == 'posted':
+<h2 class="remittance_letter_message">${ message(object) }</h2>
+%endif
 
 <table class="list_table">
     <thead>
