@@ -5,6 +5,25 @@ from openerp.tools.translate import _
 
 class account_voucher(osv.Model):
     _inherit = "account.voucher"
+    
+    def email_remittance_letters(self, cr, uid, ids, context=None):
+        ''' Send one email for each selected voucher; the email template
+        should generate attachments automagically. '''
+
+        # Grab the email template.
+        email_template_obj = self.pool.get('email.template')
+        template_ids = email_template_obj.search(cr, uid,
+            [('report_name', '=', 'RemittanceLetter.pdf')], context=context)
+        if not template_ids:
+            raise osv.osv_except('Error', 'No email template found which'
+                                 'generates RemittanceLetter reports')
+
+        # Send 1 email per voucher. force_send=True to send instantly rather
+        # than scheduling for later delivery.
+        vouchers = self.browse(cr, uid, ids, context=context)
+        for voucher in vouchers:
+            email_template_obj.send_mail(cr, uid, template_ids[0],
+                voucher.id, force_send=True, context=context)
 
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
