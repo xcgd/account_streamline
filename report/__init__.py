@@ -1,1 +1,1 @@
-import payment_notice
+import remittance_letter

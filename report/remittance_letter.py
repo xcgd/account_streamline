@@ -8,10 +8,10 @@ from osv import osv
 from report_webkit.webkit_report import WebKitParser
 
 
-class payment_notice_parser(report_sxw.rml_parse):
+class remittance_letter_parser(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(payment_notice_parser, self).__init__(cr, uid, name, context=context)
+        super(remittance_letter_parser, self).__init__(cr, uid, name, context=context)
         self.__check_vouchers(cr, uid, context['active_ids'], context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
@@ -61,7 +61,7 @@ class payment_notice_parser(report_sxw.rml_parse):
        return ''
 
 
-class payment_notice_report(WebKitParser):
+class remittance_letter_report(WebKitParser):
     def remove_previous(self, cr, uid, ids, context=None):
         # get attachement model
         ir_att_osv = pooler.get_pool(cr.dbname).get('ir.attachment')
@@ -79,11 +79,11 @@ class payment_notice_report(WebKitParser):
         # remove previous items
         self.remove_previous(cr, uid, ids, context=context)
         # call parent
-        return super(payment_notice_report, self).create(cr, uid, ids, datas, context)
+        return super(remittance_letter_report, self).create(
+            cr, uid, ids, datas, context)
 
 
-payment_notice_report('report.account_streamline.payment_notice',
-               'account.voucher',
-               'addons/account_streamline/report'
-               '/payment_notice.mako',
-               parser=payment_notice_parser)
+remittance_letter_report('report.account_streamline.remittance_letter',
+                         'account.voucher',
+                         'addons/account_streamline/report/remittance_letter.mako',
+                         parser=remittance_letter_parser)

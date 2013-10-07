@@ -249,7 +249,7 @@ ${css}
 <% setLang(order.partner_id.lang) %>
 <div class="header">
     <div class="logo">${helper.embed_logo_by_name('logo_numergy')|n}</div>
-    <div class="title">${ _(u'Payment Notice') }</div>
+    <div class="title">${ _(u'Remittance Letter') }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
@@ -280,12 +280,12 @@ ${css}
 ]]></field>
         </record>
 
-        <report id="account_streamline.payment_notice"
-                name="account_streamline.payment_notice"
+        <report id="account_streamline.remittance_letter"
+                name="account_streamline.remittance_letter"
                 auto="False"
                 model="account.voucher"
-                file="account_streamline/report/payment_notice.mako"
-                string="Payment Notice"
+                file="account_streamline/report/remittance_letter.mako"
+                string="Remittance Letter"
                 webkit_header="account_streamline.header_base_portrait_numergy"
                 attachment="'AR-' + object.name"
                 report_type="webkit"

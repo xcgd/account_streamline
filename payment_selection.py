@@ -63,7 +63,7 @@ class good_to_pay(osv.osv_memory):
         """
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'account_streamline.payment_notice',
+            'report_name': 'account_streamline.remittance_letter',
             'data': {}
         }
 
