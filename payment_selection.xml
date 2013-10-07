@@ -9,34 +9,37 @@
             <field name="arch" type="xml">
                 <form string="Mark as good to pay" version="7.0">
                     <group string="Are you sure?">
-                        <field name="journal_id"/>
-                        <!--FEATURE>
-                        <field name="auto_validate" /-->
+                        <field name="journal_id" />
+                        <!--FEATURE> <field name="auto_validate" / -->
                         <field name="line_ids" />
                     </group>
                     <footer>
-                        <button string="Validate" name="good_to_pay" type="object" class="oe_highlight"/>
+                        <button string="Validate" name="good_to_pay"
+                            type="object" class="oe_highlight" />
                         or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
-               </form>
+                </form>
             </field>
         </record>
+
         <!-- a simple action that pops a new wizard up for payment selection -->
         <record id="action_mark_as_good_to_pay" model="ir.actions.act_window">
             <field name="name">Mark as good to pay</field>
             <field name="res_model">account.move.line.goodtopay</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_move_line_goodtopay"/>
+            <field name="view_id" ref="view_account_move_line_goodtopay" />
             <field name="target">new</field>
         </record>
+
         <!-- contextual menu for account.move.line to make them as good to pay -->
         <record id="value_contextual_action_payment_selection" model="ir.values">
             <field name="model_id" ref="model_account_move_line" />
             <field name="name">Mark as good to pay</field>
             <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_mark_as_good_to_pay'))"/>
+            <field name="value"
+                eval="'ir.actions.act_window,' + str(ref('action_mark_as_good_to_pay'))" />
             <field name="key">action</field>
             <field name="model">account.move.line</field>
         </record>
