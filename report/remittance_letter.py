@@ -25,9 +25,10 @@ class remittance_letter_parser(report_sxw.rml_parse):
         """ This function check if the message for payment
         is set in the company settings and raise in the other case.
         """
-        voucher_osv = self.pool.get('account.voucher')
-        voucher_br = voucher_osv.browse(cr, uid, ids[0], context)
-        if not voucher_br.company_id.message_voucher_validate:
+        company_osv = self.pool.get('res.company')
+        company_id = company_osv._company_default_get(cr, uid, 'account.voucher', context=context)
+        company_br = company_osv.browse(cr, uid, company_id, context=context)
+        if not company_br.message_voucher_validate:
             raise osv.except_osv(
                 _('Error'),
                 _('Please set the message for payments'
