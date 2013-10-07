@@ -22,6 +22,8 @@ class account_voucher(osv.Model):
         # than scheduling for later delivery.
         vouchers = self.browse(cr, uid, ids, context=context)
         for voucher in vouchers:
+            if voucher.state != 'posted':
+                continue
             email_template_obj.send_mail(cr, uid, template_ids[0],
                 voucher.id, force_send=True, context=context)
 
