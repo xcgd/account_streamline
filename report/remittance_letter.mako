@@ -75,17 +75,19 @@ ${css}
 </div>
 
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
-<h2 class="remittance_letter_message">${ message(object) }</h2>
+<h2 class="remittance_letter_message">
+	${ object.name }<br/>
+	${ message(object) }
+</h2>
 
 <table class="list_table">
     <thead>
         <tr>
             <th>${ _('Transaction reference') }</th>
             <th>${ _('Invoice date') }</th>
-            <th>${ _('Amount') }</th>
             <th>${ _('Debit/Credit') }</th>
             <th>${ _('Currency') }</th>
-            <th>${ _('Untax Amount') }</th>
+            <th class="amount">${ _('Amount') }</th>
         </tr>
     </thead>
     <tbody>
@@ -93,10 +95,9 @@ ${css}
         <tr class="line">
             <td>${ line.name }</td>
             <td>${ line.date_original }</td>
-            <td>${ format_amount(line.amount, object) }</td>
             <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
-            <td>${ format_amount(line.untax_amount, object) }</td>
+            <td class="amount">${ format_amount(line.amount, object) }</td>
         </tr>
         %endfor
     </tbody>
