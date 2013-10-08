@@ -19,7 +19,9 @@
         'account_payment',
         'account_sequence',
         'analytic_structure',
-        'advanced_filter'],
+        'advanced_filter',
+        'report_webkit',
+    ],
     "data": [
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',
