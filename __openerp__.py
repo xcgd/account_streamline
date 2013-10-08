@@ -22,7 +22,6 @@
         'advanced_filter'],
     "data": [
         'data/partner_data.xml',
-        'data/remittance_letter_email_template.xml',
         'wizard/account_reconcile_view.xml',
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
@@ -34,6 +33,7 @@
         'account_move_line_journal_view.xml',
         'account_menu_entries.xml',
         'report/remittance_letter.xml',
+        'data/remittance_letter_email_template.xml',
         'res_company.xml',
     ],
     #'demo_xml': [],
