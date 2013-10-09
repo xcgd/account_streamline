@@ -5,6 +5,12 @@ ${css}
     text-align: center;
 }
 
+.remittance_letter_bottom {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
+}
+
 .remittance_letter_header_sep {
     clear: both;
     margin-top: 50px;
@@ -21,12 +27,6 @@ ${css}
     padding: 10px 10px 10px 10px;
     border: 1px #000000 solid;
     text-align: right;
-}
-
-.remittance_letter_sepa {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
 }
 
 .remittance_letter_voucher_name {
@@ -112,12 +112,6 @@ ${css}
 
 <h2 class="remittance_letter_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
 
-%if object.batch_id:
-<h2 class="remittance_letter_sepa">
-    ${ _('Sepa:') }<br/>
-    ${ object.batch_id.wording }<br/>
-    ${ object.batch_id.execution_date }
-</h2>
-%endif
+${ object.remittance_letter_bottom }
 
 %endfor

@@ -6,6 +6,19 @@ from openerp.tools.translate import _
 class account_voucher(osv.Model):
     _inherit = "account.voucher"
 
+    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context):
+        # The Remittance Letter bottom part is empty by default.
+        res = {}
+        for id in ids:
+            res[id] = ''
+        return res
+
+    _columns = {
+        'remittance_letter_bottom': fields.function(_get_rem_letter_bot,
+                                                    type='text',
+                                                    method=True),
+    }
+
     def email_remittance_letters(self, cr, uid, ids, context=None):
         ''' Send one email for each selected voucher; the email template
         should generate attachments automagically. '''
