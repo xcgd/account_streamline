@@ -52,14 +52,14 @@ class remittance_letter_parser(report_sxw.rml_parse):
         return amount.strip()
 
     def get_message(self, this_br):
-       company = this_br.company_id
-       if not company:
-           return ''
-       iban = this_br.partner_bank_id.acc_number
-       date = this_br.date
-       if this_br.state == 'posted':
-           return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
-       return ''
+        company = this_br.company_id
+        if not company:
+            return ''
+        iban = this_br.partner_bank_id.acc_number
+        date = this_br.date
+        if this_br.state == 'posted':
+            return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
+        return ''
 
 
 class remittance_letter_report(WebKitParser):
