@@ -55,8 +55,13 @@ class remittance_letter_parser(report_sxw.rml_parse):
         company = this_br.company_id
         if not company:
             return ''
-        iban = this_br.partner_bank_id.acc_number
-        date = this_br.date
+
+        bank = this_br.partner_bank_id
+        if not bank:
+            return ''
+
+        iban = bank.acc_number or ''
+        date = this_br.date or ''
         if this_br.state == 'posted':
             return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
         return ''
