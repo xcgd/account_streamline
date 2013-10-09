@@ -8,5 +8,8 @@
             attachment="'AR-' + object.name" report_type="webkit"
             attachment_use="True" usage="default" />
 
+        <!-- If the webkit header is not defined, associate it with Remittance Letter 
+            reports via Settings > Technical > Actions > Reports > Remittance Letter > Webkit. -->
+
     </data>
 </openerp>
