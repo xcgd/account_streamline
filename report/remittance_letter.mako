@@ -1,5 +1,215 @@
 <style type="text/css">
-${css}
+
+body {
+    font-family: helvetica;
+    font-size: 7px;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* header */
+
+.header {
+    height: 120px;
+    border-bottom: 1px solid grey;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.header .logo,
+.header .title {
+    float: left;
+    width: 33%;
+}
+
+.header .logo img {
+    padding: 0px 20px;
+    height: 120px;
+}
+
+.header .title {
+    font-size: 14px;
+    /* font-weight: bold; */
+    padding-top: 108px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pagenum {
+    font-size: 8px;
+    padding-top: 132px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.page span.text {
+    padding: 10px;
+}
+
+/* address */
+
+.address {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.address table {
+    margin-left: 100px;
+    text-align: left;
+}
+
+.address table th {
+    font-size: 10px;
+    padding-bottom: 4px;
+}
+
+.address table td {
+    font-size: 12px;
+}
+
+.addressleft,
+.addressright {
+    width: 50%;
+    margin: 20px 0;
+}
+
+.addressleft {
+    float: left;
+}
+
+.addressright {
+    float: right;
+}
+
+.address .shipping,
+.address .invoice,
+.address .recipient {
+    margin-top: 10px;
+}
+
+.address td.addresstitle {
+    font-weight: bold;
+}
+
+.address td.name {
+}
+
+/* table */
+
+.basic_table {
+    border-collapse: collapse;
+    clear: both;
+    font-size: 8px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.basic_table th,
+.basic_table td {
+    border: 1px solid lightGrey;
+    padding: 5px;
+}
+
+.list_table {
+    border-collapse: collapse;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.list_table td {
+    border-top: 1px solid lightGrey;
+    font-size: 9px;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 3px;
+    padding-bottom:3px;
+    text-align: left;
+}
+
+.list_table th {
+    border-bottom: 1px solid black;
+    text-align: center;
+    font-size: 8px;
+    font-weight: bold;
+    padding-right: 3px
+    padding-left: 3px
+}
+
+.list_table thead {
+    display: table-header-group;
+}
+
+.list_table td.amount,
+.list_table th.amount {
+    text-align: right;
+}
+
+.list_table tr.line {
+    margin-bottom: 10px;
+}
+
+.list_table th.date {
+    text-align: center;
+}
+
+.list_table tfoot {
+    font-size: 10px;
+}
+
+.list_table tfoot th {
+    padding-top: 10px;
+}
+
+.list_table tfoot td,
+.list_table tfoot th {
+    border: none;
+    text-align: right;
+}
+
+.list_table td.signature {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.list_table td.signature title,
+.list_table td.signature name {
+    font-size: 10px;
+}
+
+.list_table td.signature img {
+    margin-bottom: 14px;
+    margin-top: 14px;
+    width: 140px;
+}
+
+.note,
+.footer {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.note {
+    font-size: 9px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.footer {
+    border-top: 1px solid grey;
+}
+
+/* Remittance Letter specifics */
 
 .line td {
     text-align: center;
