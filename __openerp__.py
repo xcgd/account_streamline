@@ -34,6 +34,7 @@
         'account_move_line_journal_items.xml',
         'account_move_line_journal_view.xml',
         'account_menu_entries.xml',
+        'report/remittance_letter_header.xml',
         'report/remittance_letter.xml',
         'data/remittance_letter_email_template.xml',
         'res_company.xml',

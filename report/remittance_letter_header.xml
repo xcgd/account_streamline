@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Define a default header for Remittance Letter reports. -->
+
+        <record id="remittance_letter_header" model="ir.header_webkit">
+            <field name="name">Remittance Letter Header</field>
+            <field name="orientation">Portrait</field>
+            <field name="format">A4</field>
+            <field eval="40.0" name="margin_top" />
+            <field eval="32.0" name="margin_bottom" />
+            <field name="css"><![CDATA[
+body {
+    font-family: helvetica;
+    font-size: 7px;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* header */
+
+.header {
+    height: 120px;
+    border-bottom: 1px solid grey;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.header .logo,
+.header .title {
+    float: left;
+    width: 33%;
+}
+
+.header .logo img {
+    padding: 0px 20px;
+    height: 120px;
+}
+
+.header .title {
+    font-size: 14px;
+    /* font-weight: bold; */
+    padding-top: 108px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pagenum {
+    font-size: 8px;
+    padding-top: 132px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.page span.text {
+    padding: 10px;
+}
+
+/* address */
+
+.address {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.address table {
+    margin-left: 100px;
+    text-align: left;
+}
+
+.address table th {
+    font-size: 10px;
+    padding-bottom: 4px;
+}
+
+.address table td {
+    font-size: 12px;
+}
+
+.addressleft,
+.addressright {
+    width: 50%;
+    margin: 20px 0;
+}
+
+.addressleft {
+    float: left;
+}
+
+.addressright {
+    float: right;
+}
+
+.address .shipping,
+.address .invoice,
+.address .recipient {
+    margin-top: 10px;
+}
+
+.address td.addresstitle {
+    font-weight: bold;
+}
+
+.address td.name {
+}
+
+/* table */
+
+.basic_table {
+    border-collapse: collapse;
+    clear: both;
+    font-size: 8px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.basic_table th,
+.basic_table td {
+    border: 1px solid lightGrey;
+    padding: 5px;
+}
+
+.list_table {
+    border-collapse: collapse;
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.list_table td {
+    border-top: 1px solid lightGrey;
+    font-size: 9px;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 3px;
+    padding-bottom:3px;
+    text-align: left;
+}
+
+.list_table th {
+    border-bottom: 1px solid black;
+    text-align: center;
+    font-size: 8px;
+    font-weight: bold;
+    padding-right: 3px
+    padding-left: 3px
+}
+
+.list_table thead {
+    display: table-header-group;
+}
+
+.list_table td.amount,
+.list_table th.amount {
+    text-align: right;
+}
+
+.list_table tr.line {
+    margin-bottom: 10px;
+}
+
+.list_table th.date {
+    text-align: center;
+}
+
+.list_table tfoot {
+    font-size: 10px;
+}
+
+.list_table tfoot th {
+    padding-top: 10px;
+}
+
+.list_table tfoot td,
+.list_table tfoot th {
+    border: none;
+    text-align: right;
+}
+
+.list_table td.signature {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.list_table td.signature title,
+.list_table td.signature name {
+    font-size: 10px;
+}
+
+.list_table td.signature img {
+    margin-bottom: 14px;
+    margin-top: 14px;
+    width: 140px;
+}
+
+.note,
+.footer {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.note {
+    font-size: 9px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.footer {
+    border-top: 1px solid grey;
+}
+
+/* Remittance Letter specifics */
+
+.line td {
+    text-align: center;
+}
+
+.remittance_letter_bottom {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
+}
+
+.remittance_letter_header_sep {
+    clear: both;
+    margin-top: 50px;
+}
+
+.remittance_letter_message {
+    clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.remittance_letter_total {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
+    text-align: right;
+}
+
+.remittance_letter_voucher_name {
+	clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+]]></field>
+            <field name="html"><![CDATA[
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type"/> 
+<script>
+function subst() {
+    var vars={};
+    var x=document.location.search.substring(1).split('&');
+    for(var i in x) {
+        var z=x[i].split('=',2);
+        vars[z[0]] = unescape(z[1]);
+    }
+    var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+    for(var i in x) {
+        var y = document.getElementsByClassName(x[i]);
+        for(var j=0; j<y.length; ++j){
+             y[j].textContent = vars[x[i]];
+        }
+    }
+}
+</script>
+<style type="text/css">
+${css}
+</style>
+</head>
+<body style="border:0; margin: 0;" onload="subst()">
+%for object in objects:
+<%page expression_filter="entity"/>
+<% setLang(object.partner_id.lang) %>
+<div class="header">
+    <div class="logo">${helper.embed_image('png', object.partner_id.company_id.logo)|n}</div>
+    <div class="title">${ title(object) }</div>
+    <div class="pagenum">
+        <span class="text"><span class="page"></span> / <span class="topage"></span></span>
+    </div>
+</div>
+%endfor
+</body>
+</html>
+]]>
+            </field>
+            <field name="footer_html"><![CDATA[
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type"/> 
+<style type="text/css">
+${css}
+</style>
+<p class="footer">${objects[0].partner_id.company_id.name} - ${objects[0].partner_id.company_id.company_registry} - ${objects[0].partner_id.company_id.vat}</p>
+<br/>
+<br/>
+<br/>
+</body>
+</html>
+]]></field>
+        </record>
+
+    </data>
+</openerp>
