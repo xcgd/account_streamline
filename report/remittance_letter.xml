@@ -9,7 +9,13 @@
             attachment_use="True" usage="default" />
 
         <!-- If the webkit header is not defined, associate it with Remittance Letter 
-            reports via Settings > Technical > Actions > Reports > Remittance Letter > Webkit. -->
+            reports via Settings > Technical > Actions > Reports > Remittance Letter > Webkit.
+
+            It is recommended the title of the header is the following:
+                ${ title(object) }
+
+            That way, it will be dynamically replaced by "Suggestion Payment" or "Remittance 
+            Letter" depending on whether the voucher has been posted. -->
 
     </data>
 </openerp>
