@@ -17,6 +17,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'message': self.get_message,
+            'title': self.get_title,
         })
 
     def __check_vouchers(self, cr, uid, context=None):
@@ -65,6 +66,10 @@ class remittance_letter_parser(report_sxw.rml_parse):
         if this_br.state == 'posted':
             return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
         return ''
+
+    def get_title(self, br):
+        return (_('Remittance Letter') if br.state == 'posted'
+                else _('Payment Suggestion'))
 
 
 class remittance_letter_report(WebKitParser):
