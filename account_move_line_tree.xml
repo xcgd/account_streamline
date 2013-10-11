@@ -75,7 +75,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_readonly"/>
             <field name="search_view_id" ref="account.view_account_move_line_filter" />
-            <field name="domain">['|', ('reconcile_id', '=', False), ('reconcile_partial_id', '!=', False), ('account_id.type', 'in', ['payable','receivable']), ('state', '=', 'valid')]</field>
+            <field name="domain">['|', ('reconcile_id', '=', False), ('reconcile_partial_id', '!=', False), ('account_id.type', 'in', ['payable','receivable']), ('state', '=', 'posted')]</field>
             <field name="context">{'advanced_filter':True, 'model_id':'account_move_line', 'filter_wizard_action':'action_view_advanced_filter_payment_selection'}</field>
             <field name="view_mode">list</field>
         </record>
