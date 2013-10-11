@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 
 class account_move_line_reconcile(osv.TransientModel):
@@ -109,7 +110,13 @@ class account_move_line_reconcile(osv.TransientModel):
         return super(account_move_line_reconcile, self).trans_rec_reconcile_partial_reconcile(cr, uid, ids, context=context)
 
     def trans_rec_reconcile_full(self, cr, uid, ids, context=None):
-        if self.read(cr, uid, ids, context=context)[0]['force_by_base']:
+        this = self.read(cr, uid, ids, context=context)[0]
+        if not this['trans_nbr']:
+            raise osv.except_osv(
+                _('Error'),
+                _('Your entries are already reconciled'),
+            )
+        if this['force_by_base']:
             context['reconcile_second_currency'] = True
         else:
             context['reconcile_second_currency'] = False
