@@ -19,6 +19,13 @@ class account_voucher(osv.Model):
                                                     method=True),
     }
 
+    def print_payment_suggestion(self, cr, uid, ids, context=None):
+        ''' Create a payment_suggestion object to which the report should be
+        attached; let it handle the rest of the logic. '''
+
+        return (self.pool.get('payment.suggestion')
+                .print_payment_suggestion(cr, uid, ids, context=context))
+
     def email_remittance_letters(self, cr, uid, ids, context=None):
         ''' Send one email for each selected voucher; the email template
         should generate attachments automagically. '''
