@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+
 from openerp import pooler
 from openerp.report import report_sxw
 from openerp.tools.translate import _
@@ -14,12 +16,16 @@ class payment_suggestion_parser(report_sxw.rml_parse):
         super(payment_suggestion_parser, self).__init__(
             cr, uid, name, context=context)
         self.localcontext.update({
+            'date': self.get_date,
             'get_partners': self.get_partners,
             'get_totals': self.get_totals,
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'title': self.get_title,
         })
+
+    def get_date(self):
+        return self.formatLang(str(datetime.today()), date_time=True)
 
     def get_partners(self, sugg_br):
         ''' sugg_br is a payment.suggestion which contains the selected
@@ -77,7 +83,7 @@ class payment_suggestion_report(WebKitParser):
         data_ids = ir_att_osv.search(
             cr,
             uid,
-            [('res_model', '=', 'account.streamline.payment.suggestion'),
+            [('res_model', '=', 'payment.suggestion'),
              ('res_id', 'in', ids)],
             context=context)
         # remove previous items

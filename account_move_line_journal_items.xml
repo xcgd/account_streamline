@@ -46,6 +46,7 @@
                     <field readonly="1" name="journal_id" invisible="1"/>
                     <field readonly="1" name="internal_sequence_number" invisible="1"/>
                     <field readonly="1" name="state" />
+                    <field readonly="1" name="partner_id" />
                     <field readonly="1" name="period_id" />
                     <field readonly="1" name="ref" />
                     <field readonly="1" name="invoice" />
