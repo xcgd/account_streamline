@@ -67,6 +67,6 @@ class payment_suggestion_report(WebKitParser):
 
 
 payment_suggestion_report('report.account_streamline.payment_suggestion',
-                          'account.streamline.payment.suggestion',
+                          'payment.suggestion',
                           'addons/account_streamline/report/payment_suggestion.mako',
                           parser=payment_suggestion_parser)

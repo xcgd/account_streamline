@@ -2,7 +2,7 @@
 ${css}
 </style>
 
-%for object in objects:
+%for object in objects[0].voucher_ids:
 <% setLang(object.partner_id.lang) %>
 
 <div class="payment_suggestion_header_sep">&nbsp;</div>
@@ -47,10 +47,6 @@ ${css}
 
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_suggestion_voucher_name">${ object.name }</h2>
-
-%if object.state == 'posted':
-<h2 class="payment_suggestion_message">${ message(object) }</h2>
-%endif
 
 <table class="list_table">
     <thead>

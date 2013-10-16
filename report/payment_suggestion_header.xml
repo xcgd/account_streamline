@@ -4,6 +4,10 @@
 
         <!-- Define a default header for Payment Suggestion reports. -->
 
+        <!-- objects[0].voucher_ids[0] is used in several places: objects[0] is the 
+            first (and only) object (in this case, a payment.suggestion) and voucher_ids[0] is 
+            the first voucher within that payment.suggestion. -->
+
         <record id="payment_suggestion_header" model="ir.header_webkit">
             <field name="name">Payment Suggestion Header</field>
             <field name="orientation">Portrait</field>
@@ -283,10 +287,10 @@ ${css}
 </head>
 <body style="border:0; margin: 0;" onload="subst()">
 <%page expression_filter="entity"/>
-<% setLang(objects[0].partner_id.lang) %>
+<% setLang(objects[0].voucher_ids[0].partner_id.lang) %>
 <div class="header">
-    <div class="logo">${helper.embed_image('png', objects[0].partner_id.company_id.logo)|n}</div>
-    <div class="title">${ title(objects[0]) }</div>
+    <div class="logo">${helper.embed_image('png', objects[0].voucher_ids[0].partner_id.company_id.logo)|n}</div>
+    <div class="title">${ title(objects[0].voucher_ids[0]) }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
@@ -302,7 +306,7 @@ ${css}
 <style type="text/css">
 ${css}
 </style>
-<p class="footer">${objects[0].partner_id.company_id.name} - ${objects[0].partner_id.company_id.company_registry} - ${objects[0].partner_id.company_id.vat}</p>
+<p class="footer">${objects[0].voucher_ids[0].partner_id.company_id.name} - ${objects[0].voucher_ids[0].partner_id.company_id.company_registry} - ${objects[0].voucher_ids[0].partner_id.company_id.vat}</p>
 <br/>
 <br/>
 <br/>

@@ -27,6 +27,7 @@ class payment_suggestion(orm.TransientModel):
         if 'active_model' in context:
             context['active_model'] = 'account.streamline.payment.suggestion'
         if 'active_ids' in context:
+            ids = context['active_ids']
             del context['active_ids']
         if 'active_id' in context:
             del context['active_id']
@@ -42,6 +43,6 @@ class payment_suggestion(orm.TransientModel):
             'type': 'ir.actions.report.xml',
             'report_name': 'account_streamline.payment_suggestion',
             'datas': { 'ids': [sugg_id],
-                      'model': 'account.streamline.payment.suggestion' },
+                      'model': 'payment.suggestion' },
             'context': context,
         }
