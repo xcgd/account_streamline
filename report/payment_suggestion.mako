@@ -7,44 +7,6 @@ ${css}
 
 <div class="payment_suggestion_header_sep">&nbsp;</div>
 
-<div class="address">
-    <div class="addressright">
-        <table class="recipient">
-            <tr><th class="addresstitle">${ _("Supplier address") } :</th></tr>
-            %if object.partner_id.parent_id:
-            <tr><td class="name">${object.partner_id.parent_id.name or ''}</td></tr>
-            <% address_lines = object.partner_id.contact_address.split("\n")[1:] %>
-            %else:
-            <% address_lines = object.partner_id.contact_address.split("\n") %>
-            %endif
-            <tr><td class="name">${object.partner_id.title and object.partner_id.title.name or ''} ${object.partner_id.name }</td></tr>
-            %for part in address_lines:
-                %if part:
-                <tr><td>${part}</td></tr>
-                %endif
-            %endfor
-        </table>
-    </div>
-    <div class="addressleft">
-        <table class="shipping">
-            <tr><th class="addresstitle">${ _("Shipping address") } :</th></tr>
-            %if object.company_id.partner_id.parent_id:
-            <tr><td class="name">${object.company_id.partner_id.parent_id.name or ''}</td></tr>
-            <% address_lines = object.company_id.partner_id.contact_address.split("\n")[1:] %>
-            %else:
-            <% address_lines = object.company_id.partner_id.contact_address.split("\n") %>
-            %endif
-            <tr><td class="name">${object.company_id.partner_id.title and object.company_id.partner_id.title.name or ''} ${object.company_id.partner_id.name }</td></tr>
-            %for part in address_lines:
-                %if part:
-                <tr><td>${ part }</td></tr>
-                %endif
-            %endfor
-            <tr><td>${object.partner_id.email}</td></tr>
-       </table>
-    </div>
-</div>
-
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_suggestion_voucher_name">${ object.name }</h2>
 

@@ -68,55 +68,6 @@ table {
     padding: 10px;
 }
 
-/* address */
-
-.address {
-    clear: both;
-    float: left;
-    width: 100%;
-}
-
-.address table {
-    margin-left: 100px;
-    text-align: left;
-}
-
-.address table th {
-    font-size: 10px;
-    padding-bottom: 4px;
-}
-
-.address table td {
-    font-size: 12px;
-}
-
-.addressleft,
-.addressright {
-    width: 50%;
-    margin: 20px 0;
-}
-
-.addressleft {
-    float: left;
-}
-
-.addressright {
-    float: right;
-}
-
-.address .shipping,
-.address .invoice,
-.address .recipient {
-    margin-top: 10px;
-}
-
-.address td.addresstitle {
-    font-weight: bold;
-}
-
-.address td.name {
-}
-
 /* table */
 
 .basic_table {
