@@ -128,89 +128,108 @@ class account_move_line(osv.osv):
                                           context):
         if not field in arch:
             return
-        _test = True
         for test in list_test:
             if test in context:
-                _test = False
+                print field + " / " + test
+                doc.xpath("//field[@name='%s']" % field)[0].\
+                    set('modifiers',
+                        '{"tree_invisible": true, "readonly": true}'
+                    )
                 break
-        doc.xpath("//field[@name='%s']" % field)[0].\
-            set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                str(_test).lower())
 
     def __render_columns(self, doc, arch, context):
         #Set the columns invisible depending on the context
         self.__set_column_invisible_by_context(
             doc, arch, 'partner_id',
-            ['complete_view',
-             'analytic_view',
-             'item_complete_view',
-             'item_analytic_view',
-             'item_simple_view'],
+            [
+                'simple_view'
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'journal_id',
-            ['complete_view',
-             'simple_view',
-             'item_complete_view',
-             'item_analytic_view',
-             'item_simple_view'],
+            [
+                'analytic_view'
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'internal_sequence_number',
-            ['complete_view',
-             'item_complete_view'],
+            [
+                'simple_view',
+                'analytic_view',
+                'item_simple_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'date',
-            ['analytic_view'],
+            [
+                'simple_view',
+                'complete_view',
+                'item_complete_view',
+                'item_simple_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'date_maturity',
-            ['complete_view',
-             'item_complete_view'],
+            [
+                'simple_view',
+                'analytic_view',
+                'item_simple_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'date_created',
-            ['complete_view',
-             'item_complete_view'],
+            [
+                'simple_view',
+                'analytic_view',
+                'item_simple_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'currency_id',
-            ['complete_view',
-             'simple_view',
-             'item_complete_view',
-             'item_simple_view'],
+            [
+                'analytic_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'debit',
-            ['complete_view',
-             'simple_view',
-             'item_complete_view',
-             'item_simple_view'],
+            [
+                'analytic_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'credit',
-            ['complete_view',
-             'simple_view',
-             'item_complete_view',
-             'item_simple_view'],
+            [
+                'analytic_view',
+                'item_analytic_view',
+            ],
             context
         )
         self.__set_column_invisible_by_context(
             doc, arch, 'account_tax_id',
-            ['complete_view',
-             'analytic_view',
-             'item_complete_view',
-             'item_analytic_view',
-             'item_simple_view'],
+            [
+                'simple_view',
+            ],
+            context
+        )
+        self.__set_column_invisible_by_context(
+            doc, arch, 'state',
+            [
+                'payment_view',
+            ],
             context
         )
 
