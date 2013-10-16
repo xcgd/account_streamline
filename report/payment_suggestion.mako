@@ -5,6 +5,11 @@ ${css}
     text-align: center;
 }
 
+.payment_suggestion_bottom {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+}
+
 .payment_suggestion_header_sep {
     clear: both;
     margin-top: 50px;
@@ -78,6 +83,14 @@ ${css}
 <h2 class="payment_suggestion_total">
 	${ _('Total for %s:') % partner.name }
 	${ format_amount(partner_total, vouchers[0]) }
+</h2>
+
+<h2 class="payment_suggestion_bottom">
+	${ _('Generated on %s') % date() }
+</h2>
+
+<h2 class="payment_suggestion_bottom">
+	${ _('Signature:') }
 </h2>
 
 %endfor
