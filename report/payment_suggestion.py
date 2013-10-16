@@ -83,7 +83,7 @@ class payment_suggestion_report(WebKitParser):
         data_ids = ir_att_osv.search(
             cr,
             uid,
-            [('res_model', '=', 'account.streamline.payment.suggestion'),
+            [('res_model', '=', 'payment.suggestion'),
              ('res_id', 'in', ids)],
             context=context)
         # remove previous items
