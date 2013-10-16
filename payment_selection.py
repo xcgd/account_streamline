@@ -21,6 +21,8 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from collections import defaultdict
+import itertools
 
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
 msg_invalid_partner_type = _('Partner %s is not a supplier.')
@@ -47,13 +49,33 @@ class good_to_pay(osv.osv_memory):
             _('Lines'),
         ),
         'generate_report': fields.boolean('Generate Report'),
+        'nb_lines': fields.integer('Number of lines'),
+        'total_amount': fields.float('Total Amount'),
+        'view_selection': fields.selection(
+            [('complete', 'Complete view'),
+             ('detailed', 'Detailed view')],
+            translate=True,
+            string='View selector',
+            required=True,
+        ),
+        'partner_id': fields.many2one(
+            'res.partner',
+            string='Selected Partner',
+        ),
     }
 
+    __lines_by_partner = {}
+    __state_line_ids = {}
+
     def default_get(self, cr, uid, field_list=None, context=None):
+        if not uid in self.__lines_by_partner:
+            self.__lines_by_partner[uid] = {}
+        self.__state_line_ids[uid] = 'entering_wizard'
         if not 'active_ids' in context:
             return {}
         vals = {}
         move_lines = [(6, 0, context['active_ids'])]
+        vals['view_complete'] = 'complete'
         vals['line_ids'] = move_lines
         return vals
 
@@ -81,8 +103,13 @@ class good_to_pay(osv.osv_memory):
 
         for form in self.read(cr, uid, ids, context=context):
             auto = form['generate_report']
+            active_ids = list(
+                itertools.chain.from_iterable(
+                    self.__lines_by_partner[uid].values()
+                )
+            )
             for aml in aml_osv.browse(
-                    cr, uid, context['active_ids'], context=context):
+                    cr, uid, active_ids, context=context):
 
                 # first we need to make sure the line is acceptable to be
                 # used in a voucher (ie: account is marked as payable
@@ -170,3 +197,153 @@ class good_to_pay(osv.osv_memory):
                 action = self._generate_report(cr, uid, voucher_amounts.keys(), context)
 
         return action
+
+    def onchange_view_selector(self, cr, uid, ids, selector, partner_id, context=None):
+        if self.__state_line_ids[uid] == 'entering_wizard':
+            self.__state_line_ids[uid] = None
+            return {'value': {}}
+        value = {}
+        if not selector:
+            selector = 'complete'
+            value['view_selection'] = 'complete'
+        list_ids = []
+        if selector == 'complete':
+            list_ids = list(
+                itertools.chain.from_iterable(
+                    self.__lines_by_partner[uid].values()
+                )
+            )
+            partner_id = None
+        else:
+            if self.__lines_by_partner[uid] and partner_id != self.__lines_by_partner[uid].keys()[0]:
+                partner_id = self.__lines_by_partner[uid].keys()[0]
+
+        if list_ids:
+            value['line_ids'] = [(6, 0, list_ids)]
+        value['partner_id'] = partner_id
+            
+        self.__state_line_ids[uid] = 'view_changed'
+        return {
+            'value': value,
+        }
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        domain = [
+            '|',
+            ('reconcile_id', '=', False),
+            ('reconcile_partial_id', '!=', False),
+            ('account_id.type', 'in', ['payable','receivable']),
+            ('state', '=', 'valid'),
+            ('move_id.state', '=', 'posted')
+        ]
+        if self.__state_line_ids[uid] == 'entering_wizard' or not partner_id:
+            return {
+                'value': {},
+                'domain': { 'line_ids': domain }
+            }
+        domain.append(('partner_id', '=', partner_id))
+        list_ids = self.__lines_by_partner[uid][partner_id]
+        self.__state_line_ids[uid] = 'partner_changed'
+        return {
+            'value': { 'line_ids': [(6, 0, list_ids)] },
+            'domain': { 'line_ids': domain }
+        }
+
+    def __compile_list_dict(self, list_dict):
+        """ This function compile the list of dict into
+            a dict of list with an easier format
+            i.e: [{'partner_id: (3556, name1), 'id': 20},
+                  {'partner_id: (5024, name2), 'id': 53},
+                  {'partner_id: (3556, name1), 'id': 59}]
+            ->  {3556: [20, 59], 5024: [53]}
+        """
+
+        if len(list_dict) == 0:
+            return None
+
+        res = defaultdict(list)
+
+        for _dict in list_dict:
+            res[_dict['partner_id'][0]].append(_dict['id'])
+        
+        return res
+
+    def __calcul_partner_domain(self, uid):
+        return {
+            'partner_id': [('id', 'in', self.__lines_by_partner[uid].keys())]
+        }
+
+    def __entering_wizard(self, cr, uid, ids, list_ids, context):
+        move_line_osv = self.pool.get('account.move.line')
+        reads = move_line_osv.read(
+            cr, uid, list_ids, ['partner_id'], context
+        )
+        reads = [read for read in reads if read['partner_id']]
+        self.__lines_by_partner[uid] = self.__compile_list_dict(reads)
+        return {
+            'value': {
+                'view_selection': 'complete',
+            },
+            'domain': self.__calcul_partner_domain(uid),
+        }
+
+    def __substract_wo_dups(self, src, dest):
+        return list(set(dest) - set(src))
+
+
+    def __add_del_element(self, cr, uid, ids, list_ids, context):
+
+        move_line_osv = self.pool.get('account.move.line')
+        reads = move_line_osv.read(
+            cr, uid, list_ids, ['partner_id'], context
+        )
+        reads = [read for read in reads if read['partner_id']]
+        temp = self.__compile_list_dict(reads)
+        for partner_id in temp:
+            if partner_id in self.__lines_by_partner[uid]:
+                if temp[partner_id] not in self.__lines_by_partner[uid][partner_id]:
+                    self.__lines_by_partner[uid][partner_id].extend(
+                        self.__substract_wo_dups(
+                            self.__lines_by_partner[uid][partner_id],
+                            temp[partner_id]
+                        )
+                    )
+            else:
+                self.__lines_by_partner[uid][partner_id] = temp[partner_id]
+        
+        return { 'domain': self.__calcul_partner_domain(uid) }
+
+    def __view_changed(self, cr, uid, ids, list_ids, context):
+        return {'value': {}}
+
+    def __partner_changed(self, cr, uid, ids, list_ids, context):
+        return {'value': {}}
+
+    def onchange_line_ids(self, cr, uid, ids, line_ids, context=None):
+        """ print the line selected or the line filtered by state
+            4 states : 'entering_wizard'
+                       'view_changed'
+                       'partner_changed
+                       'add_del_element' = None
+        """
+
+        # We cut the ids from the magic tuple [(6, False, [ids])]
+        list_ids = line_ids[0][2]
+
+        res = {}
+
+        # and we store the ids in the many2many
+        # depending on the state we are.
+        if self.__state_line_ids[uid] == 'entering_wizard':
+            res = self.__entering_wizard(cr, uid, ids, list_ids, context)
+        elif not self.__state_line_ids[uid]:
+            res = self.__add_del_element(cr, uid, ids, list_ids, context)
+        elif self.__state_line_ids[uid] == 'partner_changed':
+            self.__state_line_ids[uid] = None
+            res = self.__partner_changed(cr, uid, ids, list_ids, context)
+        elif self.__state_line_ids[uid] == 'view_changed':
+            self.__state_line_ids[uid] = None
+            res = self.__view_changed(cr, uid, ids, list_ids, context)
+
+
+        return res
