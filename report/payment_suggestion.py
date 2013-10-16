@@ -15,6 +15,7 @@ class payment_suggestion_parser(report_sxw.rml_parse):
             cr, uid, name, context=context)
         self.localcontext.update({
             'get_partners': self.get_partners,
+            'get_totals': self.get_totals,
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'title': self.get_title,
@@ -33,6 +34,18 @@ class payment_suggestion_parser(report_sxw.rml_parse):
             res[partner]['vouchers'].append(voucher)
             res[partner]['total'] += voucher.amount
         return res
+
+    def get_totals(self, partners):
+        ''' Go through the grouped-by-partner list and compute totals to be
+        displayed at the top of the report. '''
+
+        voucher_count = 0
+        total = 0
+        for partner, partner_details in partners.iteritems():
+            voucher_count += len(partner_details['vouchers'])
+            total += partner_details['total']
+
+        return voucher_count, len(partners), total
 
     def get_debit_credit(self, br):
         return _('Debit') if br.type == 'debit' else _('Credit')

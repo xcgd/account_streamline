@@ -28,16 +28,24 @@ ${css}
 %for object in objects:
 <% setLang(object.voucher_ids[0].partner_id.lang) %>
 
+<% partners = get_partners(object) %>
+
 <div class="payment_suggestion_header_sep">&nbsp;</div>
 
-<% partners = get_partners(object) %>
+<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
+<h2 class="payment_suggestion_total">
+	<% voucher_count, partner_count, total = get_totals(partners) %>
+	${ _('Voucher count: %d') % voucher_count }<br/>
+	${ _('Partner count: %d') % partner_count }<br/>
+	${ _('Total: %s') % format_amount(total, object.voucher_ids[0]) }
+</h2>
+
 %for partner, partner_details in partners.iteritems():
 <%
 	vouchers = partner_details['vouchers']
 	partner_total = partner_details['total']
 %>
 
-<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_suggestion_partner">${ partner.name }</h2>
 
 <table class="list_table">
@@ -67,7 +75,10 @@ ${css}
     </tbody>
 </table>
 
-<h2 class="payment_suggestion_total">${ _('Total for %s:') % partner.name } ${ format_amount(partner_total, vouchers[0]) }</h2>
+<h2 class="payment_suggestion_total">
+	${ _('Total for %s:') % partner.name }
+	${ format_amount(partner_total, vouchers[0]) }
+</h2>
 
 %endfor
 
