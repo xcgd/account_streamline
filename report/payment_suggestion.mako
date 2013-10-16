@@ -5,12 +5,6 @@ ${css}
     text-align: center;
 }
 
-.payment_suggestion_bottom {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
-}
-
 .payment_suggestion_header_sep {
     clear: both;
     margin-top: 50px;
