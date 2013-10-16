@@ -2,10 +2,14 @@
 <openerp>
     <data>
 
-        <!-- Define a default header for Remittance Letter reports. -->
+        <!-- Define a default header for Payment Suggestion reports. -->
 
-        <record id="remittance_letter_header" model="ir.header_webkit">
-            <field name="name">Remittance Letter Header</field>
+        <!-- objects[0].voucher_ids[0] is used in several places: objects[0] is the 
+            first (and only) object (in this case, a payment.suggestion) and voucher_ids[0] is 
+            the first voucher within that payment.suggestion. -->
+
+        <record id="payment_suggestion_header" model="ir.header_webkit">
+            <field name="name">Payment Suggestion Header</field>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
             <field eval="40.0" name="margin_top" />
@@ -62,55 +66,6 @@ table {
 
 .page span.text {
     padding: 10px;
-}
-
-/* address */
-
-.address {
-    clear: both;
-    float: left;
-    width: 100%;
-}
-
-.address table {
-    margin-left: 100px;
-    text-align: left;
-}
-
-.address table th {
-    font-size: 10px;
-    padding-bottom: 4px;
-}
-
-.address table td {
-    font-size: 12px;
-}
-
-.addressleft,
-.addressright {
-    width: 50%;
-    margin: 20px 0;
-}
-
-.addressleft {
-    float: left;
-}
-
-.addressright {
-    float: right;
-}
-
-.address .shipping,
-.address .invoice,
-.address .recipient {
-    margin-top: 10px;
-}
-
-.address td.addresstitle {
-    font-weight: bold;
-}
-
-.address td.name {
 }
 
 /* table */
@@ -246,17 +201,15 @@ ${css}
 </style>
 </head>
 <body style="border:0; margin: 0;" onload="subst()">
-%for object in objects:
 <%page expression_filter="entity"/>
-<% setLang(object.partner_id.lang) %>
+<% setLang(objects[0].voucher_ids[0].partner_id.lang) %>
 <div class="header">
-    <div class="logo">${helper.embed_image('png', object.partner_id.company_id.logo)|n}</div>
-    <div class="title">${ title(object) }</div>
+    <div class="logo">${helper.embed_image('png', objects[0].voucher_ids[0].partner_id.company_id.logo)|n}</div>
+    <div class="title">${ title(objects[0].voucher_ids[0]) }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
 </div>
-%endfor
 </body>
 </html>
 ]]>
@@ -268,7 +221,7 @@ ${css}
 <style type="text/css">
 ${css}
 </style>
-<p class="footer">${objects[0].partner_id.company_id.name} - ${objects[0].partner_id.company_id.company_registry} - ${objects[0].partner_id.company_id.vat}</p>
+<p class="footer">${objects[0].voucher_ids[0].partner_id.company_id.name} - ${objects[0].voucher_ids[0].partner_id.company_id.company_registry} - ${objects[0].voucher_ids[0].partner_id.company_id.vat}</p>
 <br/>
 <br/>
 <br/>

@@ -11,7 +11,8 @@ from report_webkit.webkit_report import WebKitParser
 class remittance_letter_parser(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(remittance_letter_parser, self).__init__(cr, uid, name, context=context)
+        super(remittance_letter_parser, self).__init__(
+            cr, uid, name, context=context)
         self.__check_vouchers(cr, uid, context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
@@ -68,8 +69,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
         return ''
 
     def get_title(self, br):
-        return (_('Remittance Letter') if br.state == 'posted'
-                else _('Payment Suggestion'))
+        return _('Remittance Letter')
 
 
 class remittance_letter_report(WebKitParser):

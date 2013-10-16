@@ -1,5 +1,40 @@
 <style type="text/css">
 ${css}
+
+.line td {
+    text-align: center;
+}
+
+.remittance_letter_bottom {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
+}
+
+.remittance_letter_header_sep {
+    clear: both;
+    margin-top: 50px;
+}
+
+.remittance_letter_message {
+    clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.remittance_letter_total {
+    margin-top: 30px;
+    padding: 10px 10px 10px 10px;
+    border: 1px #000000 solid;
+    text-align: right;
+}
+
+.remittance_letter_voucher_name {
+	clear: both;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
 </style>
 
 %for object in objects:

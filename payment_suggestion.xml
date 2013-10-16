@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- View for Payment Suggestions. -->
+
+        <record id="payment_suggestion_view" model="ir.ui.view">
+            <field name="name">payment.suggestion.view</field>
+            <field name="model">payment.suggestion</field>
+            <field name="arch" type="xml">
+                <field name="voucher_ids" />
+            </field>
+        </record>
+
+        <!-- Contextual action to generate a Payment Suggestion. -->
+
+        <record id="action_payment_suggestion" model="ir.actions.server">
+            <field name="name">Print Payment Suggestion</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_voucher" />
+            <field name="state">code</field>
+            <field name="code">
+action = object.print_payment_suggestion()
+            </field>
+        </record>
+        <record id="value_contextual_action_payment_suggestion" model="ir.values">
+            <field name="name">Print Payment Suggestion</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value"
+                eval="'ir.actions.server,%d' % action_payment_suggestion" />
+            <field name="model">account.voucher</field>
+        </record>
+
+    </data>
+</openerp>
