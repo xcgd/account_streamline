@@ -38,6 +38,10 @@ class account_voucher(osv.Model):
             raise osv.except_osv(_('Error'), _('No email template found '
                 'which generates RemittanceLetter reports'))
 
+        # Get the correct list of ids...
+        if 'active_ids' in context:
+            ids = context['active_ids']
+
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
         vouchers = self.browse(cr, uid, ids, context=context)
