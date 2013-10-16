@@ -174,42 +174,6 @@ table {
 .footer {
     border-top: 1px solid grey;
 }
-
-/* Payment Suggestion specifics */
-
-.line td {
-    text-align: center;
-}
-
-.payment_suggestion_bottom {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
-}
-
-.payment_suggestion_header_sep {
-    clear: both;
-    margin-top: 50px;
-}
-
-.payment_suggestion_message {
-    clear: both;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
-.payment_suggestion_total {
-    margin-top: 30px;
-    padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
-    text-align: right;
-}
-
-.payment_suggestion_voucher_name {
-	clear: both;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
 ]]></field>
             <field name="html"><![CDATA[
 <html>

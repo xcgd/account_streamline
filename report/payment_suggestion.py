@@ -14,18 +14,30 @@ class payment_suggestion_parser(report_sxw.rml_parse):
         super(payment_suggestion_parser, self).__init__(
             cr, uid, name, context=context)
         self.localcontext.update({
+            'get_partners': self.get_partners,
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
             'title': self.get_title,
         })
 
+    def get_partners(self, sugg_br):
+        ''' sugg_br is a payment.suggestion which contains the selected
+        vouchers. Group these vouchers by partner then return a list the
+        template can iterate on. Compute totals as well. '''
+
+        res = {}
+        for voucher in sugg_br.voucher_ids:
+            partner = voucher.partner_id
+            if partner not in res:
+                res[partner] = { 'vouchers': [], 'total': 0 }
+            res[partner]['vouchers'].append(voucher)
+            res[partner]['total'] += voucher.amount
+        return res
+
     def get_debit_credit(self, br):
-        return 'abc'
-#         return _('Debit') if br.type == 'debit' else _('Credit')
+        return _('Debit') if br.type == 'debit' else _('Credit')
 
     def format_amount(self, amount, br):
-        return '0.00'
-
         # little check
         if not amount:
             return '0.00'
