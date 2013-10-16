@@ -33,6 +33,24 @@ msg_define_dc_on_journal = _(
 class good_to_pay(osv.osv_memory):
     """create vouchers for all invoices that have been selected
     """
+
+
+    class __container:
+        lines = set()
+        partner_dict = {}
+
+        def add(self, ids, key):
+            self.lines.update(ids)
+            if key not in self._dict:
+                self._dict[key] = set(ids)
+            else:
+                self._dict[key].update(ids)
+
+        def delete(self, ids):
+            self.lines.difference_update(ids)
+
+
+
     _name = "account.move.line.goodtopay"
     _description = "Payment selection for good to pay"
     _columns = {
@@ -290,8 +308,29 @@ class good_to_pay(osv.osv_memory):
     def __substract_wo_dups(self, src, dest):
         return list(set(dest) - set(src))
 
+    def __check_add_del(self, uid, temp):
+        """ -1 : del, 0: equal (should not happen), 1: add
+        """
+        if not temp:
+            return -1, set([])
 
-    def __add_del_element(self, cr, uid, ids, list_ids, context):
+        src_set = set(
+            itertools.chain.from_iterable(
+                self.__lines_by_partner[uid].values()
+            )
+        )
+        dst_set = set(
+            itertools.chain.from_iterable(
+                temp.values()
+            )
+        )
+        if dst_set - src_set:
+            return 1, dst_set - src_set
+        if src_set - dst_set:
+            return -1, src_set - dst_set
+        return 0, []
+        
+    def __add_del_element(self, cr, uid, ids, selector, partner_id, list_ids, context):
 
         move_line_osv = self.pool.get('account.move.line')
         reads = move_line_osv.read(
@@ -299,19 +338,42 @@ class good_to_pay(osv.osv_memory):
         )
         reads = [read for read in reads if read['partner_id']]
         temp = self.__compile_list_dict(reads)
-        for partner_id in temp:
-            if partner_id in self.__lines_by_partner[uid]:
-                if temp[partner_id] not in self.__lines_by_partner[uid][partner_id]:
-                    self.__lines_by_partner[uid][partner_id].extend(
-                        self.__substract_wo_dups(
-                            self.__lines_by_partner[uid][partner_id],
-                            temp[partner_id]
-                        )
-                    )
-            else:
-                self.__lines_by_partner[uid][partner_id] = temp[partner_id]
+
+        values = {}
         
-        return { 'domain': self.__calcul_partner_domain(uid) }
+        if temp:
+            type, diff = self.__check_add_del(uid, temp)
+        else:
+            type = -1
+            diff = set([])
+        if type == -1:
+            for key, value in self.__lines_by_partner[uid].items():
+                if diff:
+                    self.__lines_by_partner[uid][key] = list(set(value) - diff)
+                else:
+                    self.__lines_by_partner[uid][key] = []
+                if not self.__lines_by_partner[uid][key]:
+                    del self.__lines_by_partner[uid][key]
+                    if self.__lines_by_partner[uid]:
+                        values['partner_id'] = self.__lines_by_partner[uid].keys()
+                    else:
+                        values['partner_id'] = None
+                        values['view_selection'] = 'complete'
+        else:
+            for partner_id in temp:
+                if partner_id in self.__lines_by_partner[uid]:
+                    if temp[partner_id] not in self.__lines_by_partner[uid][partner_id]:
+                        self.__lines_by_partner[uid][partner_id].extend(
+                            self.__substract_wo_dups(
+                                self.__lines_by_partner[uid][partner_id],
+                                temp[partner_id]
+                            )
+                        )
+                else:
+                    self.__lines_by_partner[uid][partner_id] = temp[partner_id]
+        
+        return { 'domain': self.__calcul_partner_domain(uid),
+                 'value': values}
 
     def __view_changed(self, cr, uid, ids, list_ids, context):
         return {'value': {}}
@@ -319,7 +381,7 @@ class good_to_pay(osv.osv_memory):
     def __partner_changed(self, cr, uid, ids, list_ids, context):
         return {'value': {}}
 
-    def onchange_line_ids(self, cr, uid, ids, line_ids, context=None):
+    def onchange_line_ids(self, cr, uid, ids, selector, partner_id, line_ids, context=None):
         """ print the line selected or the line filtered by state
             4 states : 'entering_wizard'
                        'view_changed'
@@ -337,7 +399,9 @@ class good_to_pay(osv.osv_memory):
         if self.__state_line_ids[uid] == 'entering_wizard':
             res = self.__entering_wizard(cr, uid, ids, list_ids, context)
         elif not self.__state_line_ids[uid]:
-            res = self.__add_del_element(cr, uid, ids, list_ids, context)
+            res = self.__add_del_element(
+                cr, uid, ids, selector, partner_id, list_ids, context
+            )
         elif self.__state_line_ids[uid] == 'partner_changed':
             self.__state_line_ids[uid] = None
             res = self.__partner_changed(cr, uid, ids, list_ids, context)

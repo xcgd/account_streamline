@@ -17,7 +17,7 @@
                         <field name="partner_id" attrs="{'invisible': [('view_selection', '=', 'complete')]}" options="{'create': False, 'create_edit': False}" on_change="onchange_partner_id(partner_id)"/>
 
                     </group>
-                    <field name="line_ids" on_change="onchange_line_ids(line_ids)"
+                    <field name="line_ids" on_change="onchange_line_ids(view_selection, partner_id, line_ids)"
                       domain="['|', ('reconcile_id', '=', False), ('reconcile_partial_id', '!=', False), ('account_id.type', 'in', ['payable','receivable']), ('state', '=', 'valid'), ('move_id.state', '=', 'posted')]">
                         <tree>
                             <field invisible="1" name="state"/>
