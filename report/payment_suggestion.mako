@@ -50,6 +50,7 @@ ${css}
     <thead>
         <tr>
             <th>${ _('Transaction reference') }</th>
+            <th>${ _('Description') }</th>
             <th>${ _('Invoice date') }</th>
             <th>${ _('Debit/Credit') }</th>
             <th>${ _('Currency') }</th>
@@ -61,6 +62,7 @@ ${css}
         %for line in voucher.line_dr_ids:
         <tr class="line">
             <td>${ line.name }</td>
+            <td>${ line.move_line_id.ref }</td>
             <td>${ line.date_original }</td>
             <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
