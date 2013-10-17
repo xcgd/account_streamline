@@ -62,8 +62,8 @@ ${css}
             <th>${ _('Transaction reference') }</th>
             <th>${ _('Description') }</th>
             <th>${ _('Invoice date') }</th>
-            <th>${ _('Debit/Credit') }</th>
             <th>${ _('Currency') }</th>
+            <th>${ _('Debit/Credit') }</th>
             <th class="amount">${ _('Amount') }</th>
         </tr>
     </thead>
@@ -74,8 +74,8 @@ ${css}
             <td>${ line.name }</td>
             <td>${ line.move_line_id.ref }</td>
             <td>${ line.date_original }</td>
-            <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
+            <td>${ debit_credit(line) }</td>
             <td class="amount">${ format_amount(line.amount, voucher) }</td>
         </tr>
         %endfor
