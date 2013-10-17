@@ -85,6 +85,8 @@ ${css}
 	${ format_amount(partner_total, vouchers[0]) }
 </h2>
 
+%endfor
+
 <h2 class="payment_suggestion_bottom">
 	${ _('Generated on %s') % date() }
 </h2>
@@ -92,7 +94,5 @@ ${css}
 <h2 class="payment_suggestion_bottom">
 	${ _('Signature:') }
 </h2>
-
-%endfor
 
 %endfor
