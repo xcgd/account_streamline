@@ -98,15 +98,16 @@ class good_to_pay(osv.osv_memory):
         return vals
 
     def _generate_report(self, cr, uid, active_ids, context=None):
-        """ function to generate report with some parameters
-        to select the sentence to print in the report
-        """
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account_streamline.remittance_letter',
-            'datas': {'ids': active_ids,
-                     'model': 'account.voucher'},
-        }
+        ''' Generate a Payment Suggestion report. '''
+
+        # active_ids contains move-line ids; remove them or the payment
+        # suggestion object will use them by default.
+        if 'active_ids' in context:
+            del context['active_ids']
+
+        return (self.pool.get('payment.suggestion')
+                .print_payment_suggestion(cr, uid, active_ids,
+                                          context=context))
 
     def good_to_pay(self, cr, uid, ids, context=None):
         aml_osv = self.pool.get('account.move.line')
