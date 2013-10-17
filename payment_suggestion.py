@@ -25,7 +25,7 @@ class payment_suggestion(orm.TransientModel):
         # The context contains account.voucher references; update it to refer
         # to payment suggestions.
         if 'active_model' in context:
-            context['active_model'] = 'account.streamline.payment.suggestion'
+            context['active_model'] = 'payment.suggestion'
         if 'active_ids' in context:
             ids = context['active_ids']
             del context['active_ids']
