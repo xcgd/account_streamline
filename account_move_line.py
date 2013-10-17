@@ -142,6 +142,7 @@ class account_move_line(osv.osv):
         self.__set_column_invisible_by_context(
             doc, arch, 'partner_id',
             [
+                'reconcile_view',
                 'simple_view'
             ],
             context
@@ -149,7 +150,8 @@ class account_move_line(osv.osv):
         self.__set_column_invisible_by_context(
             doc, arch, 'journal_id',
             [
-                'analytic_view'
+                'analytic_view',
+                'reconcile_view',
             ],
             context
         )
@@ -160,6 +162,7 @@ class account_move_line(osv.osv):
                 'analytic_view',
                 'item_simple_view',
                 'item_analytic_view',
+                'reconcile_view',
             ],
             context
         )
@@ -229,6 +232,7 @@ class account_move_line(osv.osv):
             doc, arch, 'state',
             [
                 'payment_view',
+                'reconcile_view',
             ],
             context
         )
