@@ -151,7 +151,6 @@ class account_move_line(osv.osv):
             doc, arch, 'journal_id',
             [
                 'analytic_view',
-                'reconcile_view',
             ],
             context
         )
