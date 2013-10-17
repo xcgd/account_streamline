@@ -141,6 +141,7 @@ class account_move_line(osv.osv):
         self.__set_column_invisible_by_context(
             doc, arch, 'partner_id',
             [
+                'payment_view',
                 'reconcile_view',
                 'simple_view'
             ],
@@ -150,6 +151,7 @@ class account_move_line(osv.osv):
             doc, arch, 'journal_id',
             [
                 'analytic_view',
+                'payment_view',
             ],
             context
         )
