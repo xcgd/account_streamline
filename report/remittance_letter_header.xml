@@ -25,11 +25,9 @@ table {
 /* header */
 
 .header {
-    height: 120px;
+    height: 80px;
     border-bottom: 1px solid grey;
     padding-bottom: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .header .logo,
@@ -40,13 +38,13 @@ table {
 
 .header .logo img {
     padding: 0px 20px;
-    height: 120px;
+    height: 80px;
 }
 
 .header .title {
     font-size: 14px;
     /* font-weight: bold; */
-    padding-top: 108px;
+    padding-top: 68px;
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
@@ -55,7 +53,7 @@ table {
 
 .pagenum {
     font-size: 8px;
-    padding-top: 132px;
+    padding-top: 72px;
     padding-right: 10px;
     text-align: right;
 }

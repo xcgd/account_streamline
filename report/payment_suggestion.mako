@@ -10,11 +10,6 @@ ${css}
     padding: 10px 10px 10px 10px;
 }
 
-.payment_suggestion_header_sep {
-    clear: both;
-    margin-top: 50px;
-}
-
 .payment_suggestion_partner {
 	clear: both;
     margin-top: 40px;
@@ -37,8 +32,6 @@ ${css}
 <% setLang(object.voucher_ids[0].partner_id.lang) %>
 
 <% partners = get_partners(object) %>
-
-<div class="payment_suggestion_header_sep">&nbsp;</div>
 
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_suggestion_total_main">
