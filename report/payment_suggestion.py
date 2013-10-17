@@ -48,7 +48,8 @@ class payment_suggestion_parser(report_sxw.rml_parse):
         voucher_count = 0
         total = 0
         for partner, partner_details in partners.iteritems():
-            voucher_count += len(partner_details['vouchers'])
+            for voucher in partner_details['vouchers']:
+                voucher_count += len(voucher.line_dr_ids)
             total += partner_details['total']
 
         return voucher_count, len(partners), total
