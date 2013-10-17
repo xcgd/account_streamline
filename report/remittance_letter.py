@@ -87,11 +87,33 @@ class remittance_letter_report(WebKitParser):
         ir_att_osv.unlink(cr, uid, data_ids)
 
     def create(self, cr, uid, ids, datas, context=None):
+        ids = self._check_vouchers(cr, uid, ids, context)
+
         # remove previous items
         self.remove_previous(cr, uid, ids, context=context)
         # call parent
         return super(remittance_letter_report, self).create(
             cr, uid, ids, datas, context)
+
+    def _check_vouchers(self, cr, uid, ids, context):
+        ''' - Only print Remittance Letters for posted vouchers. '''
+
+        voucher_obj = pooler.get_pool(cr.dbname).get('account.voucher')
+        vouchers = voucher_obj.browse(cr, uid, ids, context=context)
+
+        ids = []
+
+        for voucher in vouchers:
+            if voucher.state == 'posted':
+                ids.append(voucher.id)
+
+        if not ids:
+            raise osv.except_osv(
+                _('Error'),
+                _('No posted voucher selected.')
+            )
+
+        return ids
 
 
 remittance_letter_report('report.account_streamline.remittance_letter',

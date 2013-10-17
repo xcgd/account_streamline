@@ -91,11 +91,56 @@ class payment_suggestion_report(WebKitParser):
         ir_att_osv.unlink(cr, uid, data_ids)
 
     def create(self, cr, uid, ids, datas, context=None):
+        ids = self._check_vouchers(cr, uid, ids, context)
+
         # remove previous items
         self.remove_previous(cr, uid, ids, context=context)
         # call parent
         return super(payment_suggestion_report, self).create(
             cr, uid, ids, datas, context)
+
+    def _check_vouchers(self, cr, uid, ids, context):
+        ''' - Only print Remittance Letters for non-posted vouchers.
+        - Disallow separate journals. '''
+
+        journal = 0
+
+        sugg_obj = pooler.get_pool(cr.dbname).get('payment.suggestion')
+        suggs = sugg_obj.browse(cr, uid, ids, context=context)
+
+        ids = []
+
+        for sugg in suggs:
+            vouchers = []
+
+            for voucher in sugg.voucher_ids:
+
+                if voucher.state != 'posted':
+                    vouchers.append(voucher.id)
+
+                    if journal:
+                        if voucher.journal_id != journal:
+                            raise osv.except_osv(
+                                _('Error'),
+                                _('Payment Suggestions must apply to one journal'
+                                  'only.'))
+                    else:
+                        journal = voucher.journal_id
+
+            sugg_obj.write(cr, uid, [sugg.id],
+                           { 'voucher_ids': [(6, 0, vouchers)] },
+                           context=context)
+
+            if vouchers:
+                ids.append(sugg.id)
+
+        if not ids:
+            raise osv.except_osv(
+                _('Error'),
+                _('No draft voucher selected.')
+            )
+
+        return ids
 
 
 payment_suggestion_report('report.account_streamline.payment_suggestion',
