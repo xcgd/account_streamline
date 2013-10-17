@@ -53,6 +53,7 @@ class good_to_pay(osv.osv_memory):
 
     _name = "account.move.line.goodtopay"
     _description = "Payment selection for good to pay"
+
     _columns = {
         'journal_id': fields.many2one('account.journal',
                                    'Payment Method',
@@ -80,6 +81,10 @@ class good_to_pay(osv.osv_memory):
             'res.partner',
             string='Selected Partner',
         ),
+    }
+
+    _defaults = {
+        'generate_report': lambda *a: True,
     }
 
     __lines_by_partner = {}
