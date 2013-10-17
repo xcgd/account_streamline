@@ -45,12 +45,12 @@
                                              version="7.0">
                     <field readonly="1" name="journal_id" />
                     <field readonly="1" name="internal_sequence_number" />
+                    <field readonly="1" name="account_id" />
                     <field readonly="1" name="state" />
                     <field readonly="1" name="partner_id" />
                     <field readonly="1" name="period_id" />
                     <field readonly="1" name="ref" />
                     <field readonly="1" name="invoice" />
-                    <field readonly="1" name="account_id" />
                     <field readonly="1" name="name" />
                     <field readonly="1" name="narration" />
                     <field readonly="1" name="date" />
