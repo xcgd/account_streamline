@@ -130,7 +130,6 @@ class account_move_line(osv.osv):
             return
         for test in list_test:
             if test in context:
-                print field + " / " + test
                 doc.xpath("//field[@name='%s']" % field)[0].\
                     set('modifiers',
                         '{"tree_invisible": true, "readonly": true}'
