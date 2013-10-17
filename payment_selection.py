@@ -49,8 +49,6 @@ class good_to_pay(osv.osv_memory):
         def delete(self, ids):
             self.lines.difference_update(ids)
 
-
-
     _name = "account.move.line.goodtopay"
     _description = "Payment selection for good to pay"
     _columns = {
@@ -108,7 +106,30 @@ class good_to_pay(osv.osv_memory):
                      'model': 'account.voucher'},
         }
 
+    def __check_no_debit_line(self, cr, uid, context):
+        aml_osv = self.pool.get('account.move.line')
+
+        for partner_id, line_ids in self.__lines_by_partner[uid].items():
+            total_credit = 0.0
+            total_debit = 0.0
+            reads = aml_osv.read(
+                cr, uid, line_ids, ['credit', 'debit', 'partner_id'], context
+            )
+            for read in reads:
+                total_credit += read['credit']
+                total_debit += read['debit']
+            if total_credit <= total_debit:
+                return False, read['partner_id'][1]
+        return True, None
+
     def good_to_pay(self, cr, uid, ids, context=None):
+        test, error = self.__check_no_debit_line(cr, uid, context)
+        if not test:
+            raise osv.except_osv(
+                _('Error'),
+                _('The voucher for the partner %s is debit.' % error)
+            )
+
         aml_osv = self.pool.get('account.move.line')
         avl_osv = self.pool.get('account.voucher.line')
         voucher_osv = self.pool.get('account.voucher')
@@ -131,6 +152,7 @@ class good_to_pay(osv.osv_memory):
 
                 # first we need to make sure the line is acceptable to be
                 # used in a voucher (ie: account is marked as payable
+
                 if not aml.account_id.type == 'payable':
                     msg = msg_invalid_line_type % aml.account_id.type
                     raise osv.except_osv(_('Error!'), msg)
@@ -220,6 +242,7 @@ class good_to_pay(osv.osv_memory):
         if self.__state_line_ids[uid] == 'entering_wizard':
             self.__state_line_ids[uid] = None
             return {'value': {}}
+        domain = {}
         value = {}
         if not selector:
             selector = 'complete'
@@ -235,6 +258,8 @@ class good_to_pay(osv.osv_memory):
         else:
             if self.__lines_by_partner[uid] and partner_id != self.__lines_by_partner[uid].keys()[0]:
                 partner_id = self.__lines_by_partner[uid].keys()[0]
+            else:
+                domain['line_ids'] = [('partner_id', '=', -1)]
 
         if list_ids:
             value['line_ids'] = [(6, 0, list_ids)]
@@ -243,6 +268,7 @@ class good_to_pay(osv.osv_memory):
         self.__state_line_ids[uid] = 'view_changed'
         return {
             'value': value,
+            'domain': domain
         }
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -308,70 +334,79 @@ class good_to_pay(osv.osv_memory):
     def __substract_wo_dups(self, src, dest):
         return list(set(dest) - set(src))
 
-    def __check_add_del(self, uid, temp):
+    def __check_add_del(self, uid, ids):
         """ -1 : del, 0: equal (should not happen), 1: add
         """
-        if not temp:
-            return -1, set([])
+
 
         src_set = set(
             itertools.chain.from_iterable(
                 self.__lines_by_partner[uid].values()
             )
         )
-        dst_set = set(
-            itertools.chain.from_iterable(
-                temp.values()
-            )
-        )
+        dst_set = set(ids)
+
         if dst_set - src_set:
             return 1, dst_set - src_set
         if src_set - dst_set:
             return -1, src_set - dst_set
         return 0, []
         
-    def __add_del_element(self, cr, uid, ids, selector, partner_id, list_ids, context):
-
-        move_line_osv = self.pool.get('account.move.line')
-        reads = move_line_osv.read(
-            cr, uid, list_ids, ['partner_id'], context
-        )
-        reads = [read for read in reads if read['partner_id']]
-        temp = self.__compile_list_dict(reads)
-
-        values = {}
-        
-        if temp:
-            type, diff = self.__check_add_del(uid, temp)
-        else:
-            type = -1
-            diff = set([])
-        if type == -1:
-            for key, value in self.__lines_by_partner[uid].items():
-                if diff:
-                    self.__lines_by_partner[uid][key] = list(set(value) - diff)
-                else:
-                    self.__lines_by_partner[uid][key] = []
+    def __delete_line(self, diff, uid):
+        res = {}
+        line = list(diff)[0]
+        for key, value in self.__lines_by_partner[uid].items():
+            if line in self.__lines_by_partner[uid][key]:
+                self.__lines_by_partner[uid][key] = list(set(value) - diff)
                 if not self.__lines_by_partner[uid][key]:
                     del self.__lines_by_partner[uid][key]
-                    if self.__lines_by_partner[uid]:
-                        values['partner_id'] = self.__lines_by_partner[uid].keys()
-                    else:
-                        values['partner_id'] = None
-                        values['view_selection'] = 'complete'
+                    res['partner_id'] = None
+                    res['view_selection'] = 'complete'
+        return res
+
+    def __add_line(self, cr, uid, ids, context):
+        move_line_osv = self.pool.get('account.move.line')
+        reads = move_line_osv.read(
+            cr, uid, ids, ['partner_id'], context
+        )
+        reads = [read for read in reads if read['partner_id']]
+        dict_ids = self.__compile_list_dict(reads)
+        for partner_id in dict_ids.keys():
+            if partner_id in self.__lines_by_partner[uid]:
+                self.__lines_by_partner[uid][partner_id].extend(
+                    self.__substract_wo_dups(
+                        self.__lines_by_partner[uid][partner_id],
+                        dict_ids[partner_id]
+                    )
+                )
+            else:
+                self.__lines_by_partner[uid][partner_id] = dict_ids[partner_id]
+ 
+    def __compute_sum_and_nb_lines(self, cr, uid, context):
+        res = {}
+        line_ids = itertools.chain.from_iterable(
+            self.__lines_by_partner[uid].values()
+        )
+        aml_osv = self.pool.get('account.move.line')
+        reads = aml_osv.read(cr, uid, line_ids, ['credit', 'debit'], context)
+        total_credit = reduce(lambda x, y: x + y, [read['credit'] for read in reads])
+        total_debit = reduce(lambda x, y: x + y, [read['debit'] for read in reads])
+        res['total_amount'] = total_credit - total_debit
+        res['nb_lines'] = len(reads)
+        return res
+
+
+    def __add_del_element(self, cr, uid, ids, selector, partner_id, list_ids, context):
+
+        values = {}
+        type, diff = self.__check_add_del(uid, list_ids)
+        if type == -1:
+            values = self.__delete_line(diff, uid)
+        elif type == 1:
+            self.__add_line(cr, uid, diff, context)
         else:
-            for partner_id in temp:
-                if partner_id in self.__lines_by_partner[uid]:
-                    if temp[partner_id] not in self.__lines_by_partner[uid][partner_id]:
-                        self.__lines_by_partner[uid][partner_id].extend(
-                            self.__substract_wo_dups(
-                                self.__lines_by_partner[uid][partner_id],
-                                temp[partner_id]
-                            )
-                        )
-                else:
-                    self.__lines_by_partner[uid][partner_id] = temp[partner_id]
-        
+            return { 'value': {}}
+
         return { 'domain': self.__calcul_partner_domain(uid),
                  'value': values}
 
@@ -408,6 +443,9 @@ class good_to_pay(osv.osv_memory):
         elif self.__state_line_ids[uid] == 'view_changed':
             self.__state_line_ids[uid] = None
             res = self.__view_changed(cr, uid, ids, list_ids, context)
-
+        if self.__lines_by_partner[uid]:
+            res['value'].update(self.__compute_sum_and_nb_lines(cr, uid, context))
+        else:
+            res['value'].update({'nb_lines': 0.0, 'total_amount': 0.0})
 
         return res

@@ -31,6 +31,8 @@
                             <field readonly="1" name="date_maturity" />
                             <field readonly="1" name="debit"/>
                             <field readonly="1" name="credit"/>
+                            <field readonly="1" name="debit_curr" />
+                            <field readonly="1" name="credit_curr" />
                             <field readonly="1" name="currency_id" />
                         </tree>
                     </field>
