@@ -51,6 +51,7 @@ class good_to_pay(osv.osv_memory):
 
     _name = "account.move.line.goodtopay"
     _description = "Payment selection for good to pay"
+
     _columns = {
         'journal_id': fields.many2one('account.journal',
                                    'Payment Method',
@@ -80,6 +81,10 @@ class good_to_pay(osv.osv_memory):
         ),
     }
 
+    _defaults = {
+        'generate_report': lambda *a: True,
+    }
+
     __lines_by_partner = {}
     __state_line_ids = {}
 
@@ -96,15 +101,16 @@ class good_to_pay(osv.osv_memory):
         return vals
 
     def _generate_report(self, cr, uid, active_ids, context=None):
-        """ function to generate report with some parameters
-        to select the sentence to print in the report
-        """
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account_streamline.remittance_letter',
-            'datas': {'ids': active_ids,
-                     'model': 'account.voucher'},
-        }
+        ''' Generate a Payment Suggestion report. '''
+
+        # active_ids contains move-line ids; remove them or the payment
+        # suggestion object will use them by default.
+        if 'active_ids' in context:
+            del context['active_ids']
+
+        return (self.pool.get('payment.suggestion')
+                .print_payment_suggestion(cr, uid, active_ids,
+                                          context=context))
 
     def __check_no_debit_line(self, cr, uid, context):
         aml_osv = self.pool.get('account.move.line')

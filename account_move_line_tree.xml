@@ -42,6 +42,8 @@
                 <list editable="bottom" colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="false" version="7.0">
                     <field readonly="1" name="state"/>
                     <field readonly="1" name="period_id" />
+                    <field readonly="1" name="partner_id" />
+                    <field readonly="1" name="journal_id" />
                     <field readonly="1" name="account_id" />
                     <field readonly="1" name="ref" />
                     <field readonly="1" name="name" />

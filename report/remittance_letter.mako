@@ -13,7 +13,7 @@ ${css}
 
 .remittance_letter_header_sep {
     clear: both;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .remittance_letter_message {

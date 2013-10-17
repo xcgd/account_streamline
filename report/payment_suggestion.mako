@@ -10,21 +10,19 @@ ${css}
     padding: 10px 10px 10px 10px;
 }
 
-.payment_suggestion_header_sep {
-    clear: both;
-    margin-top: 50px;
-}
-
 .payment_suggestion_partner {
 	clear: both;
     margin-top: 40px;
     margin-bottom: 40px;
 }
 
-.payment_suggestion_total {
+.payment_suggestion_total, .payment_suggestion_total_main {
     margin-top: 30px;
     padding: 10px 10px 10px 10px;
     border: 1px #000000 solid;
+}
+
+.payment_suggestion_total {
     text-align: right;
 }
 
@@ -35,10 +33,8 @@ ${css}
 
 <% partners = get_partners(object) %>
 
-<div class="payment_suggestion_header_sep">&nbsp;</div>
-
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
-<h2 class="payment_suggestion_total">
+<h2 class="payment_suggestion_total_main">
 	<% voucher_count, partner_count, total = get_totals(partners) %>
 	${ _('Voucher count: %d') % voucher_count }<br/>
 	${ _('Partner count: %d') % partner_count }<br/>
@@ -59,8 +55,8 @@ ${css}
             <th>${ _('Transaction reference') }</th>
             <th>${ _('Description') }</th>
             <th>${ _('Invoice date') }</th>
-            <th>${ _('Debit/Credit') }</th>
             <th>${ _('Currency') }</th>
+            <th>${ _('Debit/Credit') }</th>
             <th class="amount">${ _('Amount') }</th>
         </tr>
     </thead>
@@ -71,8 +67,8 @@ ${css}
             <td>${ line.name }</td>
             <td>${ line.move_line_id.ref }</td>
             <td>${ line.date_original }</td>
-            <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
+            <td>${ debit_credit(line) }</td>
             <td class="amount">${ format_amount(line.amount, voucher) }</td>
         </tr>
         %endfor
@@ -85,6 +81,8 @@ ${css}
 	${ format_amount(partner_total, vouchers[0]) }
 </h2>
 
+%endfor
+
 <h2 class="payment_suggestion_bottom">
 	${ _('Generated on %s') % date() }
 </h2>
@@ -92,7 +90,5 @@ ${css}
 <h2 class="payment_suggestion_bottom">
 	${ _('Signature:') }
 </h2>
-
-%endfor
 
 %endfor
