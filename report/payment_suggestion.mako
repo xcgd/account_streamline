@@ -35,6 +35,7 @@ ${css}
 
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="payment_suggestion_total_main">
+	${ _('Journal: %s') % object.voucher_ids[0].journal_id.name }<br/>
 	<% voucher_count, partner_count, total = get_totals(partners) %>
 	${ _('Voucher count: %d') % voucher_count }<br/>
 	${ _('Partner count: %d') % partner_count }<br/>
