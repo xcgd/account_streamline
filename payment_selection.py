@@ -81,10 +81,6 @@ class good_to_pay(osv.osv_memory):
         ),
     }
 
-    _defaults = {
-        'generate_report': lambda *a: True,
-    }
-
     __lines_by_partner = {}
     __state_line_ids = {}
 
@@ -98,6 +94,9 @@ class good_to_pay(osv.osv_memory):
         move_lines = [(6, 0, context['active_ids'])]
         vals['view_complete'] = 'complete'
         vals['line_ids'] = move_lines
+
+        vals['generate_report'] = True
+
         return vals
 
     def _generate_report(self, cr, uid, active_ids, context=None):
