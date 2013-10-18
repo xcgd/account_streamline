@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem action="action_move_line_tree_readonly"
-                  id="menu_action_account_move_line_readonly"
-                  parent="account_payment.menu_main_payment"
-                  groups="account.group_account_user" />
+        <!-- Hide the following menu item for now. -->
+<!--         <menuitem action="action_move_line_tree_readonly" -->
+<!--                   id="menu_action_account_move_line_readonly" -->
+<!--                   parent="account_payment.menu_main_payment" -->
+<!--                   groups="account.group_account_user" /> -->
 
         <menuitem action="action_move_line_tree_payment"
                   id="menu_action_account_move_line_payment"
