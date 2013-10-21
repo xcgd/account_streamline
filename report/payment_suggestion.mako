@@ -52,6 +52,9 @@ ${css}
 	partner_total = partner_details['total']
 %>
 
+<!-- Page breaks have not been ideally fixed (tables that are too high still span multiple pages
+without their report row being repeated) but this solution is already quite good; see
+<https://bitbucket.org/xcg/account_streamline/issue/38>. -->
 <div class="avoid_page_break">
 
 <h2 class="payment_suggestion_partner">${ partner.name }</h2>
