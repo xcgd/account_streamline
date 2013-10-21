@@ -81,14 +81,10 @@ class account_move_line(osv.osv):
         date_reconcile=fields.function(_get_reconcile_date,
                                        method=True,
                                        string="Reconcile Date",
-                                       type='datetime',
-                                       store={
-                                           'account.move.line': (
-                                               lambda cr, uid, ids, c={}: ids,
-                                               [''],
-                                               20
-                                           ),
-                                       }),
+                                       type='date',
+                                       store={ 'account.move.line': (
+           lambda self, cr, uid, ids, c={}: ids, ['reconcile_id'], 20),
+                                              }),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
