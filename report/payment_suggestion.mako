@@ -5,6 +5,10 @@ ${css}
     text-align: center;
 }
 
+.avoid_page_break {
+	page-break-inside: avoid;
+}
+
 .payment_suggestion_bottom {
     margin-top: 30px;
     padding: 10px 10px 10px 10px;
@@ -48,6 +52,8 @@ ${css}
 	partner_total = partner_details['total']
 %>
 
+<div class="avoid_page_break">
+
 <h2 class="payment_suggestion_partner">${ partner.name }</h2>
 
 <table class="list_table">
@@ -81,6 +87,8 @@ ${css}
 	${ _('Total for %s:') % partner.name }
 	${ format_amount(partner_total, vouchers[0]) }
 </h2>
+
+</div>
 
 %endfor
 
