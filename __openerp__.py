@@ -36,7 +36,6 @@
         'account_move_line_journal_view.xml',
         'account_menu_entries.xml',
         'data/voucher_report_header.xml',
-        'report/payment_suggestion_header.xml',
         'report/payment_suggestion.xml',
         'report/remittance_letter.xml',
         'data/remittance_letter_email_template.xml',
