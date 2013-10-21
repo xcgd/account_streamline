@@ -17,7 +17,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
-            'message': self.get_message,
+            'top_message': self.get_top_message,
             'title': self.get_title,
         })
 
@@ -28,11 +28,11 @@ class remittance_letter_parser(report_sxw.rml_parse):
         company_osv = self.pool.get('res.company')
         company_id = company_osv._company_default_get(cr, uid, 'account.voucher', context=context)
         company_br = company_osv.browse(cr, uid, company_id, context=context)
-        if not company_br.message_voucher_validate:
+        if not company_br.remittance_letter_top:
             raise osv.except_osv(
                 _('Error'),
-                _('Please set the message for payments'
-                  ' in your company settings.')
+                _('Please set the "Remittance Letter - top message" in '
+                  'company settings.')
             )
 
     def get_debit_credit(self, br):
@@ -53,7 +53,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
             return '%s %s' % (symbol, amount)
         return amount.strip()
 
-    def get_message(self, this_br):
+    def get_top_message(self, this_br):
         company = this_br.company_id
         if not company:
             return ''
@@ -64,9 +64,10 @@ class remittance_letter_parser(report_sxw.rml_parse):
 
         iban = bank.acc_number or ''
         date = this_br.date or ''
-        if this_br.state == 'posted':
-            return company.message_voucher_validate.replace('$iban', iban).replace('$date', str(date))
-        return ''
+
+        return (company.remittance_letter_top
+                .replace('$iban', iban)
+                .replace('$date', str(date)))
 
     def get_title(self, br):
         return _('Remittance Letter')

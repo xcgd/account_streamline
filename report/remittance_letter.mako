@@ -84,7 +84,7 @@ ${css}
 <h2 class="remittance_letter_voucher_name">${ object.name }</h2>
 
 %if object.state == 'posted':
-<h2 class="remittance_letter_message">${ message(object) }</h2>
+<h2 class="remittance_letter_message">${ top_message(object) }</h2>
 %endif
 
 <table class="list_table">
