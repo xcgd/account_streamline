@@ -21,6 +21,7 @@ class payment_suggestion_parser(report_sxw.rml_parse):
             'get_totals': self.get_totals,
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
+            'get_voucher': self.get_voucher,
             'title': self.get_title,
         })
 
@@ -71,6 +72,11 @@ class payment_suggestion_parser(report_sxw.rml_parse):
         if position == 'before':
             return '%s %s' % (symbol, amount)
         return amount.strip()
+
+    def get_voucher(self, br):
+        #  This report operates on payment.suggestion opjects; return the first
+        # linked voucher.
+        return br.voucher_ids[0]
 
     def get_title(self, br):
         return _('Payment Suggestion')

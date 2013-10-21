@@ -2,10 +2,10 @@
 <openerp>
     <data>
 
-        <!-- Define a default header for Remittance Letter reports. -->
+        <!-- Default header for reports that depend on account.voucher objects. -->
 
-        <record id="remittance_letter_header" model="ir.header_webkit">
-            <field name="name">Remittance Letter Header</field>
+        <record id="voucher_report_header" model="ir.header_webkit">
+            <field name="name">Voucher Report Header</field>
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
             <field eval="40.0" name="margin_top" />
@@ -250,11 +250,12 @@ ${css}
 </head>
 <body style="border:0; margin: 0;" onload="subst()">
 %for object in objects:
+<% voucher = get_voucher(object) %>
 <%page expression_filter="entity"/>
-<% setLang(object.partner_id.lang) %>
+<% setLang(voucher.partner_id.lang) %>
 <div class="header">
-    <div class="logo">${helper.embed_image('png', object.partner_id.company_id.logo)|n}</div>
-    <div class="title">${ title(object) }</div>
+    <div class="logo">${helper.embed_image('png', voucher.partner_id.company_id.logo)|n}</div>
+    <div class="title">${ title(voucher) }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
@@ -272,10 +273,19 @@ ${css}
 <style type="text/css">
 ${css}
 </style>
-<p class="footer">${objects[0].partner_id.company_id.name} - ${objects[0].partner_id.company_id.company_registry} - ${objects[0].partner_id.company_id.vat}</p>
+<body>
+%for object in objects:
+<% voucher = get_voucher(object) %>
+<% setLang(voucher.partner_id.lang) %>
+<p class="footer">
+    ${voucher.partner_id.company_id.name} -
+    ${voucher.partner_id.company_id.company_registry} -
+    ${voucher.partner_id.company_id.vat}
+</p>
 <br/>
 <br/>
 <br/>
+%endfor
 </body>
 </html>
 ]]></field>

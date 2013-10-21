@@ -17,6 +17,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
+            'get_voucher': self.get_voucher,
             'top_message': self.get_top_message,
             'title': self.get_title,
         })
@@ -52,6 +53,10 @@ class remittance_letter_parser(report_sxw.rml_parse):
         if position == 'before':
             return '%s %s' % (symbol, amount)
         return amount.strip()
+
+    def get_voucher(self, br):
+        # This report already operates on account.voucher objects.
+        return br
 
     def get_top_message(self, this_br):
         company = this_br.company_id
