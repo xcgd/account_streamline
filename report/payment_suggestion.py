@@ -122,8 +122,8 @@ class payment_suggestion_report(WebKitParser):
                         if voucher.journal_id != journal:
                             raise osv.except_osv(
                                 _('Error'),
-                                _('Payment Suggestions must apply to one journal'
-                                  'only.'))
+                                _('Payment Suggestions must apply to one '
+                                  'journal only.'))
                     else:
                         journal = voucher.journal_id
 
