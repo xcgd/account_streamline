@@ -51,6 +51,11 @@ table {
     text-align: center;
 }
 
+.header_sep {
+    clear: both;
+    height: 20px;
+}
+
 .pagenum {
     font-size: 8px;
     padding-top: 72px;
@@ -254,6 +259,7 @@ ${css}
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
     </div>
 </div>
+<div class="header_sep">&nbsp;</div>
 %endfor
 </body>
 </html>

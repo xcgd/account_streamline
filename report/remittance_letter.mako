@@ -11,11 +11,6 @@ ${css}
     border: 1px #000000 solid;
 }
 
-.remittance_letter_header_sep {
-    clear: both;
-    margin-top: 20px;
-}
-
 .remittance_letter_message {
     clear: both;
     margin-top: 40px;
@@ -39,8 +34,6 @@ ${css}
 
 %for object in objects:
 <% setLang(object.partner_id.lang) %>
-
-<div class="remittance_letter_header_sep">&nbsp;</div>
 
 <div class="address">
     <div class="addressright">
