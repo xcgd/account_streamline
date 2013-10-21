@@ -12,4 +12,10 @@ class res_company(osv.Model):
             'reports. Available variables: "$iban" for the IBAN; "$date" for '
             'the payment date. HTML tags are allowed.')
         ),
+
+        'remittance_letter_bottom': fields.text(
+            _('Remittance Letter - bottom message'),
+            help=_('Message to write at the bottom of Remittance Letter '
+            'reports. HTML tags are allowed.')
+        ),
     }

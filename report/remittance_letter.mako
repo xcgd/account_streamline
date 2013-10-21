@@ -5,8 +5,11 @@ ${css}
     text-align: center;
 }
 
+.remittance_letter_bottom, .remittance_letter_company_bottom {
+	margin-top: 30px;
+}
+
 .remittance_letter_bottom {
-    margin-top: 30px;
     padding: 10px 10px 10px 10px;
     border: 1px #000000 solid;
 }
@@ -76,9 +79,7 @@ ${css}
 <!-- Using h2 as the font-size property doesn't seem to affect divs... -->
 <h2 class="remittance_letter_voucher_name">${ object.name }</h2>
 
-%if object.state == 'posted':
 <h2 class="remittance_letter_message">${ top_message(object) }</h2>
-%endif
 
 <table class="list_table">
     <thead>
@@ -105,6 +106,11 @@ ${css}
 
 <h2 class="remittance_letter_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
 
+<!-- Voucher-specific bottom information. -->
 ${ object.remittance_letter_bottom }
 
+<!-- Company-specific bottom information. -->
+<h2 class="remittance_letter_company_bottom">${ bottom_message(object) }</h2>
+
 %endfor
+

@@ -11,9 +11,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='Configuration']" position="after">
                     <page string="Messages">
+
                         <separator string="Remittance Letter - top message"
                             colspan="4" />
                         <field name="remittance_letter_top" widget="html" />
+
+                        <separator string="Remittance Letter - bottom message"
+                            colspan="4" />
+                        <field name="remittance_letter_bottom" widget="html" />
+
                     </page>
                 </xpath>
             </field>
