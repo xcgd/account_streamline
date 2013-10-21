@@ -78,13 +78,19 @@ class account_move_line(osv.osv):
                                  help="This is the credit "
                                       "amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
-        date_reconcile=fields.function(_get_reconcile_date,
-                                       method=True,
-                                       string="Reconcile Date",
-                                       type='date',
-                                       store={ 'account.move.line': (
-           lambda self, cr, uid, ids, c={}: ids, ['reconcile_id'], 20),
-                                              }),
+        date_reconcile=fields.function(
+                _get_reconcile_date,
+                method=True,
+                string="Reconcile Date",
+                type='date',
+                store={
+                    'account.move.line': (
+                        lambda self, cr, uid, ids, c={}: ids,
+                        ['reconcile_id'],
+                        20
+                        ),
+                }
+        ),
         a1_id=fields.many2one('analytic.code', "Analysis Code 1",
                               domain=[('nd_id.ns_id.model_name', '=',
                                        'account_move_line'),
