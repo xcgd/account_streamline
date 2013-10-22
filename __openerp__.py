@@ -25,11 +25,11 @@
     "data": [
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',
+        'wizard/email_remittance.xml',
         'account_move_line_search_unreconciled.xml',
         'account_move_line_tree.xml',
         'account_move_view.xml',
         'account_view.xml',
-        'account_voucher.xml',
         'partner_view.xml',
         'payment_selection.xml',
         'payment_suggestion.xml',
