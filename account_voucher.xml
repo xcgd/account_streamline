@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Contextual action to send Remittance Letters by email. -->
+
+        <record id="action_email_remittance" model="ir.actions.server">
+            <field name="name">Email Remittance Letters</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_voucher" />
+            <field name="state">code</field>
+            <field name="code">
+action = object.email_remittance_letters()
+            </field>
+        </record>
+        <record id="value_contextual_action_email_remittance" model="ir.values">
+            <field name="name">Email Remittance Letters</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d' % action_email_remittance" />
+            <field name="model">account.voucher</field>
+        </record>
+
+    </data>
+</openerp>

@@ -29,6 +29,7 @@
         'account_move_line_tree.xml',
         'account_move_view.xml',
         'account_view.xml',
+        'account_voucher.xml',
         'partner_view.xml',
         'payment_selection.xml',
         'payment_suggestion.xml',
