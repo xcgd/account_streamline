@@ -89,7 +89,7 @@ class email_remittance(orm.TransientModel):
             [('name', '=', 'email.remittance.done')])
 
         return {
-            'name': 'Email Remittance Letters',
+            'name': _('Email Remittance Letters'),
             'res_id': this.id,
             'res_model': 'email.remittance',
             'target': 'new',
