@@ -12,33 +12,69 @@ class email_remittance(orm.TransientModel):
         'email_template': fields.many2one(
             'email.template',
             string=_('Email template'),
-            domain=[('id', '=', 'remittance_letter_email_template')]),
+            domain=[('report_name', '=', 'RemittanceLetter.pdf')],
+            required=True),
+
         'partners': fields.many2many(
             'res.partner',
-            'email_remittance_rel',
+            'email_remittance_partner_rel',
             'email_remittance_id',
             'partner_id',
-            _('Partners')),
+            _('Partners'),
+            required=True,
+            readonly=True),
+
+        'vouchers': fields.many2many(
+            'account.voucher',
+            'email_remittance_voucher_rel',
+            'email_remittance_id',
+            'voucher_id',
+            _('Vouchers'),
+            required=True,
+            readonly=True),
     }
 
     def default_get(self, cr, uid, fields_list=None, context=None):
-        ''' Gather partners from selected vouchers. '''
+        ''' - Ensure posted vouchers have been selected.
+        - Gather partners from selected vouchers.
+        - Select a default email template. '''
 
-        if not 'active_ids' in context:
-            return {}
-
-        partners = []
+        if 'active_ids' not in context:
+            raise osv.except_osv(
+                _('Error'),
+                _('No voucher selected.')
+            )
 
         voucher_obj = self.pool.get('account.voucher')
         vouchers = voucher_obj.browse(cr, uid, context['active_ids'],
                                       context=context)
 
+        voucher_ids = []
+        partner_ids = []
+
         for voucher in vouchers:
-            if voucher.partner_id.id not in partners:
-                partners.append(voucher.partner_id.id)
+            if voucher.state == 'posted':
+                voucher_ids.append(voucher.id)
+
+                if voucher.partner_id.id not in partner_ids:
+                    partner_ids.append(voucher.partner_id.id)
+
+        if not voucher_ids:
+            raise osv.except_osv(
+                _('Error'),
+                _('No posted voucher selected.')
+            )
+
+        # Grab the default email template.
+        email_template_obj = self.pool.get('email.template')
+        default_email_template = email_template_obj.search(cr, uid,
+            [('report_name', '=', 'RemittanceLetter.pdf')],
+            context=context)
 
         return {
-            'partners': [(6, 0, partners)],
+            'email_template': default_email_template,
+            'partners': [(6, 0, partner_ids)],
+            'vouchers': [(6, 0, voucher_ids)],
         }
 
     def send_emails(self, cr, uid, ids, context=None):
@@ -47,25 +83,11 @@ class email_remittance(orm.TransientModel):
 
         this = self.browse(cr, uid, ids)[0]
 
-        # Grab the email template.
-        email_template_obj = self.pool.get('email.template')
-        template_ids = email_template_obj.search(cr, uid,
-            [('report_name', '=', 'RemittanceLetter.pdf')], context=context)
-        if not template_ids:
-            raise osv.except_osv(_('Error'), _('No email template found '
-                'which generates RemittanceLetter reports'))
-
-        # Get the correct list of ids...
-        if 'active_ids' in context:
-            ids = context['active_ids']
-
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
-        vouchers = self.browse(cr, uid, ids, context=context)
-        for voucher in vouchers:
-            if voucher.state != 'posted':
-                continue
-            email_template_obj.send_mail(cr, uid, template_ids[0],
+        email_template_obj = self.pool.get('email.template')
+        for voucher in this.vouchers:
+            email_template_obj.send_mail(cr, uid, this.email_template.id,
                 voucher.id, force_send=True, context=context)
 
         view_obj = self.pool.get('ir.ui.view')

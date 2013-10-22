@@ -10,16 +10,22 @@
             <field name="arch" type="xml">
                 <form string="Email Remittance Letters" version="7.0">
                     <group cols="2">
+
                         <field name="email_template" />
+
+                        <field name="partners">
+                            <tree string="Partners" version="7.0">
+                                <field name="name" />
+                                <field name="email" />
+                            </tree>
+                        </field>
+
+                        <field name="vouchers" />
+
                     </group>
-                    <field name="partners">
-                        <tree string="Partners" version="7.0">
-                            <field name="name" />
-                            <field name="email" />
-                        </tree>
-                    </field>
                     <separator
                         string="Warning! Emails will be sent when clicking on the red button." />
+
                     <footer>
                         <button string="Send emails" name="send_emails"
                             type="object" class="oe_highlight" />
@@ -35,8 +41,13 @@
             <field name="name">email.remittance.done</field>
             <field name="model">email.remittance</field>
             <field name="arch" type="xml">
-                <label string="Remittance Letter emails have been successfully sent." />
-                <button special="cancel" string="Close" type="object" />
+                <form string="Email Remittance Letters" version="7.0">
+                    <label
+                        string="Remittance Letter emails have been successfully sent." />
+                    <footer>
+                        <button string="Close" special="cancel" type="object" />
+                    </footer>
+                </form>
             </field>
         </record>
 

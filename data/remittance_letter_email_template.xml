@@ -5,6 +5,7 @@
         <!-- Default email template for Remittance Letter emails. -->
         <record id="remittance_letter_email_template" model="email.template">
             <field name="body_html">Dear provider, Please take note of the details of the transaction with your account (attached).</field>
+            <field name="email_from">${object.company_id.name} &lt;${object.company_id.email}&gt;</field>
             <field name="email_recipients">${object.partner_id.id}</field>
             <field name="email_to">${object.partner_id.email}</field>
             <field name="model_id" ref="account_streamline.model_account_voucher" />
