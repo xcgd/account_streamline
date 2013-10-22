@@ -2,16 +2,41 @@
 <openerp>
     <data>
 
-        <!-- Contextual action to send Remittance Letters by email. -->
+        <!-- Wizard to send Remittance Letters by email. -->
 
-        <record id="action_email_remittance" model="ir.actions.server">
-            <field name="name">Email Remittance Letters</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="model_account_voucher" />
-            <field name="state">code</field>
-            <field name="code">
-action = object.email_remittance_letters()
+        <record id="email_remittance_wizard" model="ir.ui.view">
+            <field name="name">email.remittance.wizard</field>
+            <field name="model">email.remittance.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Email Remittance Letters" version="7.0">
+                    <field name="email_template" />
+                    <field name="partners">
+                        <tree string="Partners" version="7.0">
+                            <field name="name" />
+                            <field name="email" />
+                        </tree>
+                    </field>
+                    <label
+                        string="Warning! Emails will be sent when clicking on the red button." />
+                    <footer>
+                        <button string="Send emails" name="send_emails"
+                            type="object" class="oe_highlight" />
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
             </field>
+        </record>
+
+        <!-- Contextual action to launch the Remittance Letter email wizard. -->
+
+        <record id="action_email_remittance" model="ir.actions.act_window">
+            <field name="name">Email Remittance Letters</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">email.remittance.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="email_remittance_wizard" />
+            <field name="target">new</field>
         </record>
         <record id="value_contextual_action_email_remittance" model="ir.values">
             <field name="name">Email Remittance Letters</field>
