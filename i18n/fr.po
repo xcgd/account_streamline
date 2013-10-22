@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-22 09:31+0000\n"
-"PO-Revision-Date: 2013-10-22 09:31+0000\n"
+"POT-Creation-Date: 2013-10-22 15:45+0000\n"
+"PO-Revision-Date: 2013-10-22 15:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -172,9 +172,10 @@ msgid "Mark as good to pay"
 msgstr "Marquer en Bon à payer"
 
 #. module: account_streamline
-#: field:account.move.line,move_state:0
-msgid "status"
-msgstr "Etat"
+#: view:email.remittance:0
+#: field:email.remittance,partners:0
+msgid "Partners"
+msgstr "Partenaires"
 
 #. module: account_streamline
 #: field:account.move.line.reconcile,trans_currency_id:0
@@ -212,6 +213,12 @@ msgid "Dear provider, Please take note of the details of the transaction with yo
 msgstr "Cher fournisseur, Veuillez prendre note des détails de transaction sur votre compte (pièce jointe)."
 
 #. module: account_streamline
+#: field:email.remittance,email_template:0
+msgid "Email template"
+msgstr "Modele d'email"
+
+#. module: account_streamline
+#: field:email.remittance,vouchers:0
 #: field:payment.suggestion,voucher_ids:0
 msgid "Vouchers"
 msgstr "Bons de réglement"
@@ -253,6 +260,11 @@ msgid "View selector"
 msgstr "Voir sélecteur"
 
 #. module: account_streamline
+#: view:email.remittance:0
+msgid "Remittance Letter emails have been successfully sent."
+msgstr "Remittance Letter emails have been successfully sent."
+
+#. module: account_streamline
 #: field:account.move.line.reconcile,writeoff_curr:0
 msgid "Write-Off amount"
 msgstr "Ecart de réglement"
@@ -267,9 +279,10 @@ msgid "Forbidden"
 msgstr "Interdit"
 
 #. module: account_streamline
-#: model:ir.actions.server,name:account_streamline.action_email_remittance
+#: view:email.remittance:0
+#: model:ir.actions.act_window,name:account_streamline.action_email_remittance
 msgid "Email Remittance Letters"
-msgstr "Email avis de réglement"
+msgstr "Avis de réglement par email"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_voucher_line
@@ -282,6 +295,11 @@ msgid "T3 control"
 msgstr "Contrôle T3"
 
 #. module: account_streamline
+#: view:email.remittance:0
+msgid "Warning! Emails will be sent when clicking on the red button."
+msgstr "Attention!L'email sera envoyé en cliquant sur le bouton rouge."
+
+#. module: account_streamline
 #: field:account.move.line.goodtopay,nb_lines:0
 msgid "Number of lines"
 msgstr "Nombre de lignes"
@@ -291,6 +309,11 @@ msgstr "Nombre de lignes"
 #: view:account.move.line.reconcile:0
 msgid "or"
 msgstr "ou"
+
+#. module: account_streamline
+#: view:email.remittance:0
+msgid "Send emails"
+msgstr "Envoyer emails"
 
 #. module: account_streamline
 #: model:mail.message.subtype,description:account_streamline.mt_partner_supplier
@@ -422,8 +445,14 @@ msgstr "Avis de réglement - message du bas"
 #. module: account_streamline
 #: view:account.move.line.goodtopay:0
 #: view:account.move.line.reconcile:0
+#: view:email.remittance:0
 msgid "Cancel"
 msgstr "Annuler"
+
+#. module: account_streamline
+#: view:email.remittance:0
+msgid "Close"
+msgstr "Fermé"
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,generate_report:0
@@ -523,6 +552,11 @@ msgid "Partial Reconcile"
 msgstr "Lettrage partiel"
 
 #. module: account_streamline
+#: model:ir.model,name:account_streamline.model_email_remittance
+msgid "email.remittance"
+msgstr "email.remittance"
+
+#. module: account_streamline
 #: sql_constraint:res.partner:0
 msgid "The name of the partner must be unique !"
 msgstr "Le nom du partenaire doit être unique !"
@@ -556,6 +590,11 @@ msgid "Reconciled Journal Items"
 msgstr "Lignes lettrées"
 
 #. module: account_streamline
+#: field:account.move.line,move_state:0
+msgid "status"
+msgstr "Etat"
+
+#. module: account_streamline
 #: field:account.move.line.goodtopay,partner_id:0
 msgid "Selected Partner"
 msgstr "Selectionner partenaire"
@@ -581,7 +620,7 @@ msgstr "Analytique Code 5"
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_move_line_goodtopay
 msgid "Payment selection for good to pay"
-msgstr "Sélection de paiment bon à payer"
+msgstr "Sélection de paiement bon à payer"
 
 #. module: account_streamline
 #: field:account.account,a3_id:0
