@@ -5,8 +5,8 @@
         <!-- Wizard to send Remittance Letters by email. -->
 
         <record id="email_remittance_wizard" model="ir.ui.view">
-            <field name="name">email.remittance.wizard</field>
-            <field name="model">email.remittance.wizard</field>
+            <field name="name">email.remittance</field>
+            <field name="model">email.remittance</field>
             <field name="arch" type="xml">
                 <form string="Email Remittance Letters" version="7.0">
                     <field name="email_template" />
@@ -27,12 +27,23 @@
             </field>
         </record>
 
+        <!-- Wizard view to show after Remittance Letter emails have been sent. -->
+
+        <record id="email_remittance_wizard_done" model="ir.ui.view">
+            <field name="name">email.remittance.done</field>
+            <field name="model">email.remittance</field>
+            <field name="arch" type="xml">
+                <label string="Remittance Letter emails have been successfully sent." />
+                <button special="cancel" string="Close" type="object" />
+            </field>
+        </record>
+
         <!-- Contextual action to launch the Remittance Letter email wizard. -->
 
         <record id="action_email_remittance" model="ir.actions.act_window">
             <field name="name">Email Remittance Letters</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">email.remittance.wizard</field>
+            <field name="res_model">email.remittance</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="email_remittance_wizard" />
@@ -41,7 +52,7 @@
         <record id="value_contextual_action_email_remittance" model="ir.values">
             <field name="name">Email Remittance Letters</field>
             <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.server,%d' % action_email_remittance" />
+            <field name="value" eval="'ir.actions.act_window,%d' % action_email_remittance" />
             <field name="model">account.voucher</field>
         </record>
 

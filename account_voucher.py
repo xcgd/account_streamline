@@ -26,31 +26,6 @@ class account_voucher(osv.Model):
         return (self.pool.get('payment.suggestion')
                 .print_payment_suggestion(cr, uid, ids, context=context))
 
-    def email_remittance_letters(self, cr, uid, ids, context=None):
-        ''' Send one email for each selected voucher; the email template
-        should generate attachments automagically. '''
-
-        # Grab the email template.
-        email_template_obj = self.pool.get('email.template')
-        template_ids = email_template_obj.search(cr, uid,
-            [('report_name', '=', 'RemittanceLetter.pdf')], context=context)
-        if not template_ids:
-            raise osv.except_osv(_('Error'), _('No email template found '
-                'which generates RemittanceLetter reports'))
-
-        # Get the correct list of ids...
-        if 'active_ids' in context:
-            ids = context['active_ids']
-
-        # Send 1 email per voucher. force_send=True to send instantly rather
-        # than scheduling for later delivery.
-        vouchers = self.browse(cr, uid, ids, context=context)
-        for voucher in vouchers:
-            if voucher.state != 'posted':
-                continue
-            email_template_obj.send_mail(cr, uid, template_ids[0],
-                voucher.id, force_send=True, context=context)
-
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
         Create one account move line, on the given account move, per voucher line where amount is not 0.0.
