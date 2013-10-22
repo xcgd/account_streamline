@@ -40,10 +40,7 @@ class email_remittance(orm.TransientModel):
         - Select a default email template. '''
 
         if 'active_ids' not in context:
-            raise osv.except_osv(
-                _('Error'),
-                _('No voucher selected.')
-            )
+            return {}
 
         voucher_obj = self.pool.get('account.voucher')
         vouchers = voucher_obj.browse(cr, uid, context['active_ids'],
@@ -60,10 +57,7 @@ class email_remittance(orm.TransientModel):
                     partner_ids.append(voucher.partner_id.id)
 
         if not voucher_ids:
-            raise osv.except_osv(
-                _('Error'),
-                _('No posted voucher selected.')
-            )
+            return {}
 
         # Grab the default email template.
         email_template_obj = self.pool.get('email.template')
