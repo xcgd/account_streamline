@@ -13,8 +13,11 @@
 
                         <field name="email_template" />
 
+                        <label colspan="2"
+                            string="Selected partners are listed below. Their email can be edited in the list; press Enter to validate." />
+
                         <field name="partners">
-                            <tree string="Partners" version="7.0">
+                            <tree string="Partners" version="7.0" editable="bottom">
                                 <field name="name" />
                                 <field name="email" />
                             </tree>
@@ -23,6 +26,7 @@
                         <field name="vouchers" />
 
                     </group>
+
                     <separator
                         string="Warning! Emails will be sent when clicking on the red button." />
 
