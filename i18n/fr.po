@@ -23,7 +23,7 @@ msgstr "Lettrage"
 #. module: account_streamline
 #: view:account.move.line.reconcile:0
 msgid "Write-Off"
-msgstr "Ecart de réglement"
+msgstr "Ecart de règlement"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_move_line_reconcile
@@ -215,13 +215,13 @@ msgstr "Cher fournisseur, Veuillez prendre note des détails de transaction sur 
 #. module: account_streamline
 #: field:email.remittance,email_template:0
 msgid "Email template"
-msgstr "Modele d'email"
+msgstr "Modèle d'email"
 
 #. module: account_streamline
 #: field:email.remittance,vouchers:0
 #: field:payment.suggestion,voucher_ids:0
 msgid "Vouchers"
-msgstr "Bons de réglement"
+msgstr "Bons de règlement"
 
 #. module: account_streamline
 #: field:account.move.line,credit_curr:0
@@ -242,7 +242,7 @@ msgstr "Si vous voyez ceci, la contrainte redéfinie dans account_streamline.acc
 #: model:email.template,subject:account_streamline.remittance_letter_email_template
 #: model:ir.actions.report.xml,name:account_streamline.remittance_letter
 msgid "Remittance Letter"
-msgstr "Avis de réglement"
+msgstr "Avis de règlement"
 
 #. module: account_streamline
 #: field:account.account,t2_ctl:0
@@ -262,12 +262,12 @@ msgstr "Voir sélecteur"
 #. module: account_streamline
 #: view:email.remittance:0
 msgid "Remittance Letter emails have been successfully sent."
-msgstr "Remittance Letter emails have been successfully sent."
+msgstr "Les emails d'avis de règlement ont été envoyés avec succès."
 
 #. module: account_streamline
 #: field:account.move.line.reconcile,writeoff_curr:0
 msgid "Write-Off amount"
-msgstr "Ecart de réglement"
+msgstr "Ecart de règlement"
 
 #. module: account_streamline
 #: selection:account.account,t1_ctl:0
@@ -282,12 +282,12 @@ msgstr "Interdit"
 #: view:email.remittance:0
 #: model:ir.actions.act_window,name:account_streamline.action_email_remittance
 msgid "Email Remittance Letters"
-msgstr "Avis de réglement par email"
+msgstr "Email des avis de règlement"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Lignes de bon de réglement"
+msgstr "Lignes de règlement"
 
 #. module: account_streamline
 #: field:account.account,t3_ctl:0
@@ -297,7 +297,7 @@ msgstr "Contrôle T3"
 #. module: account_streamline
 #: view:email.remittance:0
 msgid "Warning! Emails will be sent when clicking on the red button."
-msgstr "Attention!L'email sera envoyé en cliquant sur le bouton rouge."
+msgstr "Attention ! Les emails seront envoyés en cliquant sur le bouton rouge."
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,nb_lines:0
@@ -313,7 +313,7 @@ msgstr "ou"
 #. module: account_streamline
 #: view:email.remittance:0
 msgid "Send emails"
-msgstr "Envoyer emails"
+msgstr "Envoyer les emails"
 
 #. module: account_streamline
 #: model:mail.message.subtype,description:account_streamline.mt_partner_supplier
@@ -330,7 +330,7 @@ msgstr "Vue complète"
 #. module: account_streamline
 #: help:res.company,remittance_letter_top:0
 msgid "Message to write at the top of Remittance Letter reports. Available variables: \"$iban\" for the IBAN; \"$date\" for the payment date. HTML tags are allowed."
-msgstr "Message à écrire au début des rapports d'avis de réglement. Variables disponibles: \"$iban\" pour l'IBAN; \"$date\" pour la date de paiement. Les balises HTML sont autorisées"
+msgstr "Message écrit en haut des rapports d'avis de règlement. Variables disponibles : \"$iban\" pour l'IBAN ; \"$date\" pour la date de paiement. Les balises HTML sont autorisées."
 
 #. module: account_streamline
 #: field:account.account,t1_ctl:0
@@ -440,7 +440,7 @@ msgstr "Justificatif comptable"
 #: view:res.company:0
 #: field:res.company,remittance_letter_bottom:0
 msgid "Remittance Letter - bottom message"
-msgstr "Avis de réglement - message du bas"
+msgstr "Avis de règlement - message du bas"
 
 #. module: account_streamline
 #: view:account.move.line.goodtopay:0
@@ -452,7 +452,7 @@ msgstr "Annuler"
 #. module: account_streamline
 #: view:email.remittance:0
 msgid "Close"
-msgstr "Fermé"
+msgstr "Fermer"
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,generate_report:0
@@ -524,7 +524,7 @@ msgstr "Devise de l'entreprise"
 #. module: account_streamline
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr "Lettrer avec un écart de réglement"
+msgstr "Lettrer avec un écart de règlement"
 
 #. module: account_streamline
 #: model:mail.message.subtype,name:account_streamline.mt_partner_customer
@@ -539,7 +539,7 @@ msgstr "Credit total T"
 #. module: account_streamline
 #: help:res.company,remittance_letter_bottom:0
 msgid "Message to write at the bottom of Remittance Letter reports. HTML tags are allowed."
-msgstr "Message à écrire au bas des rapports de bon de réglement. Les balises HTML sont autorisées."
+msgstr "Message à écrire en bas des rapports d'avis de règlement. Les balises HTML sont autorisées."
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,line_ids:0
@@ -603,7 +603,7 @@ msgstr "Selectionner partenaire"
 #: view:res.company:0
 #: field:res.company,remittance_letter_top:0
 msgid "Remittance Letter - top message"
-msgstr "Bon de réglement - Message d'en tête'"
+msgstr "Avis de règlement - Message du haut"
 
 #. module: account_streamline
 #: field:account.account,a4_id:0
