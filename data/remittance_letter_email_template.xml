@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <!-- Default email template for Remittance Letter emails. -->
         <record id="remittance_letter_email_template" model="email.template">
