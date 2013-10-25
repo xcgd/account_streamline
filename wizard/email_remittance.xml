@@ -45,7 +45,12 @@
             <field name="name">email.remittance.done</field>
             <field name="model">email.remittance</field>
             <field name="arch" type="xml">
+
                 <form string="Email Remittance Letters" version="7.0">
+                    <group cols="2">
+                        <field name="emails" />
+                    </group>
+
                     <label
                         string="Remittance Letter emails have been successfully sent." />
                     <footer>

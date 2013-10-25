@@ -32,6 +32,14 @@ class email_remittance(orm.TransientModel):
             _('Vouchers'),
             required=True,
             readonly=True),
+
+        'emails': fields.many2many(
+            'mail.mail',
+            'email_remittance_email_rel',
+            'email_remittance_id',
+            'email_id',
+            _('Sent emails'),
+            readonly=True),
     }
 
     def default_get(self, cr, uid, fields_list=None, context=None):
@@ -77,12 +85,19 @@ class email_remittance(orm.TransientModel):
 
         this = self.browse(cr, uid, ids)[0]
 
+        email_ids = []
+
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
         email_template_obj = self.pool.get('email.template')
         for voucher in this.vouchers:
-            email_template_obj.send_mail(cr, uid, this.email_template.id,
-                voucher.id, force_send=True, context=context)
+            email_ids.append(email_template_obj.send_mail(cr, uid,
+                this.email_template.id, voucher.id, force_send=True,
+                context=context))
+
+        self.write(cr, uid, ids,
+                   { 'emails': [(6, 0, email_ids)] },
+                   context=context)
 
         view_obj = self.pool.get('ir.ui.view')
         view_id = view_obj.search(cr, uid,
