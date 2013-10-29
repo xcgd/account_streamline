@@ -27,10 +27,10 @@
 
                     </group>
 
-                    <separator
-                        string="Warning! Emails will be sent when clicking on the red button." />
-
                     <footer>
+                        <separator
+                            string="Warning! Emails will be sent when clicking on the red button." />
+
                         <button string="Send emails" name="send_emails"
                             type="object" class="oe_highlight" />
                         <button string="Cancel" class="oe_link" special="cancel" />
