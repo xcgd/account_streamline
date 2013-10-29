@@ -5,6 +5,11 @@ from openerp.osv import fields, orm
 from openerp.tools.translate import _
 
 
+email_template_domain = [('report_template.report_name',
+                          '=',
+                          'account_streamline.remittance_letter')]
+
+
 class email_remittance(orm.TransientModel):
     _name = 'email.remittance'
 
@@ -12,8 +17,9 @@ class email_remittance(orm.TransientModel):
         'email_template': fields.many2one(
             'email.template',
             string=_('Email template'),
-            domain=[('report_name', '=', 'RemittanceLetter.pdf')],
-            required=True),
+            domain=email_template_domain,
+            required=True,
+            readonly=True),
 
         'partners': fields.many2many(
             'res.partner',
@@ -69,12 +75,11 @@ class email_remittance(orm.TransientModel):
 
         # Grab the default email template.
         email_template_obj = self.pool.get('email.template')
-        default_email_template = email_template_obj.search(cr, uid,
-            [('report_name', '=', 'RemittanceLetter.pdf')],
-            context=context)
+        email_template = email_template_obj.search(cr, uid,
+            email_template_domain, context=context)
 
         return {
-            'email_template': default_email_template,
+            'email_template': email_template,
             'partners': [(6, 0, partner_ids)],
             'vouchers': [(6, 0, voucher_ids)],
         }
