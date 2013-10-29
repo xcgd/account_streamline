@@ -64,26 +64,39 @@ class remittance_letter_parser(report_sxw.rml_parse):
         if not company:
             return ''
 
-        return company.remittance_letter_bottom
+        return self.translate(company.remittance_letter_bottom)
 
-    def get_top_message(self, this_br):
-        company = this_br.company_id
+    def get_top_message(self, br):
+        company = br.company_id
         if not company:
             return ''
 
-        bank = this_br.partner_bank_id
+        bank = br.partner_bank_id
         if not bank:
             return ''
 
         iban = bank.acc_number or ''
-        date = this_br.date or ''
+        date = br.date or ''
 
-        return (company.remittance_letter_top
+        return (self.translate(company.remittance_letter_top)
                 .replace('$iban', iban)
                 .replace('$date', str(date)))
 
     def get_title(self, br):
         return _('Remittance Letter')
+
+    def translate(self, message):
+        ''' Translate text according to the currently selected language. '''
+
+        trans_obj = self.pool.get('ir.translation')
+        trans_ids = trans_obj.search(self.cr, self.uid,
+            [('src', '=', message),
+             ('lang', '=', self.localcontext['lang'])],
+            context=self.localcontext)
+        if not trans_ids:
+            return message
+        return trans_obj.browse(self.cr, self.uid,
+            trans_ids[0], context=self.localcontext).value
 
 
 class remittance_letter_report(WebKitParser):
