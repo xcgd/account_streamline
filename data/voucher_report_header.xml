@@ -89,22 +89,15 @@ table {
     font-size: 12px;
 }
 
-.addressleft,
 .addressright {
     width: 50%;
     margin: 20px 0;
-}
-
-.addressleft {
-    float: left;
 }
 
 .addressright {
     float: right;
 }
 
-.address .shipping,
-.address .invoice,
 .address .recipient {
     margin-top: 10px;
 }
