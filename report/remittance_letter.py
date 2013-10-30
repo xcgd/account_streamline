@@ -13,7 +13,6 @@ class remittance_letter_parser(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(remittance_letter_parser, self).__init__(
             cr, uid, name, context=context)
-        self.__check_vouchers(cr, uid, context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
             'format_amount': self.format_amount,
@@ -22,20 +21,6 @@ class remittance_letter_parser(report_sxw.rml_parse):
             'top_message': self.get_top_message,
             'title': self.get_title,
         })
-
-    def __check_vouchers(self, cr, uid, context=None):
-        """ This function check if the message for payment
-        is set in the company settings and raise in the other case.
-        """
-        company_osv = self.pool.get('res.company')
-        company_id = company_osv._company_default_get(cr, uid, 'account.voucher', context=context)
-        company_br = company_osv.browse(cr, uid, company_id, context=context)
-        if not company_br.remittance_letter_top:
-            raise osv.except_osv(
-                _('Error'),
-                _('Please set the "Remittance Letter - top message" in '
-                  'company settings.')
-            )
 
     def get_debit_credit(self, br):
         return _('Debit') if br.type == 'debit' else _('Credit')
