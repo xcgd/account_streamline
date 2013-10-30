@@ -17,6 +17,11 @@ class account_voucher(osv.Model):
         'remittance_letter_bottom': fields.function(_get_rem_letter_bot,
                                                     type='text',
                                                     method=True),
+
+        'partner_email': fields.related('partner_id',
+                                        'email',
+                                        type='char',
+                                        string=_('Partner email')),
     }
 
     def print_payment_suggestion(self, cr, uid, ids, context=None):
