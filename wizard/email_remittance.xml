@@ -51,8 +51,6 @@
                         <field name="emails" />
                     </group>
 
-                    <label
-                        string="Remittance Letter emails have been successfully sent." />
                     <footer>
                         <button string="Close" special="cancel" type="object" />
                     </footer>

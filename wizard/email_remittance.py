@@ -78,8 +78,11 @@ class email_remittance(orm.TransientModel):
         email_template = email_template_obj.search(cr, uid,
             email_template_domain, context=context)
 
+        if not email_template:
+            return {}
+
         return {
-            'email_template': email_template,
+            'email_template': email_template[0],
             'partners': [(6, 0, partner_ids)],
             'vouchers': [(6, 0, voucher_ids)],
         }
