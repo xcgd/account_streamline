@@ -394,7 +394,7 @@ msgstr "Emails envoyés"
 #. module: account_streamline
 #: model:ir.actions.server,name:account_streamline.action_payment_suggestion
 msgid "Generate Payment Suggestion"
-msgstr "Générer une suggestion de paiement"
+msgstr "Générer suggestion de paiement"
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,view_selection:0
