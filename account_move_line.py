@@ -239,6 +239,18 @@ class account_move_line(osv.osv):
             context
         )
 
+
+    def convert_modifiers(self, doc):
+        fields = doc.xpath("//field")
+        for field in fields:
+            mod = field.get('modifiers')
+            if mod is not None:
+                mod = mod.replace("\"invisible\"", "\"tree_invisible\"")
+                doc.xpath("//field[@name='%s']" % field.get('name'))[0].\
+                    set('modifiers', mod)
+
+
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
         '''
@@ -281,8 +293,11 @@ class account_move_line(osv.osv):
                 self.__modify_analysis_fields(doc, 'a5_id', ans_dict, context)
             self.__render_columns(doc, res['fields'], context)
 
+        self.convert_modifiers(doc)
+
         res['arch'] = etree.tostring(doc)
         return res
+
 
     def _get_currency(self, cr, uid, context=None):
         """
