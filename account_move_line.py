@@ -91,26 +91,46 @@ class account_move_line(osv.osv):
                         ),
                 }
         ),
-        a1_id=fields.many2one('analytic.code', "Analysis Code 1",
-                              domain=[('nd_id.ns_id.model_name', '=',
-                                       'account_move_line'),
-                                      ('nd_id.ns_id.ordering', '=', '1')]),
-        a2_id=fields.many2one('analytic.code', "Analysis Code 2",
-                              domain=[('nd_id.ns_id.model_name', '=',
-                                       'account_move_line'),
-                                      ('nd_id.ns_id.ordering', '=', '2')]),
-        a3_id=fields.many2one('analytic.code', "Analysis Code 3",
-                              domain=[('nd_id.ns_id.model_name', '=',
-                                       'account_move_line'),
-                                      ('nd_id.ns_id.ordering', '=', '3')]),
-        a4_id=fields.many2one('analytic.code', "Analysis Code 4",
-                              domain=[('nd_id.ns_id.model_name', '=',
-                                       'account_move_line'),
-                                      ('nd_id.ns_id.ordering', '=', '4')]),
-        a5_id=fields.many2one('analytic.code', "Analysis Code 5",
-                              domain=[('nd_id.ns_id.model_name', '=',
-                                       'account_move_line'),
-                                      ('nd_id.ns_id.ordering', '=', '5')]),
+        a1_id=fields.many2one(
+            'analytic.code',
+            "Analysis Code 1",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.ordering', '=', '1'),
+            ],
+        ),
+        a2_id=fields.many2one(
+            'analytic.code',
+            "Analysis Code 2",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.ordering', '=', '2'),
+            ],
+        ),
+        a3_id=fields.many2one(
+            'analytic.code',
+            "Analysis Code 3",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.ordering', '=', '3'),
+            ],
+        ),
+        a4_id=fields.many2one(
+            'analytic.code',
+            "Analysis Code 4",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.ordering', '=', '4'),
+            ],
+        ),
+        a5_id=fields.many2one(
+            'analytic.code',
+            "Analysis Code 5",
+            domain=[
+                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.ordering', '=', '5'),
+            ],
+        ),
     )
 
     def __modify_analysis_fields(self, doc, field, ans_dict, context):
@@ -119,11 +139,14 @@ class account_move_line(osv.osv):
         '''
         doc.xpath("//field[@name='%s']" % field)[0].\
             set('modifiers', '{"tree_invisible": %s, "readonly": true}' %
-                str(((not 'analytic_view' in context) and
-                     (not 'complete_view' in context) and
-                     (not 'item_complete_view' in context) and
-                     (not 'item_analytic_view' in context)) or
-                    (not '1' in ans_dict)).lower())
+                str(
+                    (
+                        (not 'analytic_view' in context) and
+                        (not 'complete_view' in context) and
+                        (not 'item_complete_view' in context) and
+                        (not 'item_analytic_view' in context)
+                    ) or (not len(ans_dict))
+                ).lower())
 
     def __set_column_invisible_by_context(self, doc, arch,
                                           field, list_test,
@@ -245,9 +268,11 @@ class account_move_line(osv.osv):
         for field in fields:
             mod = field.get('modifiers')
             if mod is not None:
-                mod = mod.replace("\"invisible\"", "\"tree_invisible\"")
-                doc.xpath("//field[@name='%s']" % field.get('name'))[0].\
-                    set('modifiers', mod)
+                mod = mod.replace('"invisible"', '"tree_invisible"')
+                doc.xpath(
+                    "//field[@name='%s']" % field.get(
+                        'name')
+                )[0].set('modifiers', mod)
 
 
 
