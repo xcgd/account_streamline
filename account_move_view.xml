@@ -41,7 +41,7 @@
                                     <field name="account_id"
                                            on_change="onchange_account_id(account_id)"
                                            domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" required="1"
+                                    <field name="currency_id" groups="base.group_multi_currency" required="0"
                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
                                     <field name="debit_curr" groups="base.group_multi_currency" sum="Total Debit"
                                            on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)"/>
