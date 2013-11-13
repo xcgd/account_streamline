@@ -21,9 +21,9 @@
                     <field readonly="1" name="account_id"/>
                     <field readonly="1" name="name"/>
                     <field readonly="1" name="narration"/>
-                    <field readonly="1" name="debit_curr" sum="Total Debit T"/>
-                    <field readonly="1" name="credit_curr" sum="Total Credit T"/>
-                    <field readonly="1" name="currency_id"/>
+                    <field readonly="1" name="debit_curr" groups="base.group_multi_currency" sum="Total Debit T"/>
+                    <field readonly="1" name="credit_curr" groups="base.group_multi_currency" sum="Total Credit T"/>
+                    <field readonly="1" name="currency_id" groups="base.group_multi_currency"/>
                     <field readonly="1" name="debit" sum="Total Debit"/>
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
