@@ -42,6 +42,7 @@
         'report/payment_suggestion.xml',
         'report/remittance_letter.xml',
         'data/remittance_letter_email_template.xml',
+        'security/ir.model.access.csv',
     ],
     #'demo_xml': [],
     'test': [],
