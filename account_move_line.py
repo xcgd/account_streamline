@@ -40,25 +40,27 @@ class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
-        reconcile_osv = self.pool.get("account.move.reconcile")
         move_line_osv = self.pool.get("account.move.line")
         result = {}
-        if (not reconcile_osv) or (not move_line_osv):
-            return None
         move_lines = move_line_osv.browse(cr, uid, ids, context=context)
         for move_line in move_lines:
             result[move_line.id] = move_line.reconcile_id and move_line.reconcile_id.create_date or None
 
         return result
 
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False, context=None):
-        '''
+    def onchange_partner_id(self, cr, uid, ids,
+                            move_id, partner_id, account_id=None,
+                            debit=0, credit=0,
+                            date=False, journal=False,
+                            context=None):
+        """
         we override this function to set the date_maturity if it is not set
-        '''
-        res = super(account_move_line, self).onchange_partner_id(cr, uid, ids, move_id,
-                                                                 partner_id, account_id,
-                                                                 debit, credit, date, journal,
-                                                                 context)
+        """
+        res = super(account_move_line, self).onchange_partner_id(
+            cr, uid, ids, move_id,
+            partner_id, account_id,
+            debit, credit, date, journal,
+            context=context)
         if 'date_maturity' in res['value'] and not res['value']['date_maturity']:
             res['value']['date_maturity'] = date
         return res
@@ -95,23 +97,23 @@ class account_move_line(osv.osv):
             'analytic.code',
             "Analysis Code 1",
             domain=[
-                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                ('nd_id.ns_id.ordering', '=', '1'),
+                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
+                ('nd_id.ns_id.ordering', 'in', ['1']),
             ],
         ),
         a2_id=fields.many2one(
             'analytic.code',
             "Analysis Code 2",
             domain=[
-                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                ('nd_id.ns_id.ordering', '=', '2'),
+                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
+                ('nd_id.ns_id.ordering', '=', ['2']),
             ],
         ),
         a3_id=fields.many2one(
             'analytic.code',
             "Analysis Code 3",
             domain=[
-                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
+                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', '=', '3'),
             ],
         ),
@@ -119,16 +121,16 @@ class account_move_line(osv.osv):
             'analytic.code',
             "Analysis Code 4",
             domain=[
-                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                ('nd_id.ns_id.ordering', '=', '4'),
+                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
+                ('nd_id.ns_id.ordering', 'in', ['4']),
             ],
         ),
         a5_id=fields.many2one(
             'analytic.code',
             "Analysis Code 5",
             domain=[
-                ('nd_id.ns_id.model_name', '=', 'account_move_line'),
-                ('nd_id.ns_id.ordering', '=', '5'),
+                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
+                ('nd_id.ns_id.ordering', 'in', ['5']),
             ],
         ),
     )
