@@ -80,13 +80,17 @@ class remittance_letter_parser(report_sxw.rml_parse):
             context=self.localcontext)
         if not trans_ids:
             return message
-        return trans_obj.browse(self.cr, self.uid,
-            trans_ids[0], context=self.localcontext).value
+        translated_value = trans_obj.browse(
+            self.cr, self.uid, trans_ids[0], context=self.localcontext).value
+        # Replace False by empty string (False indicating a missing value)
+        if translated_value == False:
+            return ''
+        return translated_value
 
 
 class remittance_letter_report(WebKitParser):
     def remove_previous(self, cr, uid, ids, context=None):
-        # get attachement model
+        # get attachment model
         ir_att_osv = pooler.get_pool(cr.dbname).get('ir.attachment')
         # previous ids
         data_ids = ir_att_osv.search(
