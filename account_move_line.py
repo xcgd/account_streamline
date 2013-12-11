@@ -44,7 +44,11 @@ class account_move_line(osv.osv):
         result = {}
         move_lines = move_line_osv.browse(cr, uid, ids, context=context)
         for move_line in move_lines:
-            result[move_line.id] = move_line.reconcile_id and move_line.reconcile_id.create_date or None
+            result[move_line.id] = (
+                move_line.reconcile_id and
+                move_line.reconcile_id.create_date or
+                None
+            )
 
         return result
 
@@ -61,7 +65,10 @@ class account_move_line(osv.osv):
             partner_id, account_id,
             debit, credit, date, journal,
             context=context)
-        if 'date_maturity' in res['value'] and not res['value']['date_maturity']:
+        if (
+            'date_maturity' in res['value'] and
+            not res['value']['date_maturity']
+        ):
             res['value']['date_maturity'] = date
         return res
 
@@ -81,17 +88,17 @@ class account_move_line(osv.osv):
                                       "amount in transaction currency"),
         currency_rate=fields.float('Used rate', digits=(12, 6)),
         date_reconcile=fields.function(
-                _get_reconcile_date,
-                method=True,
-                string="Reconcile Date",
-                type='date',
-                store={
-                    'account.move.line': (
-                        lambda self, cr, uid, ids, c={}: ids,
-                        ['reconcile_id'],
-                        20
-                        ),
-                }
+            _get_reconcile_date,
+            method=True,
+            string="Reconcile Date",
+            type='date',
+            store={
+                'account.move.line': (
+                    lambda self, cr, uid, ids, c={}: ids,
+                    ['reconcile_id'],
+                    20
+                    ),
+            }
         ),
         a1_id=fields.many2one(
             'analytic.code',
@@ -157,10 +164,10 @@ class account_move_line(osv.osv):
             return
         for test in list_test:
             if test in context:
-                doc.xpath("//field[@name='%s']" % field)[0].\
-                    set('modifiers',
-                        '{"tree_invisible": true, "readonly": true}'
-                    )
+                doc.xpath("//field[@name='%s']" % field)[0].set(
+                    'modifiers',
+                    '{"tree_invisible": true, "readonly": true}'
+                )
                 break
 
     def __render_columns(self, doc, arch, context):
@@ -264,7 +271,6 @@ class account_move_line(osv.osv):
             context
         )
 
-
     def convert_modifiers(self, doc):
         fields = doc.xpath("//field")
         for field in fields:
@@ -275,8 +281,6 @@ class account_move_line(osv.osv):
                     "//field[@name='%s']" % field.get(
                         'name')
                 )[0].set('modifiers', mod)
-
-
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
@@ -325,7 +329,6 @@ class account_move_line(osv.osv):
         res['arch'] = etree.tostring(doc)
         return res
 
-
     def _get_currency(self, cr, uid, context=None):
         """
         override default so the currency is
@@ -372,13 +375,22 @@ class account_move_line(osv.osv):
         move_obj = self.pool.get('account.move')
         if context.get('journal_id'):
             total_curr = 0.0
-            #in account.move form view, it is not possible to compute total debit and credit using
-            #a browse record. So we must use the context to pass the whole one2many field and compute the total
+            #in account.move form view, it is not possible total
+            #compute total debit and credit using
+            #a browse record. So we must use the context to pass
+            #the whole one2many field and compute the total
             if context.get('line_id'):
-                for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'),
-                                                                      context=context):
-                    data['currency_id'] = data.get('currency_id') or move_line_dict.get('currency_id')
-                    total_curr += move_line_dict.get('debit_curr', 0.0) - move_line_dict.get('credit_curr', 0.0)
+                for move_line_dict in move_obj.resolve_2many_commands(
+                    cr, uid, 'line_id', context.get('line_id'), context=context
+                ):
+                    data['currency_id'] = (
+                        data.get('currency_id') or
+                        move_line_dict.get('currency_id')
+                    )
+                    total_curr += (
+                        move_line_dict.get('debit_curr', 0.0) -
+                        move_line_dict.get('credit_curr', 0.0)
+                    )
 
             #compute the total of current move
             data['debit_curr'] = total_curr < 0 and -total_curr or 0.0
@@ -404,7 +416,10 @@ class account_move_line(osv.osv):
         account_obj = self.pool.get('account.account')
         cur_obj = self.pool.get('res.currency')
         amount_trans = vals.get('amount_currency', 0.0)
-        amount_curr = vals.get('debit_curr', 0.0) - vals.get('credit_curr', 0.0)
+        amount_curr = (
+            vals.get('debit_curr', 0.0) -
+            vals.get('credit_curr', 0.0)
+        )
         amount_base = vals.get('debit', 0.0) - vals.get('credit', 0.0)
         currency_trans = vals.get('currency_id', False)
 
@@ -414,45 +429,68 @@ class account_move_line(osv.osv):
         if amount_trans == 0.0 and not amount_curr == 0.0:
             amount_trans = vals['amount_currency'] = amount_curr
 
-        #compute actual rate ONLY when amounts in BOTH base and transaction curr are given
-        if not amount_trans == 0.0 and currency_trans and not amount_base == 0.0:
-            #vals['currency_rate'] = cur_obj.round(cr, uid, cur_browse, abs(amount_trans / amount_base))
+        #compute actual rate ONLY when amounts in
+        #BOTH base and transaction curr are given
+        if (
+            not amount_trans == 0.0 and
+            currency_trans and
+            not amount_base == 0.0
+        ):
+            #vals['currency_rate'] = cur_obj.round(
+            #    cr, uid, cur_browse, abs(amount_trans / amount_base)
+            #)
             vals['currency_rate'] = abs(amount_trans / amount_base)
 
-        #make sure the secondary currency is always present by copying the base amount and currency
+        #make sure the secondary currency is always present
+        #by copying the base amount and currency
         if 'account_id' in vals:
-            currency_base = account_obj.browse(cr, uid, vals['account_id'], context=context).company_id.currency_id.id
-            if amount_trans == 0.0 and (currency_trans == currency_base or not currency_trans):
-                amount_trans = vals['amount_currency'] = cur_obj.compute(cr, uid, currency_base,
-                                                                         currency_base,
-                                                                         vals.get('debit', 0.0) - vals.get('credit', 0.0),
-                                                                         context=context)
+            currency_base = account_obj.browse(
+                cr, uid, vals['account_id'], context=context
+            ).company_id.currency_id.id
+            if (
+                amount_trans == 0.0 and
+                (currency_trans == currency_base or not currency_trans)
+            ):
+                amount_trans = vals['amount_currency'] = cur_obj.compute(
+                    cr, uid, currency_base, currency_base,
+                    vals.get('debit', 0.0) - vals.get('credit', 0.0),
+                    context=context
+                )
 
                 currency_trans = vals['currency_id'] = currency_base
-                cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
+                cur_browse = cur_obj.browse(
+                    cr, uid, currency_trans, context=context)
                 vals['currency_rate'] = 1.0
 
         #TODO : create proper tests!!!
 
         #compute debit and credit in transaction currency when not provided
-        #this should happen only with generated transaction, not with manual entries
+        #this should happen only with generated transaction,
+        #not with manual entries
         if not amount_trans == 0.0 and not vals.get('_manual_write', False):
-            vals['debit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
-            vals['credit_curr'] = cur_obj.round(cr, uid, cur_browse, amount_trans < 0.0 and -amount_trans)
+            vals['debit_curr'] = cur_obj.round(
+                cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
+            vals['credit_curr'] = cur_obj.round(
+                cr, uid, cur_browse, amount_trans < 0.0 and -amount_trans)
 
         return vals
 
-    def onchange_currency(self, cr, uid, ids, account_id, debit, credit, currency_id, date=False, journal=False,
-                          context=None):
-        """override onchange to pass both debit and credit amount, not only signed amount
+    def onchange_currency(self, cr, uid, ids, account_id,
+                          debit, credit, currency_id, date=False,
+                          journal=False, context=None):
+        """override onchange to pass both debit and
+        credit amount, not only signed amount
         that might be computed only during the save process
         """
 
         amount = debit - credit
-        result = super(account_move_line, self).onchange_currency(cr, uid, ids, account_id, amount, currency_id,
-                                                                  date=date, journal=journal, context=context)
+        result = super(account_move_line, self).onchange_currency(
+            cr, uid, ids, account_id, amount, currency_id,
+            date=date, journal=journal, context=context
+        )
         # the context is already updated by the previous statement
-        context_rate = currency_id and self.pool.get('res.currency').browse(cr, uid, currency_id, context=context).rate
+        context_rate = currency_id and self.pool.get('res.currency').browse(
+            cr, uid, currency_id, context=context).rate
 
         if 'value' in result:
             result['value']['amount_currency'] = amount
@@ -535,12 +573,16 @@ class account_move_line(osv.osv):
                                                      context=context)
 
     def reconcile(self, cr, uid, ids, type='auto',
-                  writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
-        '''This method is completely overridden in order to include a full multicurrency support
-          The context will determine if second currency is used for reconciliation or not 'reconcile_second_currency'
-          In addition, when matching the transaction amounts, differences must be processed as
-          both exchange difference and write-off, when applicable.
-          Finally, the original code is documented for an easier maintenance.
+                  writeoff_acc_id=False, writeoff_period_id=False,
+                  writeoff_journal_id=False, context=None):
+        '''This method is completely overridden in ordering
+        to include a full multicurrency support
+        The context will determine if second currency is used
+        for reconciliation or not 'reconcile_second_currency'
+        In addition, when matching the transaction amounts,
+        differences must be processed as both exchange difference and
+        write-off, when applicable. Finally, the original code is
+        documented for an easier maintenance.
         '''
         account_obj = self.pool.get('account.account')
         move_obj = self.pool.get('account.move')
@@ -561,28 +603,43 @@ class account_move_line(osv.osv):
         company_list = []
         for line in self.browse(cr, uid, ids, context=context):
             if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company '
-                                                      'should be the same for all entries.'))
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _('To reconcile the entries company '
+                      'should be the same for all entries.')
+                )
             company_list.append(line.company_id.id)
 
         for line in unrec_lines:
-            # these are the received lines filtered out of already reconciled lines
-            # we compute allocation totals in both currencies
+            # these are the received lines filtered out of already reconciled
+            # lines we compute allocation totals in both currencies
             if line.state != 'valid':
-                raise osv.except_osv(_('Error!'),
-                                     _('Entry "%s" is not valid !') % line.name)
+                raise osv.except_osv(
+                    _('Error!'),
+                    _('Entry "%s" is not valid !') % line.name
+                )
 
-            # control on second currency : must always be the same to authorise reconciliation on second currency
-            #TODO : the context key should be given by the reconciliation wizard
-            if context.get('reconcile_second_currency', True) and \
-                    currency_id and not currency_id == line['currency_id']['id']:
-                raise osv.except_osv(_('Error!'),
-                                     _('All entries must have the same second currency! Reconcile on company currency otherwise.'))
+            # control on second currency : must always be the same TODO
+            # authorise reconciliation on second currency
+            #TODO : the context key should be given by the
+            # reconciliation wizard
+            if (
+                context.get('reconcile_second_currency', True) and
+                currency_id and not currency_id == line['currency_id']['id']
+            ):
+                raise osv.except_osv(
+                    _('Error!'),
+                    _('All entries must have the same second currency! '
+                      'Reconcile on company currency otherwise.')
+                )
             # control on account : reconciliation must be on one account only
             # TODO : check accuracy of this control
             if account_id and not account_id == line['account_id']['id']:
-                raise osv.except_osv(_('Error!'),
-                                     _('All entries must have the same account to be reconciled.'))
+                raise osv.except_osv(
+                    _('Error!'),
+                    _('All entries must have the same '
+                      'account to be reconciled.')
+                )
 
             credit += line['credit']
             credit_curr += line['credit_curr']
@@ -591,8 +648,14 @@ class account_move_line(osv.osv):
             amount_currency_writeoff += line['amount_currency'] or 0.0
 
             account_id = line['account_id']['id']
-            partner_id = (line['partner_id'] and line['partner_id']['id']) or False
-            currency_id = line['currency_id'] and line['currency_id']['id'] or False
+            partner_id = (
+                (line['partner_id'] and line['partner_id']['id']) or
+                False
+            )
+            currency_id = (
+                line['currency_id'] and line['currency_id']['id'] or
+                False
+            )
 
         # we need some browse records
         account = account_obj.browse(cr, uid, account_id, context=context)
@@ -608,41 +671,61 @@ class account_move_line(osv.osv):
         # else:
         #     date = time.strftime('%Y-%m-%d')
 
-        # We will be using a context key to define the reconciliation currency (base or trans)
+        # We will be using a context key to define the
+        # reconciliation currency (base or trans)
         if context.get('reconcile_second_currency', True):
-            # the actual write off is the conversion of the second currency net amount to base currency at current date
-            writeoff = currency_obj.compute(cr, uid, currency.id, company_currency.id,
-                                            amount_currency_writeoff, context={'date': date})
+            # the actual write off is the conversion of the second
+            # currency net amount to base currency at current date
+            writeoff = currency_obj.compute(
+                cr, uid, currency.id, company_currency.id,
+                amount_currency_writeoff, context={'date': date}
+            )
             currency_rate_difference = debit - credit - writeoff
         else:
             writeoff = debit - credit
 
-        cr.execute('SELECT account_id, reconcile_id '\
-                   'FROM account_move_line '\
-                   'WHERE id IN %s '\
+        cr.execute('SELECT account_id, reconcile_id '
+                   'FROM account_move_line '
+                   'WHERE id IN %s '
                    'GROUP BY account_id,reconcile_id',
                    (tuple(ids), ))
         r = cr.fetchall()
-        #TODO: move this check to a constraint in the account_move_reconcile object
+        #TODO: move this check to a constraint in the
+        # account_move_reconcile object
         if not unrec_lines:
-            raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
+            raise osv.except_osv(
+                _('Error!'),
+                _('Entry is already reconciled.')
+            )
         if r[0][1] is not None:
-            raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
+            raise osv.except_osv(
+                _('Error!'),
+                _('Some entries are already reconciled.')
+            )
 
         if context.get('fy_closing'):
-            # We don't want to generate any write-off when being called from the
+            # We don't want to generate any write-off
+            # when being called from the
             # wizard used to close a fiscal year (and it doesn't give us any
             # writeoff_acc_id).
             pass
         else:
-        # this condition is replaced as we separate write off from exchange difference
-        # elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
-        #    (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
+        # this condition is replaced as we separate
+        # write off from exchange difference
+        # elif (not currency_obj.is_zero(
+        #     cr, uid, account.company_id.currency_id, writeoff
+        # )) or
+        #    (account.currency_id and
+        # (not currency_obj.is_zero(
+        #      cr, uid, account.currency_id, currency
+        # ))):
 
             # create exchange difference transaction
-            if not currency_obj.is_zero(cr, uid, currency, currency_rate_difference):
+            if not currency_obj.is_zero(
+                cr, uid, currency, currency_rate_difference
+            ):
                 if currency_rate_difference > 0:
-                    # this is a gain (account comes from account_voucher module)
+                    # this is a gain account comes from account_voucher module
                     exchange_diff_acc_id = account.company_id.income_currency_exchange_account_id.id
                     debit = currency_rate_difference
                     credit = 0.0
@@ -666,7 +749,10 @@ class account_move_line(osv.osv):
                         'account_id': account_id,
                         'date': date,
                         'partner_id': partner_id,
-                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'currency_id': (
+                            currency_id or
+                            (account.currency_id.id or False)
+                        ),
                         'amount_currency': 0.0
                     }),
                     (0, 0, {
@@ -674,10 +760,15 @@ class account_move_line(osv.osv):
                         'debit': debit,
                         'credit': credit,
                         'account_id': exchange_diff_acc_id,
-                        'analytic_account_id': context.get('analytic_id', False),
+                        'analytic_account_id': context.get(
+                            'analytic_id', False
+                        ),
                         'date': date,
                         'partner_id': partner_id,
-                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'currency_id': (
+                            currency_id or
+                            (account.currency_id.id or False)
+                        ),
                         'amount_currency': 0.0
                     })
                 ]
@@ -690,12 +781,15 @@ class account_move_line(osv.osv):
                     'line_id': exchange_diff_lines
                 })
 
-                # The generated transaction needs to be added to the allocation block
-                exchange_diff_line_ids = self.search(cr, uid,
-                                                     [('move_id', '=',
-                                                       exchange_diff_move_id),
-                                                      ('account_id', '=',
-                                                       account_id)])
+                # The generated transaction needs to because
+                # added to the allocation block
+                exchange_diff_line_ids = self.search(
+                    cr, uid,
+                    [
+                        ('move_id', '=', exchange_diff_move_id),
+                        ('account_id', '=', account_id)
+                    ]
+                )
                 # the following case should never happen but still...
                 if account_id == exchange_diff_acc_id:
                     exchange_diff_line_ids = [exchange_diff_line_ids[1]]
@@ -704,8 +798,11 @@ class account_move_line(osv.osv):
             # create write off transaction
             if not currency_obj.is_zero(cr, uid, company_currency, writeoff):
                 if not writeoff_acc_id:
-                    raise osv.except_osv(_('Warning!'), _('You have to provide an account '
-                                                          'for the write off entry.'))
+                    raise osv.except_osv(
+                        _('Warning!'),
+                        _('You have to provide an account '
+                          'for the write off entry.')
+                    )
                 if writeoff > 0:
                     debit = writeoff
                     credit = 0.0
@@ -722,22 +819,6 @@ class account_move_line(osv.osv):
                 else:
                     libelle = _('Write-Off')
 
-                # this code is dead anyway as the context keys are never set anywhere!!!
-                # cur_id = False
-                # amount_currency_writeoff = 0.0
-                # if context.get('company_currency_id',False) != context.get('currency_id',False):
-                #     cur_id = context.get('currency_id',False)
-                #     for line in unrec_lines:
-                #         if line.currency_id and line.currency_id.id == context.get('currency_id',False):
-                #             amount_currency_writeoff += line.amount_currency
-                #         else:
-                #             tmp_amount = currency_obj.compute(cr, uid,
-                #                                               line.account_id.company_id.currency_id.id,
-                #                                               context.get('currency_id',False),
-                #                                               abs(line.debit-line.credit),
-                #                                               context={'date': line.date})
-                #             amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
-
                 writeoff_lines = [
                     (0, 0, {
                         'name': libelle,
@@ -746,7 +827,10 @@ class account_move_line(osv.osv):
                         'account_id': account_id,
                         'date': date,
                         'partner_id': partner_id,
-                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'currency_id': (
+                            currency_id or
+                            (account.currency_id.id or False)
+                        ),
                         'amount_currency': -1 * amount_currency_writeoff
                     }),
                     (0, 0, {
@@ -754,10 +838,15 @@ class account_move_line(osv.osv):
                         'debit': debit,
                         'credit': credit,
                         'account_id': writeoff_acc_id,
-                        'analytic_account_id': context.get('analytic_id', False),
+                        'analytic_account_id': context.get(
+                            'analytic_id', False
+                        ),
                         'date': date,
                         'partner_id': partner_id,
-                        'currency_id': currency_id or (account.currency_id.id or False),
+                        'currency_id': (
+                            currency_id or
+                            (account.currency_id.id or False)
+                        ),
                         'amount_currency': amount_currency_writeoff
                     })
                 ]
@@ -771,9 +860,16 @@ class account_move_line(osv.osv):
                 })
 
                 # when the write off is posted in the original account,
-                # the reconciliation block receives only the second computed line to add up to 0
+                # the reconciliation block receives only the secondary
+                # computed line to add up to 0
                 # the other one is therefore left open
-                writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+                writeoff_line_ids = self.search(
+                    cr, uid,
+                    [
+                        ('move_id', '=', writeoff_move_id),
+                        ('account_id', '=', account_id)
+                    ],
+                )
                 # the following case should never happen but still...
                 if account_id == writeoff_acc_id:
                     writeoff_line_ids = [writeoff_line_ids[1]]
@@ -785,13 +881,25 @@ class account_move_line(osv.osv):
             'line_partial_ids': map(lambda x: (3, x, False), ids)
         })
         wf_service = netsvc.LocalService("workflow")
-        # the id of the move.reconcile is written in the move.line (self) by the create method above
+        # the id of the move.reconcile is written in
+        # the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
-            partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
-                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
+            partner_id = (
+                lines[0].partner_id and
+                lines[0].partner_id.id or
+                False
+            )
+            if (
+                partner_id and
+                not partner_obj.has_something_to_reconcile(
+                    cr, uid, partner_id, context=context
+                )
+            ):
+                partner_obj.mark_as_reconciled(
+                    cr, uid, [partner_id], context=context
+                )
         return r_id
