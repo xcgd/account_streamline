@@ -101,5 +101,21 @@
                 </xpath>
             </field>
         </record>
+
+        <!-- Inherit from account.view_move_tree. -->
+
+        <record id="view_move_tree_streamline" model="ir.ui.view">
+            <field name="name">account.move.tree.streamline</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
     </data>
 </openerp>
