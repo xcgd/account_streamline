@@ -78,6 +78,11 @@ class account_move_line(osv.osv):
                                     help="The mandatory currency code"),
         move_state=fields.related("move_id", "state",
                                   type="char", string="status", readonly=True),
+        period_state=fields.related(
+            'period_id',
+            'state',
+            type='selection'
+        ),
         debit_curr=fields.float('Debit T',
                                 digits_compute=dp.get_precision('Account'),
                                 help="This is the debit amount "
@@ -171,7 +176,7 @@ class account_move_line(osv.osv):
                 break
 
     def __render_columns(self, doc, arch, context):
-        #Set the columns invisible depending on the context
+        # Set the columns invisible depending on the context
         self.__set_column_invisible_by_context(
             doc, arch, 'partner_id',
             [
@@ -295,8 +300,8 @@ class account_move_line(osv.osv):
                             toolbar=toolbar, submenu=False)
         ans_obj = self.pool.get('analytic.structure')
 
-        #display analysis codes only when present on a related structure,
-        #with dimension name as label
+        # display analysis codes only when present on a related structure,
+        # with dimension name as label
         ans_ids = ans_obj.search(cr, uid,
                                  [('model_name', '=', 'account_move_line')],
                                  context=context)
@@ -375,10 +380,10 @@ class account_move_line(osv.osv):
         move_obj = self.pool.get('account.move')
         if context.get('journal_id'):
             total_curr = 0.0
-            #in account.move form view, it is not possible total
-            #compute total debit and credit using
-            #a browse record. So we must use the context to pass
-            #the whole one2many field and compute the total
+            # in account.move form view, it is not possible total
+            # compute total debit and credit using
+            # a browse record. So we must use the context to pass
+            # the whole one2many field and compute the total
             if context.get('line_id'):
                 for move_line_dict in move_obj.resolve_2many_commands(
                     cr, uid, 'line_id', context.get('line_id'), context=context
@@ -392,7 +397,7 @@ class account_move_line(osv.osv):
                         move_line_dict.get('credit_curr', 0.0)
                     )
 
-            #compute the total of current move
+            # compute the total of current move
             data['debit_curr'] = total_curr < 0 and -total_curr or 0.0
             data['credit_curr'] = total_curr > 0 and total_curr or 0.0
 
@@ -412,7 +417,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
 
-        #some data to evaluate
+        # some data to evaluate
         account_obj = self.pool.get('account.account')
         cur_obj = self.pool.get('res.currency')
         amount_trans = vals.get('amount_currency', 0.0)
@@ -425,24 +430,24 @@ class account_move_line(osv.osv):
 
         cur_browse = cur_obj.browse(cr, uid, currency_trans, context=context)
 
-        #report net currency amount if necessary
+        # report net currency amount if necessary
         if amount_trans == 0.0 and not amount_curr == 0.0:
             amount_trans = vals['amount_currency'] = amount_curr
 
-        #compute actual rate ONLY when amounts in
-        #BOTH base and transaction curr are given
+        # compute actual rate ONLY when amounts in
+        # BOTH base and transaction curr are given
         if (
             not amount_trans == 0.0 and
             currency_trans and
             not amount_base == 0.0
         ):
-            #vals['currency_rate'] = cur_obj.round(
+            # vals['currency_rate'] = cur_obj.round(
             #    cr, uid, cur_browse, abs(amount_trans / amount_base)
-            #)
+            # )
             vals['currency_rate'] = abs(amount_trans / amount_base)
 
-        #make sure the secondary currency is always present
-        #by copying the base amount and currency
+        # make sure the secondary currency is always present
+        # by copying the base amount and currency
         if 'account_id' in vals:
             currency_base = account_obj.browse(
                 cr, uid, vals['account_id'], context=context
@@ -464,9 +469,9 @@ class account_move_line(osv.osv):
 
         #TODO : create proper tests!!!
 
-        #compute debit and credit in transaction currency when not provided
-        #this should happen only with generated transaction,
-        #not with manual entries
+        # compute debit and credit in transaction currency when not provided
+        # this should happen only with generated transaction,
+        # not with manual entries
         if not amount_trans == 0.0 and not vals.get('_manual_write', False):
             vals['debit_curr'] = cur_obj.round(
                 cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
@@ -505,13 +510,13 @@ class account_move_line(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        #processing vals to get complete multicurrency data
+        # processing vals to get complete multicurrency data
         vals['_manual_write'] = True
         vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
-        #enforce stricter security rules on
-        #the account.move.line / account.move relationship related to the
-        #posted status
+        # enforce stricter security rules on
+        # the account.move.line / account.move relationship related to the
+        # posted status
         target_move_id = vals.get('move_id', False)
 
         target_journal_id = None
@@ -559,14 +564,14 @@ class account_move_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
-        #add a security check to ensure no one is
-        #creating new account.move.line inside and already posted account.move
+        # add a security check to ensure no one is
+        # creating new account.move.line inside and already posted account.move
         #TODO : write proper tests!!!
         move_id = vals.get('move_id', False)
         if move_id and self.is_move_posted(cr, uid, move_id, context=context):
             raise osv.except_osv(_('Error!'), msg_invalid_move)
 
-        #processing vals to get complete multicurrency data
+        # processing vals to get complete multicurrency data
         vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
         return super(account_move_line, self).create(cr, uid, vals,
@@ -621,7 +626,7 @@ class account_move_line(osv.osv):
 
             # control on second currency : must always be the same TODO
             # authorise reconciliation on second currency
-            #TODO : the context key should be given by the
+            # TODO : the context key should be given by the
             # reconciliation wizard
             if (
                 context.get('reconcile_second_currency', True) and
@@ -688,9 +693,9 @@ class account_move_line(osv.osv):
                    'FROM account_move_line '
                    'WHERE id IN %s '
                    'GROUP BY account_id,reconcile_id',
-                   (tuple(ids), ))
+                   (tuple(ids),))
         r = cr.fetchall()
-        #TODO: move this check to a constraint in the
+        # TODO: move this check to a constraint in the
         # account_move_reconcile object
         if not unrec_lines:
             raise osv.except_osv(
@@ -831,7 +836,7 @@ class account_move_line(osv.osv):
                             currency_id or
                             (account.currency_id.id or False)
                         ),
-                        'amount_currency': -1 * amount_currency_writeoff
+                        'amount_currency':-1 * amount_currency_writeoff
                     }),
                     (0, 0, {
                         'name': libelle,
