@@ -82,20 +82,20 @@
                                     <field name="tax_code_id"
                                         attrs="{'readonly': [('move_state', '=', 'posted')]}" />
                                     <field name="date_maturity"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                     <field name="amount_currency"
                                         invisible="1" />
                                     <field name="state" invisible="1" />
                                     <field name="a1_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                     <field name="a2_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                     <field name="a3_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                     <field name="a4_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                     <field name="a5_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted'), '|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
                                 </tree>
                             </field>
                         </page>
