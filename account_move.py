@@ -1,4 +1,4 @@
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp.tools.translate import _
 import yaml
 from lxml import etree
@@ -7,17 +7,6 @@ from lxml import etree
 class account_move(osv.Model):
     _name = "account.move"
     _inherit = "account.move"
-
-    _columns = {
-        # Redefine this field to remove the read-only constraint; it is however
-        # carefully propagated to line fields via XML attributes (except for
-        # fields we want to keep modifiable).
-        'line_id': fields.one2many(
-            'account.move.line',
-            'move_id',
-            'Entries'
-        ),
-    }
 
     def _analysis_control(self, cr, uid, ids, context=None):
         """This controls the account.move.line analysis dimensions settings
@@ -102,37 +91,31 @@ class account_move(osv.Model):
         if 'fields' in res and 'line_id' in res['fields']:
             doc = etree.XML(res['fields']['line_id']['views']['tree']['arch'])
             line_fields = res['fields']['line_id']['views']['tree']['fields']
-
-            def set_visibility(index):
-                """Add a tree_invisible modifier; preserve previous ones."""
-                elem = doc.xpath("//field[@name='a%d_id']" % index)[0]
-                modifiers = elem.get('modifiers')
-                closing = modifiers.rfind('}')
-                if closing == -1:
-                    elem.set('modifiers', '{"tree_invisible": %s}' %
-                        str(not str(index) in ans_dict).lower())
-                else:
-                    elem.set('modifiers', modifiers[:closing] +
-                        ', "tree_invisible": %s' %
-                        str(not str(index) in ans_dict).lower() +
-                        modifiers[closing:])
-
             if 'a1_id' in line_fields:
                 line_fields['a1_id']['string'] = ans_dict.get('1', 'A1')
-                set_visibility(1)
+                doc.xpath("//field[@name='a1_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '1' in ans_dict).lower())
             if 'a2_id' in line_fields:
                 line_fields['a2_id']['string'] = ans_dict.get('2', 'A2')
-                set_visibility(2)
+                doc.xpath("//field[@name='a2_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '2' in ans_dict).lower())
             if 'a3_id' in line_fields:
                 line_fields['a3_id']['string'] = ans_dict.get('3', 'A3')
-                set_visibility(3)
+                doc.xpath("//field[@name='a3_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '3' in ans_dict).lower())
             if 'a4_id' in line_fields:
                 line_fields['a4_id']['string'] = ans_dict.get('4', 'A4')
-                set_visibility(4)
+                doc.xpath("//field[@name='a4_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '4' in ans_dict).lower())
             if 'a5_id' in line_fields:
                 line_fields['a5_id']['string'] = ans_dict.get('5', 'A5')
-                set_visibility(5)
-
+                doc.xpath("//field[@name='a5_id']")[0].\
+                    set('modifiers', '{"tree_invisible": %s}' %
+                        str(not '5' in ans_dict).lower())
             res['fields']['line_id']['views']['tree']['arch'] = (
                 etree.tostring(doc)
             )

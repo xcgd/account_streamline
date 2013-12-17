@@ -40,62 +40,40 @@
                     <notebook>
                         <page string="Journal Items">
                             <field name="line_id" widget="one2many_list"
-                                context="{'line_id': line_id , 'journal_id': journal_id}">
+                                context="{'line_id': line_id , 'journal_id': journal_id }">
                                 <tree
                                     colors="blue:state == 'draft';black:state == 'posted'"
                                     editable="bottom" string="Journal Items">
-
-                                    <!-- Utility fields, used by other fields. -->
-                                    <field name="move_state" invisible="1" />
-                                    <field name="period_state" invisible="1" />
-                                    <field name="reconcile_id" invisible="1" />
-
-                                    <field name="name"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}" />
+                                    <field name="name" />
                                     <field name="partner_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}"
                                         on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)" />
                                     <field name="account_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}"
                                         on_change="onchange_account_id(account_id)"
                                         domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]" />
                                     <field name="currency_id"
                                         groups="base.group_multi_currency"
                                         required="0"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
                                     <field name="debit_curr"
                                         groups="base.group_multi_currency" sum="Total Debit"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
                                     <field name="credit_curr"
                                         groups="base.group_multi_currency" sum="Total Credit"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
-                                    <field name="debit" sum="Total Debit"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}" />
-                                    <field name="credit" sum="Total Credit"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}" />
+                                    <field name="debit" sum="Total Debit" />
+                                    <field name="credit" sum="Total Credit" />
                                     <field name="analytic_account_id"
-                                        groups="analytic.group_analytic_accounting"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}" />
-                                    <field name="tax_code_id"
-                                        attrs="{'readonly': [('move_state', '=', 'posted')]}" />
-                                    <field name="date_maturity"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                        groups="analytic.group_analytic_accounting" />
+                                    <field name="tax_code_id" />
+                                    <field name="date_maturity" invisible="1" />
                                     <field name="amount_currency"
                                         invisible="1" />
                                     <field name="state" invisible="1" />
-                                    <field name="a1_id"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
-                                    <field name="a2_id"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
-                                    <field name="a3_id"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
-                                    <field name="a4_id"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
-                                    <field name="a5_id"
-                                        attrs="{'readonly': ['|', ('reconcile_id', '!=', False), ('period_state', '=', 'done')]}" />
+                                    <field name="a1_id" />
+                                    <field name="a2_id" />
+                                    <field name="a3_id" />
+                                    <field name="a4_id" />
+                                    <field name="a5_id" />
                                 </tree>
                             </field>
                         </page>
