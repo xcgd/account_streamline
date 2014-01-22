@@ -110,7 +110,13 @@ class good_to_pay(osv.osv_memory):
                 .print_payment_suggestion(cr, uid, active_ids,
                                           context=context))
 
-    def __check_no_debit_line(self, cr, uid, context):
+    def __check_partner_debits(self, cr, uid, context):
+        """Loop through selected partners to ensure they all have more credit
+        than debit.
+        :return False and the first partner having a debit balance, otherwise
+        return True.
+        """
+
         aml_osv = self.pool.get('account.move.line')
 
         for partner_id, line_ids in self.__lines_by_partner[uid].items():
@@ -127,11 +133,11 @@ class good_to_pay(osv.osv_memory):
         return True, None
 
     def good_to_pay(self, cr, uid, ids, context=None):
-        test, error = self.__check_no_debit_line(cr, uid, context)
+        test, partner_name = self.__check_partner_debits(cr, uid, context)
         if not test:
             raise osv.except_osv(
                 _('Error'),
-                _('The voucher for the partner %s is debit.' % error)
+                _('The voucher for the partner %s is debit.' % partner_name)
             )
 
         aml_osv = self.pool.get('account.move.line')
@@ -183,6 +189,9 @@ class good_to_pay(osv.osv_memory):
                         cr, uid, vals['journal_id'])
                     vals['amount'] = 0.0
                     vals['payment_option'] = 'without_writeoff'
+                    # Define "pre_line" to ensure the voucher is aware of the
+                    # lines we are going to add; otherwise it doesn't show all
+                    # of them.
                     vals['pre_line'] = True
 
                     if not journal.default_credit_account_id or \
