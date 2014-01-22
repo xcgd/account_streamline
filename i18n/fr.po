@@ -376,7 +376,7 @@ msgstr "contrôle T2"
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:90
 msgid "Total for %s:"
-msgstr "Total pour %s:"
+msgstr "Total pour %s :"
 
 #. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:588
