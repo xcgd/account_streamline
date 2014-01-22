@@ -72,16 +72,16 @@ without their report row being repeated) but this solution is already quite good
     </thead>
     <tbody>
     	%for voucher in vouchers:
-        %for line in voucher.line_dr_ids:
-        <tr class="line">
-            <td>${ line.name }</td>
-            <td>${ line.move_line_id.ref }</td>
-            <td>${ line.date_original }</td>
-            <td>${ line.currency_id.name }</td>
-            <td>${ debit_credit(line) }</td>
-            <td class="amount">${ format_amount(line.amount, voucher) }</td>
-        </tr>
-        %endfor
+	        %for line in voucher.line_ids:
+		        <tr class="line">
+		            <td>${ line.name }</td>
+		            <td>${ line.move_line_id.ref }</td>
+		            <td>${ line.date_original }</td>
+		            <td>${ line.currency_id.name }</td>
+		            <td>${ debit_credit(line) }</td>
+		            <td class="amount">${ format_amount(line.amount, voucher) }</td>
+		        </tr>
+	        %endfor
         %endfor
     </tbody>
 </table>

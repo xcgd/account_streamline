@@ -166,7 +166,7 @@ class good_to_pay(osv.osv_memory):
                     msg = msg_invalid_partner_type % aml.partner_id.name
                     raise osv.except_osv(_('Error!'), msg)
 
-                #if aml.reconcile_id:
+                # if aml.reconcile_id:
                 #    msg = msg_already_reconciled % aml.partner_id.name
                 #    raise osv.except_osv(_('Error!'), msg)
                 partner_id = aml.partner_id.id
@@ -184,6 +184,7 @@ class good_to_pay(osv.osv_memory):
                         cr, uid, vals['journal_id'])
                     vals['amount'] = 0.0
                     vals['payment_option'] = 'without_writeoff'
+                    vals['pre_line'] = True
 
                     if not journal.default_credit_account_id or \
                             not journal.default_debit_account_id:
@@ -195,9 +196,9 @@ class good_to_pay(osv.osv_memory):
                         journal.default_debit_account_id.id
 
                     vals['account_id'] = account_id
-                    
+
                     bank_osv = self.pool.get("res.partner.bank")
-                    bank_id =  bank_osv.search(
+                    bank_id = bank_osv.search(
                         cr, uid, [('partner_id', '=', partner_id)],
                         context=context
                     )
@@ -219,7 +220,7 @@ class good_to_pay(osv.osv_memory):
                 line_vals['name'] = aml.name
                 line_vals['voucher_id'] = voucher_id
                 line_vals['account_id'] = partner.property_account_payable.id
-                line_vals['type'] = 'dr'
+                line_vals['type'] = 'dr' if aml.credit else 'cr'
                 line_vals['move_line_id'] = aml.id
 
                 avl_id = avl_osv.create(cr, uid, line_vals, context=context)
@@ -230,7 +231,11 @@ class good_to_pay(osv.osv_memory):
                 line_vals2['amount'] = avl.amount_unreconciled
 
                 avl_osv.write(cr, uid, [avl_id], line_vals2)
-                voucher_amounts[voucher_id] += avl.amount_unreconciled
+
+                # Add credits, substract debits.
+                voucher_amounts[voucher_id] += avl.amount_unreconciled * (
+                    1 if aml.credit else -1
+                )
 
             # once every voucher is finished we recompute the voucher totals
             # and write them back to the vouchers
@@ -269,7 +274,7 @@ class good_to_pay(osv.osv_memory):
         if list_ids:
             value['line_ids'] = [(6, 0, list_ids)]
         value['partner_id'] = partner_id
-            
+
         self.__state_line_ids[uid] = 'view_changed'
         return {
             'value': value,
@@ -281,7 +286,7 @@ class good_to_pay(osv.osv_memory):
             '|',
             ('reconcile_id', '=', False),
             ('reconcile_partial_id', '!=', False),
-            ('account_id.type', 'in', ['payable','receivable']),
+            ('account_id.type', 'in', ['payable', 'receivable']),
             ('state', '=', 'valid'),
             ('move_id.state', '=', 'posted')
         ]
@@ -314,7 +319,7 @@ class good_to_pay(osv.osv_memory):
 
         for _dict in list_dict:
             res[_dict['partner_id'][0]].append(_dict['id'])
-        
+
         return res
 
     def __calcul_partner_domain(self, uid):
@@ -356,7 +361,7 @@ class good_to_pay(osv.osv_memory):
         if src_set - dst_set:
             return -1, src_set - dst_set
         return 0, []
-        
+
     def __delete_line(self, diff, uid):
         res = {}
         line = list(diff)[0]
@@ -386,7 +391,7 @@ class good_to_pay(osv.osv_memory):
                 )
             else:
                 self.__lines_by_partner[uid][partner_id] = dict_ids[partner_id]
- 
+
     def __compute_sum_and_nb_lines(self, cr, uid, context):
         res = {}
         line_ids = itertools.chain.from_iterable(

@@ -56,7 +56,7 @@ class payment_suggestion_parser(report_sxw.rml_parse):
         return voucher_count, len(partners), total
 
     def get_debit_credit(self, br):
-        return _('Debit') if br.type == 'debit' else _('Credit')
+        return _('Debit') if br.type == 'dr' else _('Credit')
 
     def format_amount(self, amount, br):
         # little check
