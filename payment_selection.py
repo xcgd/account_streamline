@@ -23,11 +23,24 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from collections import defaultdict
 import itertools
+from copy import deepcopy
 
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
 msg_invalid_partner_type = _('Partner %s is not a supplier.')
 msg_define_dc_on_journal = _(
     'Please define default credit/debit accounts on the journal "%s".')
+msg_already_reconciled = _(
+    'The line %s is already reconciled.'
+)
+
+move_line_domain = [
+    '|',
+    ('reconcile_id', '=', False),
+    ('reconcile_partial_id', '!=', False),
+    ('account_id.type', 'in', ['payable', 'receivable']),
+    ('state', '=', 'valid'),
+    ('move_id.state', '=', 'posted')
+]
 
 
 class good_to_pay(osv.osv_memory):
@@ -86,14 +99,27 @@ class good_to_pay(osv.osv_memory):
     def default_get(self, cr, uid, field_list=None, context=None):
         if not uid in self.__lines_by_partner:
             self.__lines_by_partner[uid] = {}
+
         self.__state_line_ids[uid] = 'entering_wizard'
+
         if not 'active_ids' in context:
             return {}
+
         vals = {}
-        move_lines = [(6, 0, context['active_ids'])]
-        vals['view_complete'] = 'complete'
+
+        aml_obj = self.pool.get('account.move.line')
+        move_lines = aml_obj.search(
+            cr, uid,
+            move_line_domain + [
+                ('id', 'in', context.get('active_ids', [])),
+            ],
+            context=context
+        )
+
+        move_lines = [(6, 0, move_lines)]
         vals['line_ids'] = move_lines
 
+        vals['view_complete'] = 'complete'
         vals['generate_report'] = True
 
         return vals
@@ -171,9 +197,10 @@ class good_to_pay(osv.osv_memory):
                     msg = msg_invalid_partner_type % aml.partner_id.name
                     raise osv.except_osv(_('Error!'), msg)
 
-                # if aml.reconcile_id:
-                #    msg = msg_already_reconciled % aml.partner_id.name
-                #    raise osv.except_osv(_('Error!'), msg)
+                if aml.reconcile_id:
+                    msg = msg_already_reconciled % aml.name
+                    raise osv.except_osv(_('Error!'), msg)
+
                 partner_id = aml.partner_id.id
                 partner = aml.partner_id
 
@@ -297,14 +324,7 @@ class good_to_pay(osv.osv_memory):
         }
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
-        domain = [
-            '|',
-            ('reconcile_id', '=', False),
-            ('reconcile_partial_id', '!=', False),
-            ('account_id.type', 'in', ['payable', 'receivable']),
-            ('state', '=', 'valid'),
-            ('move_id.state', '=', 'posted')
-        ]
+        domain = deepcopy(move_line_domain)
         if self.__state_line_ids[uid] == 'entering_wizard' or not partner_id:
             return {
                 'value': {},
