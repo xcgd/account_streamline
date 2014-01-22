@@ -34,7 +34,6 @@ class good_to_pay(osv.osv_memory):
     """create vouchers for all invoices that have been selected
     """
 
-
     class __container:
         lines = set()
         partner_dict = {}
@@ -243,12 +242,17 @@ class good_to_pay(osv.osv_memory):
                 voucher_osv.write(
                     cr, uid, [voucher_id],
                     {'amount': voucher_amounts[voucher_id]})
+
             if auto:
-                action = self._generate_report(cr, uid, voucher_amounts.keys(), context)
+                action = self._generate_report(
+                    cr, uid, voucher_amounts.keys(), context
+                )
 
         return action
 
-    def onchange_view_selector(self, cr, uid, ids, selector, partner_id, context=None):
+    def onchange_view_selector(
+        self, cr, uid, ids, selector, partner_id, context=None
+    ):
         if self.__state_line_ids[uid] == 'entering_wizard':
             self.__state_line_ids[uid] = None
             return {'value': {}}
@@ -266,7 +270,9 @@ class good_to_pay(osv.osv_memory):
             )
             partner_id = None
         else:
-            if self.__lines_by_partner[uid] and partner_id != self.__lines_by_partner[uid].keys()[0]:
+            if (self.__lines_by_partner[uid] and
+                partner_id != self.__lines_by_partner[uid].keys()[0]
+            ):
                 partner_id = self.__lines_by_partner[uid].keys()[0]
             else:
                 domain['line_ids'] = [('partner_id', '=', -1)]
@@ -293,14 +299,14 @@ class good_to_pay(osv.osv_memory):
         if self.__state_line_ids[uid] == 'entering_wizard' or not partner_id:
             return {
                 'value': {},
-                'domain': { 'line_ids': domain }
+                'domain': {'line_ids': domain}
             }
         domain.append(('partner_id', '=', partner_id))
         list_ids = self.__lines_by_partner[uid][partner_id]
         self.__state_line_ids[uid] = 'partner_changed'
         return {
-            'value': { 'line_ids': [(6, 0, list_ids)] },
-            'domain': { 'line_ids': domain }
+            'value': {'line_ids': [(6, 0, list_ids)]},
+            'domain': {'line_ids': domain}
         }
 
     def __compile_list_dict(self, list_dict):
@@ -347,7 +353,6 @@ class good_to_pay(osv.osv_memory):
     def __check_add_del(self, uid, ids):
         """ -1 : del, 0: equal (should not happen), 1: add
         """
-
 
         src_set = set(
             itertools.chain.from_iterable(
@@ -405,8 +410,9 @@ class good_to_pay(osv.osv_memory):
         res['nb_lines'] = len(reads)
         return res
 
-
-    def __add_del_element(self, cr, uid, ids, selector, partner_id, list_ids, context):
+    def __add_del_element(
+        self, cr, uid, ids, selector, partner_id, list_ids, context
+    ):
 
         values = {}
         type, diff = self.__check_add_del(uid, list_ids)
@@ -415,10 +421,12 @@ class good_to_pay(osv.osv_memory):
         elif type == 1:
             self.__add_line(cr, uid, diff, context)
         else:
-            return { 'value': {}}
+            return {'value': {}}
 
-        return { 'domain': self.__calcul_partner_domain(uid),
-                 'value': values}
+        return {
+            'domain': self.__calcul_partner_domain(uid),
+            'value': values
+        }
 
     def __view_changed(self, cr, uid, ids, list_ids, context):
         return {'value': {}}
@@ -426,7 +434,9 @@ class good_to_pay(osv.osv_memory):
     def __partner_changed(self, cr, uid, ids, list_ids, context):
         return {'value': {}}
 
-    def onchange_line_ids(self, cr, uid, ids, selector, partner_id, line_ids, context=None):
+    def onchange_line_ids(
+        self, cr, uid, ids, selector, partner_id, line_ids, context=None
+    ):
         """ print the line selected or the line filtered by state
             4 states : 'entering_wizard'
                        'view_changed'
@@ -454,8 +464,12 @@ class good_to_pay(osv.osv_memory):
             self.__state_line_ids[uid] = None
             res = self.__view_changed(cr, uid, ids, list_ids, context)
         if self.__lines_by_partner[uid]:
-            res['value'].update(self.__compute_sum_and_nb_lines(cr, uid, context))
+            res['value'].update(
+                self.__compute_sum_and_nb_lines(cr, uid, context)
+            )
         else:
-            res['value'].update({'nb_lines': 0.0, 'total_amount': 0.0})
+            res['value'].update(
+                {'nb_lines': 0.0, 'total_amount': 0.0}
+            )
 
         return res
