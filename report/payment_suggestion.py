@@ -20,7 +20,6 @@ class payment_suggestion_parser(report_sxw.rml_parse):
             'get_partners': self.get_partners,
             'get_totals': self.get_totals,
             'debit_credit': self.get_debit_credit,
-            'format_amount': self.format_amount,
             'get_voucher': self.get_voucher,
             'title': self.get_title,
         })
@@ -57,21 +56,6 @@ class payment_suggestion_parser(report_sxw.rml_parse):
 
     def get_debit_credit(self, br):
         return _('Debit') if br.type == 'dr' else _('Credit')
-
-    def format_amount(self, amount, br):
-        # little check
-        if not amount:
-            return '0.00'
-        # shortcut
-        position = br.currency_id.position
-        symbol = br.currency_id.symbol
-        # currency after
-        if position == 'after':
-            return '%s %s' % (amount, symbol)
-        # currency before
-        if position == 'before':
-            return '%s %s' % (symbol, amount)
-        return amount.strip()
 
     def get_voucher(self, br):
         #  This report operates on payment.suggestion opjects; return the first

@@ -15,7 +15,6 @@ class remittance_letter_parser(report_sxw.rml_parse):
             cr, uid, name, context=context)
         self.localcontext.update({
             'debit_credit': self.get_debit_credit,
-            'format_amount': self.format_amount,
             'get_voucher': self.get_voucher,
             'bottom_message': self.get_bottom_message,
             'top_message': self.get_top_message,
@@ -24,21 +23,6 @@ class remittance_letter_parser(report_sxw.rml_parse):
 
     def get_debit_credit(self, br):
         return _('Debit') if br.type == 'dr' else _('Credit')
-
-    def format_amount(self, amount, br):
-        # little check
-        if not amount:
-            return '0.00'
-        # shortcut
-        position = br.currency_id.position
-        symbol = br.currency_id.symbol
-        # currency after
-        if position == 'after':
-            return '%s %s' % (amount, symbol)
-        # currency before
-        if position == 'before':
-            return '%s %s' % (symbol, amount)
-        return amount.strip()
 
     def get_voucher(self, br):
         # This report already operates on account.voucher objects.

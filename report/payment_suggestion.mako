@@ -43,7 +43,7 @@ ${css}
 	<% voucher_count, partner_count, total = get_totals(partners) %>
 	${ _('Voucher count: %d') % voucher_count }<br/>
 	${ _('Partner count: %d') % partner_count }<br/>
-	${ _('Total: %s') % format_amount(total, object.voucher_ids[0]) }
+	${ _('Total: %s') % formatLang(total, currency_obj=object.voucher_ids[0].currency_id) }
 </h2>
 
 %for partner, partner_details in partners.iteritems():
@@ -79,7 +79,7 @@ without their report row being repeated) but this solution is already quite good
 		            <td>${ line.date_original }</td>
 		            <td>${ line.currency_id.name }</td>
 		            <td>${ debit_credit(line) }</td>
-		            <td class="amount">${ format_amount(line.amount, voucher) }</td>
+		            <td class="amount">${ formatLang(line.amount, currency_obj=voucher.currency_id) }</td>
 		        </tr>
 	        %endfor
         %endfor
@@ -88,7 +88,7 @@ without their report row being repeated) but this solution is already quite good
 
 <h2 class="payment_suggestion_total">
 	${ _('Total for %s:') % partner.name }
-	${ format_amount(partner_total, vouchers[0]) }
+	${ formatLang(partner_total, currency_obj=vouchers[0].currency_id) }
 </h2>
 
 </div>

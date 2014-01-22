@@ -80,13 +80,16 @@ ${css}
             <td>${ line.date_original }</td>
             <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
-            <td class="amount">${ format_amount(line.amount, object) }</td>
+            <td class="amount">${ formatLang(line.amount, currency_obj=object.currency_id) }</td>
         </tr>
         %endfor
     </tbody>
 </table>
 
-<h2 class="remittance_letter_total">${ _('Total:') } ${ format_amount(object.amount, object) }</h2>
+<h2 class="remittance_letter_total">
+	${ _('Total:') }
+	${ formatLang(object.amount, currency_obj=object.currency_id) }
+</h2>
 
 <!-- Voucher-specific bottom information. -->
 ${ object.remittance_letter_bottom }
