@@ -525,6 +525,13 @@ class account_move_line(osv.osv):
             target_journal_id = move_osv.browse(cr, uid, target_move_id,
                                                 context=context).journal_id.id
 
+        # Whether it is safe to remove the "move_id" key from values being set;
+        # this is necessary when modifying lines from posted account.move
+        # objects as unmodified lines are written with a "move_id" key which
+        # results in validation checks not passing as they think the "move_id"
+        # is being modified.
+        same_move_id = target_move_id
+
         for aml in self.browse(cr, uid, ids, context=context):
 
             current_move = getattr(aml, 'move_id', None)
@@ -551,11 +558,17 @@ class account_move_line(osv.osv):
                                         context=context):
                 raise osv.except_osv(_('Error!'), msg_invalid_move)
 
+            if same_move_id and current_move_id != target_move_id:
+                same_move_id = False
+
             # we don't allow switching from one journal_id (journal type)
             #  to the other even for draft entries
             if target_journal_id and \
                     not target_journal_id == current_journal_id:
                 raise osv.except_osv(_('Error!'), msg_invalid_journal)
+
+        if same_move_id:
+            vals.pop('move_id')
 
         return super(account_move_line, self).write(
             cr, uid, ids, vals,
