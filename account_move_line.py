@@ -659,21 +659,18 @@ class account_move_line(osv.osv):
                       'account to be reconciled.')
                 )
 
-            credit += line['credit']
-            credit_curr += line['credit_curr']
-            debit += line['debit']
-            debit_curr += line['debit_curr']
-            amount_currency_writeoff += line['amount_currency'] or 0.0
+            credit += line.credit or 0.0
+            credit_curr += line.credit_curr or 0.0
+            debit += line.debit or 0.0
+            debit_curr += line.debit_curr or 0.0
+            # the computed write off is the net currency amount
+            amount_currency_writeoff += (
+                (line.debit_curr or 0.0) - (line.credit_curr or 0.0)
+            )
 
-            account_id = line['account_id']['id']
-            partner_id = (
-                (line['partner_id'] and line['partner_id']['id']) or
-                False
-            )
-            currency_id = (
-                line['currency_id'] and line['currency_id']['id'] or
-                False
-            )
+            account_id = line.account_id.id
+            partner_id = line.partner_id and line.partner_id.id or False
+            currency_id = line.currency_id and line.currency_id.id or False
 
         # we need some browse records
         account = account_obj.browse(cr, uid, account_id, context=context)
@@ -757,6 +754,13 @@ class account_move_line(osv.osv):
                     self_credit = 0.0
                     self_debit = -currency_rate_difference
 
+                if not exchange_diff_acc_id:
+                    raise osv.except_osv(
+                        _('Warning!'),
+                        _('You have to configure an account '
+                          'for the exchange gain/loss.')
+                    )
+
                 libelle = _('Exchange difference')
 
                 exchange_diff_lines = [
@@ -799,7 +803,7 @@ class account_move_line(osv.osv):
                     'line_id': exchange_diff_lines
                 })
 
-                # The generated transaction needs to because
+                # The generated transaction needs to be
                 # added to the allocation block
                 exchange_diff_line_ids = self.search(
                     cr, uid,
