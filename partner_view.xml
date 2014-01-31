@@ -96,6 +96,10 @@
                     <field name="siret"/>
                     <field name="siren"/>
                 </xpath>
+
+                <xpath expr="//page[@name='accounting']" position="attributes">
+                    <attribute name="groups">account.group_account_user</attribute>
+                </xpath>
             </field>
         </record>
 
