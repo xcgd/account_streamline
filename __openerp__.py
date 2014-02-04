@@ -18,6 +18,7 @@
         'account_voucher',
         'account_payment',
         'account_sequence',
+        'mail',
         'analytic_structure',
         'advanced_filter',
         'report_webkit',

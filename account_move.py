@@ -1,4 +1,4 @@
-from openerp.osv import fields, osv
+from openerp.osv import fields, expression, osv
 from openerp.tools.translate import _
 import yaml
 from lxml import etree
@@ -19,8 +19,12 @@ list_readonly_condition_loose = (
 
 
 class account_move(osv.Model):
-    _name = "account.move"
-    _inherit = "account.move"
+    _name = 'account.move'
+
+    _inherit = [
+        'account.move',
+        'mail.thread',
+    ]
 
     _columns = {
         # Redefine this field to remove the read-only constraint; it is however
@@ -184,3 +188,64 @@ class account_move(osv.Model):
                 etree.tostring(doc)
             )
         return res
+
+
+class mail_message(osv.Model):
+    _inherit = 'mail.message'
+
+    def message_read(
+        self, cr, uid, ids=None, domain=None, message_unload_ids=None,
+        thread_level=0, context=None, parent_id=False, limit=None
+    ):
+        """Override this function to include account.move.line notifications
+        within account.move notification lists.
+
+        :todo This applies to every mail.message object; maybe find a better
+        solution that doesn't involve modifying objects globally.
+        """
+
+        # Example domain: [['model', '=', 'account.move'], ['res_id', '=', 7]]
+
+        # Avoid recursion...
+        if domain and ['model', '=', 'account.move.line'] not in domain:
+
+            am_obj = self.pool.get('account.move')
+
+            line_domain = []
+
+            # Look for a "res_id = X" domain part.
+            for domain_index, domain_part in enumerate(domain):
+                if (domain_index < len(domain) - 1 and
+                    domain_part == ['model', '=', 'account.move']
+                ):
+                    next_part = domain[domain_index + 1]
+                    if next_part[0] == 'res_id' and next_part[1] == '=':
+
+                        move_id = next_part[2]
+                        line_ids = am_obj.read(
+                            cr, uid,
+                            move_id,
+                            ['line_id'],
+                            context=context
+                        )['line_id']
+
+                        line_domain = [
+                            ('model', '=', 'account.move.line'),
+                            ('res_id', 'in', line_ids)
+                        ]
+
+            if line_domain:
+                domain = expression.OR([
+                    expression.normalize_domain(line_domain),
+                    expression.normalize_domain(domain)
+                ])
+
+                # Make sure our domain is applied. When "ids" is set, the
+                # domain is ignored.
+                ids = None
+
+        return super(mail_message, self).message_read(
+            cr, uid, ids=ids, domain=domain,
+            message_unload_ids=message_unload_ids, thread_level=thread_level,
+            context=context, parent_id=parent_id, limit=limit
+        )

@@ -35,9 +35,28 @@ msg_cannot_remove_line = _(
 msg_invalid_journal = _('You cannot move line(s) between journal types')
 
 
+class aml_streamline_mail_thread(osv.AbstractModel):
+    """Inherit from mail.thread by copy (with a different name) and bypass its
+    "create" function as we want to avoid the generation of notifications at
+    creation.
+    """
+
+    _name = 'account.move.line.streamline.mail.thread'
+    _inherit = 'mail.thread'
+
+    def create(self, cr, uid, vals, context=None):
+        return osv.AbstractModel.create(
+            self, cr, uid, vals, context=context
+        )
+
+
 class account_move_line(osv.osv):
-    _name = "account.move.line"
-    _inherit = "account.move.line"
+    _name = 'account.move.line'
+
+    _inherit = [
+        'account.move.line',
+        'account.move.line.streamline.mail.thread',
+    ]
 
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
         move_line_osv = self.pool.get("account.move.line")
@@ -112,6 +131,7 @@ class account_move_line(osv.osv):
                 ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', 'in', ['1']),
             ],
+            track_visibility='onchange',
         ),
         a2_id=fields.many2one(
             'analytic.code',
@@ -120,6 +140,7 @@ class account_move_line(osv.osv):
                 ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', '=', ['2']),
             ],
+            track_visibility='onchange',
         ),
         a3_id=fields.many2one(
             'analytic.code',
@@ -128,6 +149,7 @@ class account_move_line(osv.osv):
                 ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', '=', '3'),
             ],
+            track_visibility='onchange',
         ),
         a4_id=fields.many2one(
             'analytic.code',
@@ -136,6 +158,7 @@ class account_move_line(osv.osv):
                 ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', 'in', ['4']),
             ],
+            track_visibility='onchange',
         ),
         a5_id=fields.many2one(
             'analytic.code',
@@ -144,8 +167,62 @@ class account_move_line(osv.osv):
                 ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
                 ('nd_id.ns_id.ordering', 'in', ['5']),
             ],
+            track_visibility='onchange',
+        ),
+
+        # Redefine these fields for mail-thread tracking.
+        # Track the description and the account to know which lines events are
+        # for.
+        name=fields.char(
+            'Name',
+            size=64,
+            required=True,
+            track_visibility='always',
+        ),
+        account_id=fields.many2one(
+            'account.account',
+            'Account',
+            required=True,
+            ondelete='cascade',
+            domain=[('type', '<>', 'view'), ('type', '<>', 'closed')],
+            select=2,
+            track_visibility='always',
+        ),
+        date_maturity=fields.date(
+            'Due date',
+            select=True,
+            track_visibility='onchange',
         ),
     )
+
+    def fields_get(
+        self, cr, uid, allfields=None, context=None, write_access=True
+    ):
+        """Override this function to rename analytic fields."""
+
+        ans_obj = self.pool.get('analytic.structure')
+        ans_ids = ans_obj.search(
+            cr, uid,
+            [('model_name', '=', 'account_move_line')],
+            context=context
+        )
+        ans_brs = ans_obj.browse(cr, uid, ans_ids, context=context)
+        ans_dict = {
+            ans.ordering: ans.nd_id.name
+            for ans in ans_brs
+        }
+
+        res = super(account_move_line, self).fields_get(
+            cr, uid, allfields=allfields, context=context,
+            write_access=write_access
+        )
+
+        for i in xrange(1, 5 + 1):
+            field = 'a%d_id' % i
+            if field in res:
+                res[field]['string'] = ans_dict.get('%d' % i, 'A%d' % i)
+
+        return res
 
     def __modify_analysis_fields(self, doc, field, ans_dict, context):
         '''
@@ -577,6 +654,15 @@ class account_move_line(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
+        if context is None:
+            context = {}
+
+        # No notification when creating lines.
+        context.update({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+        })
+
         # add a security check to ensure no one is
         # creating new account.move.line inside and already posted account.move
         #TODO : write proper tests!!!
@@ -587,8 +673,9 @@ class account_move_line(osv.osv):
         # processing vals to get complete multicurrency data
         vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
-        return super(account_move_line, self).create(cr, uid, vals,
-                                                     context=context)
+        return super(account_move_line, self).create(
+            cr, uid, vals, context=context
+        )
 
     def reconcile(self, cr, uid, ids, type='auto',
                   writeoff_acc_id=False, writeoff_period_id=False,
