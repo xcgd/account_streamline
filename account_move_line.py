@@ -366,43 +366,46 @@ class account_move_line(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
-        '''
-        Display analysis code in account move lines trees
-        '''
+        """Override this function to dynamically hide undefined analytic
+        fields. Note that there is no need to rename them as that has been done
+        before via the "fields_get" function.
+        """
+
         if context is None:
             context = {}
+
         res = super(account_move_line, self).\
             fields_view_get(cr, uid, view_id=view_id,
                             view_type=view_type, context=context,
                             toolbar=toolbar, submenu=False)
+
         ans_obj = self.pool.get('analytic.structure')
 
         # display analysis codes only when present on a related structure,
         # with dimension name as label
-        ans_ids = ans_obj.search(cr, uid,
-                                 [('model_name', '=', 'account_move_line')],
-                                 context=context)
-        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = dict()
-        for ans in ans_br:
-            ans_dict[ans.ordering] = ans.nd_id.name
+        ans_ids = ans_obj.search(
+            cr, uid,
+            [('model_name', '=', 'account_move_line')],
+            context=context
+        )
+        ans_brs = ans_obj.browse(cr, uid, ans_ids, context=context)
+        ans_dict = {
+            ans.ordering: ans.nd_id.name
+            for ans in ans_brs
+        }
+
         doc = etree.XML(res['arch'])
         if 'fields' in res:
             field = res['fields']
             if 'a1_id' in field:
-                field['a1_id']['string'] = ans_dict.get('1', 'A1')
                 self.__modify_analysis_fields(doc, 'a1_id', ans_dict, context)
             if 'a2_id' in field:
-                field['a2_id']['string'] = ans_dict.get('2', 'A2')
                 self.__modify_analysis_fields(doc, 'a2_id', ans_dict, context)
             if 'a3_id' in field:
-                field['a3_id']['string'] = ans_dict.get('3', 'A3')
                 self.__modify_analysis_fields(doc, 'a3_id', ans_dict, context)
             if 'a4_id' in field:
-                field['a4_id']['string'] = ans_dict.get('4', 'A4')
                 self.__modify_analysis_fields(doc, 'a4_id', ans_dict, context)
             if 'a5_id' in field:
-                field['a5_id']['string'] = ans_dict.get('5', 'A5')
                 self.__modify_analysis_fields(doc, 'a5_id', ans_dict, context)
             self.__render_columns(doc, res['fields'], context)
 
