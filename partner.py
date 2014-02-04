@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, expression, osv
 from openerp.tools.translate import _
 from lxml import etree
 
@@ -72,22 +72,25 @@ class res_partner_needaction(osv.Model):
 
     _track = {
         'property_account_payable': {
-            'account_streamline.mt_partner_supplier': lambda self,
-            cr, uid, obj, ctx=None:
-            not self.pool.get(
-                'account.account').browse(
-                    cr, uid,
-                    obj['property_account_payable']
-                ).type == 'payable',
+            'account_streamline.mt_partner_supplier': (
+                lambda self, cr, uid, obj, ctx=None: (
+                    not self.pool.get('account.account').browse(
+                        cr, uid,
+                        obj['property_account_payable'],
+                        context=ctx
+                    ).type == 'payable'
+                )
+            )
         },
         'property_account_receivable': {
-            'account_streamline.mt_partner_customer': lambda self,
-            cr, uid, obj, ctx=None:
-            not self.pool.get(
-                'account.account').browse(
-                    cr, uid,
-                    obj['property_account_receivable']
-                ).type == 'receivable',
+            'account_streamline.mt_partner_customer': (
+                lambda self, cr, uid, obj, ctx=None: (
+                    not self.pool.get('account.account').browse(
+                        cr, uid,
+                        obj['property_account_receivable']
+                    ).type == 'receivable'
+                )
+            )
         },
     }
 
@@ -140,7 +143,7 @@ class res_partner_needaction(osv.Model):
         ),
     )
 
-    #To prevent partner duplication
+    # To prevent partner duplication
     _sql_constraints = [
         ('name', 'UNIQUE (name)', 'The name of the partner must be unique !')
     ]
@@ -232,7 +235,10 @@ class res_partner_needaction(osv.Model):
                 ('customer_account_check', '=', True),
             ]
 
-            dom = ['|'] + mydom + dom
+            dom = expression.OR([
+                expression.normalize_domain(mydom),
+                expression.normalize_domain(dom)
+            ])
 
         return dom
 
@@ -258,7 +264,7 @@ class res_partner_needaction(osv.Model):
 
         ans_obj = self.pool.get('analytic.structure')
 
-        #display analysis codes only when present on a related structure,
+        # display analysis codes only when present on a related structure,
         # with dimension name as label
         ans_ids = ans_obj.search(
             cr, uid,
