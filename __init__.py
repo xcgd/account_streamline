@@ -9,5 +9,4 @@ import payment_selection
 import payment_suggestion
 import report
 import wizard
-import res_user
 import res_company
