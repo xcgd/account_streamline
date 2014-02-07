@@ -6,7 +6,10 @@ from lxml import etree
 # account.move.line fields that don't become read-only when the account.move
 # object is posted.
 list_readonly_loose = [
-    'date_maturity', 'a1_id', 'a2_id', 'a3_id', 'a4_id', 'a5_id'
+    'date_maturity'
+]
+list_noreadonly = [
+    'a1_id', 'a2_id', 'a3_id', 'a4_id', 'a5_id'
 ]
 
 list_readonly_condition = (
@@ -162,9 +165,20 @@ class account_move(osv.Model):
                 cr, uid, 'analytic_structure.group_ans_manager'
             )
 
+            # Handle fields modifiers on posted / allocated entries
             for line_field in line_fields:
-                if auth_readonly_loose and line_field in list_readonly_loose:
-                    set_readonly(line_field, list_readonly_condition_loose)
+                # is authorized
+                if auth_readonly_loose:
+                    # can change these when not allocated
+                    if line_field in list_readonly_loose:
+                        set_readonly(line_field, list_readonly_condition_loose)
+                    # can always change those
+                    elif line_field in list_noreadonly:
+                        # do not change modifiers
+                        continue
+                    # other fields cannot be changed when posted
+                    else:
+                        set_readonly(line_field, list_readonly_condition)
                 else:
                     set_readonly(line_field, list_readonly_condition)
 
