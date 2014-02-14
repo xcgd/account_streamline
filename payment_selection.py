@@ -97,9 +97,7 @@ class good_to_pay(osv.osv_memory):
     __state_line_ids = {}
 
     def default_get(self, cr, uid, field_list=None, context=None):
-        if not uid in self.__lines_by_partner:
-            self.__lines_by_partner[uid] = {}
-
+        self.__lines_by_partner[uid] = {}
         self.__state_line_ids[uid] = 'entering_wizard'
 
         if not 'active_ids' in context:
