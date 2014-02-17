@@ -164,13 +164,16 @@ class account_move(osv.Model):
             auth_readonly_loose = user_obj.has_group(
                 cr, uid, 'analytic_structure.group_ans_manager'
             )
+            auth_admin = user_obj.has_group(cr, uid, 'base.group_no_one')
 
             # Handle fields modifiers on posted / allocated entries
             for line_field in line_fields:
                 # is authorized
-                if auth_readonly_loose:
+                if auth_readonly_loose or auth_admin:
                     # can change these when not allocated
-                    if line_field in list_readonly_loose:
+                    # admin can also change partner_id
+                    if line_field in list_readonly_loose or \
+                            (auth_admin and line_field == 'partner_id'):
                         set_readonly(line_field, list_readonly_condition_loose)
                     # can always change those
                     elif line_field in list_noreadonly:
