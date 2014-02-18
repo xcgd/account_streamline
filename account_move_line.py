@@ -505,6 +505,7 @@ class account_move_line(osv.osv):
             vals.get('debit_curr', 0.0) -
             vals.get('credit_curr', 0.0)
         )
+
         amount_base = vals.get('debit', 0.0) - vals.get('credit', 0.0)
         currency_trans = vals.get('currency_id', False)
 
@@ -528,7 +529,7 @@ class account_move_line(osv.osv):
 
         # make sure the secondary currency is always present
         # by copying the base amount and currency
-        if 'account_id' in vals:
+        if 'account_id' in vals and ('debit' in vals or 'credit' in vals):
             currency_base = account_obj.browse(
                 cr, uid, vals['account_id'], context=context
             ).company_id.currency_id.id
@@ -538,7 +539,7 @@ class account_move_line(osv.osv):
             ):
                 amount_trans = vals['amount_currency'] = cur_obj.compute(
                     cr, uid, currency_base, currency_base,
-                    vals.get('debit', 0.0) - vals.get('credit', 0.0),
+                    amount_base,
                     context=context
                 )
 
@@ -552,7 +553,7 @@ class account_move_line(osv.osv):
         # compute debit and credit in transaction currency when not provided
         # this should happen only with generated transaction,
         # not with manual entries
-        if not amount_trans == 0.0 and not vals.get('_manual_write', False):
+        if not amount_trans == 0.0 and currency_trans:
             vals['debit_curr'] = cur_obj.round(
                 cr, uid, cur_browse, amount_trans > 0.0 and amount_trans)
             vals['credit_curr'] = cur_obj.round(
@@ -591,7 +592,6 @@ class account_move_line(osv.osv):
             ids = [ids]
 
         # processing vals to get complete multicurrency data
-        vals['_manual_write'] = True
         vals = self._compute_multicurrency(cr, uid, vals, context=context)
 
         # enforce stricter security rules on
