@@ -49,7 +49,6 @@ class good_to_pay(osv.osv_memory):
 
     class __container:
         lines = set()
-        partner_dict = {}
 
         def add(self, ids, key):
             self.lines.update(ids)
@@ -117,10 +116,23 @@ class good_to_pay(osv.osv_memory):
         move_lines = [(6, 0, move_lines)]
         vals['line_ids'] = move_lines
 
-        vals['view_complete'] = 'complete'
         vals['generate_report'] = True
 
         return vals
+
+    def create(self, cr, uid, vals, context=None):
+        """Override this function to add read-only fields to the list of
+        values; otherwise, the _add_missing_default_values function (see
+        orm.py) will call a second default_get at validation (which we
+        absolutely want to avoid as we initialize some structures there).
+        """
+
+        vals['nb_lines'] = 0
+        vals['total_amount'] = 0.0
+
+        return super(good_to_pay, self).create(
+            cr, uid, vals, context=context
+        )
 
     def _generate_report(self, cr, uid, active_ids, context=None):
         ''' Generate a Payment Suggestion report. '''
@@ -496,7 +508,7 @@ class good_to_pay(osv.osv_memory):
             )
         else:
             res['value'].update(
-                {'nb_lines': 0.0, 'total_amount': 0.0}
+                {'nb_lines': 0, 'total_amount': 0.0}
             )
 
         return res
