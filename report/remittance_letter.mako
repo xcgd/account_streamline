@@ -74,7 +74,7 @@ ${css}
         </tr>
     </thead>
     <tbody>
-        %for line in object.line_dr_ids:
+        %for line in object.line_ids:
         <tr class="line">
             <td>${ line.name }</td>
             <td>${ line.date_original }</td>
