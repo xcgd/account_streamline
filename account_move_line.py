@@ -97,11 +97,6 @@ class account_move_line(osv.osv):
                                     help="The mandatory currency code"),
         move_state=fields.related("move_id", "state",
                                   type="char", string="status", readonly=True),
-        period_state=fields.related(
-            'period_id',
-            'state',
-            type='selection'
-        ),
         debit_curr=fields.float('Debit T',
                                 digits_compute=dp.get_precision('Account'),
                                 help="This is the debit amount "

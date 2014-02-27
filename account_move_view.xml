@@ -47,7 +47,6 @@
 
                                     <!-- Utility fields, used by other fields. -->
                                     <field name="move_state" invisible="1" />
-                                    <field name="period_state" invisible="1" />
                                     <field name="reconcile_id" invisible="1" />
 
                                     <field name="name" />
