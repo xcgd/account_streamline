@@ -424,6 +424,9 @@ class account_move_line(osv.osv):
         return cur or False
 
     _defaults = {
+        # recall standard default to make ure it is locally used (not in super)
+        'currency_id': _get_currency,
+
         'credit_curr': 0.0,
         'debit_curr': 0.0,
         'currency_rate': 1.0,
