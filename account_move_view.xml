@@ -60,13 +60,15 @@
                                         required="0"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
                                     <field name="debit_curr"
-                                        groups="base.group_multi_currency" sum="Total Debit"
+                                        sum="Total Debit"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
                                     <field name="credit_curr"
-                                        groups="base.group_multi_currency" sum="Total Credit"
+                                        sum="Total Credit"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
-                                    <field name="debit" sum="Total Debit" />
-                                    <field name="credit" sum="Total Credit" />
+                                    <field name="debit"
+                                           groups="base.group_multi_currency" sum="Total Debit" />
+                                    <field name="credit"
+                                           groups="base.group_multi_currency" sum="Total Credit" />
                                     <field name="analytic_account_id"
                                         groups="analytic.group_analytic_accounting" />
                                     <field name="tax_code_id" />
