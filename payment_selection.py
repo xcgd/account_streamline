@@ -195,7 +195,7 @@ class good_to_pay(osv.osv_memory):
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
-                    context['lines_by_partner'].values()
+                    form['context']['lines_by_partner'].values()
                 )
             )
             for aml in aml_osv.browse(
@@ -299,8 +299,6 @@ class good_to_pay(osv.osv_memory):
                     cr, uid, voucher_amounts.keys(), context
                 )
 
-        del context['lines_by_partner']
-        del context['state_line_ids']
         return action
 
     def onchange_view_selector(
