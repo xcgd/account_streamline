@@ -195,7 +195,7 @@ class good_to_pay(osv.osv_memory):
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
-                    form['context']['lines_by_partner'].values()
+                    leval(form['context_saved'])['lines_by_partner'].values()
                 )
             )
             for aml in aml_osv.browse(
