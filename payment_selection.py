@@ -25,6 +25,8 @@ from collections import defaultdict
 import itertools
 from copy import deepcopy
 
+from ast import literal_eval as leval
+
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
 msg_invalid_partner_type = _('Partner %s is not a supplier.')
 msg_define_dc_on_journal = _(
@@ -64,11 +66,12 @@ class good_to_pay(osv.osv_memory):
     _description = "Payment selection for good to pay"
 
     _columns = {
-        'journal_id': fields.many2one('account.journal',
-                                   'Payment Method',
-                                   required=True,
-                                   domain=[('type', 'in', ['bank', 'cash'])]
-                                   ),
+        'journal_id': fields.many2one(
+            'account.journal',
+            'Payment Method',
+            required=True,
+            domain=[('type', 'in', ['bank', 'cash'])]
+        ),
         'line_ids': fields.many2many(
             'account.move.line',
             'good_to_pay_rel_',
@@ -90,19 +93,21 @@ class good_to_pay(osv.osv_memory):
             'res.partner',
             string='Selected Partner',
         ),
+        'context_saved': fields.char(
+            size=4096,
+        ),
     }
 
-    __lines_by_partner = {}
-    __state_line_ids = {}
-
     def default_get(self, cr, uid, field_list=None, context=None):
-        self.__lines_by_partner[uid] = {}
-        self.__state_line_ids[uid] = 'entering_wizard'
-
         if not 'active_ids' in context:
             return {}
 
         vals = {}
+
+        vals['context_saved'] = (
+            "{'lines_by_partner': {},"
+            "'state_line_ids': 'entering_wizard'}"
+        )
 
         aml_obj = self.pool.get('account.move.line')
         move_lines = aml_obj.search(
@@ -155,7 +160,7 @@ class good_to_pay(osv.osv_memory):
 
         aml_osv = self.pool.get('account.move.line')
 
-        for partner_id, line_ids in self.__lines_by_partner[uid].items():
+        for partner_id, line_ids in context['lines_by_partner'].items():
             total_credit = 0.0
             total_debit = 0.0
             reads = aml_osv.read(
@@ -190,7 +195,7 @@ class good_to_pay(osv.osv_memory):
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
-                    self.__lines_by_partner[uid].values()
+                    context['lines_by_partner'].values()
                 )
             )
             for aml in aml_osv.browse(
@@ -294,14 +299,17 @@ class good_to_pay(osv.osv_memory):
                     cr, uid, voucher_amounts.keys(), context
                 )
 
+        del context['lines_by_partner']
+        del context['state_line_ids']
         return action
 
     def onchange_view_selector(
-        self, cr, uid, ids, selector, partner_id, context=None
+        self, cr, uid, ids, selector, partner_id, context_saved, context=None
     ):
-        if self.__state_line_ids[uid] == 'entering_wizard':
-            self.__state_line_ids[uid] = None
-            return {'value': {}}
+        context_saved = leval(context_saved)
+        if context_saved['state_line_ids'] == 'entering_wizard':
+            context_saved['state_line_ids'] = None
+            return {'value': {'context_saved': str(context_saved)}}
         domain = {}
         value = {}
         if not selector:
@@ -311,15 +319,16 @@ class good_to_pay(osv.osv_memory):
         if selector == 'complete':
             list_ids = list(
                 itertools.chain.from_iterable(
-                    self.__lines_by_partner[uid].values()
+                    context_saved['lines_by_partner'].values()
                 )
             )
             partner_id = None
         else:
-            if (self.__lines_by_partner[uid] and
-                partner_id != self.__lines_by_partner[uid].keys()[0]
+            if (
+                context_saved['lines_by_partner'] and
+                partner_id != context_saved['lines_by_partner'].keys()[0]
             ):
-                partner_id = self.__lines_by_partner[uid].keys()[0]
+                partner_id = context_saved['lines_by_partner'].keys()[0]
             else:
                 domain['line_ids'] = [('partner_id', '=', -1)]
 
@@ -327,25 +336,32 @@ class good_to_pay(osv.osv_memory):
             value['line_ids'] = [(6, 0, list_ids)]
         value['partner_id'] = partner_id
 
-        self.__state_line_ids[uid] = 'view_changed'
+        context_saved['state_line_ids'] = 'view_changed'
+        value['context_saved'] = str(context_saved)
         return {
             'value': value,
-            'domain': domain
+            'domain': domain,
         }
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+    def onchange_partner_id(
+        self, cr, uid, ids, partner_id, context_saved, context=None
+    ):
+        context_saved = leval(context_saved)
         domain = deepcopy(move_line_domain)
-        if self.__state_line_ids[uid] == 'entering_wizard' or not partner_id:
+        if context_saved['state_line_ids'] == 'entering_wizard' or not partner_id:
             return {
                 'value': {},
                 'domain': {'line_ids': domain}
             }
         domain.append(('partner_id', '=', partner_id))
-        list_ids = self.__lines_by_partner[uid][partner_id]
-        self.__state_line_ids[uid] = 'partner_changed'
+        list_ids = context_saved['lines_by_partner'][partner_id]
+        context_saved['state_line_ids'] = 'partner_changed'
         return {
-            'value': {'line_ids': [(6, 0, list_ids)]},
-            'domain': {'line_ids': domain}
+            'value': {
+                'line_ids': [(6, 0, list_ids)],
+                'context_saved': str(context_saved),
+            },
+            'domain': {'line_ids': domain},
         }
 
     def __compile_list_dict(self, list_dict):
@@ -360,16 +376,19 @@ class good_to_pay(osv.osv_memory):
         if len(list_dict) == 0:
             return None
 
-        res = defaultdict(list)
+        res = {}
 
         for _dict in list_dict:
-            res[_dict['partner_id'][0]].append(_dict['id'])
+            if not _dict['partner_id'][0] in res:
+                res[_dict['partner_id'][0]] = [_dict['id']]
+            else:
+                res[_dict['partner_id'][0]].append(_dict['id'])
 
         return res
 
-    def __calcul_partner_domain(self, uid):
+    def __calcul_partner_domain(self, uid, context):
         return {
-            'partner_id': [('id', 'in', self.__lines_by_partner[uid].keys())]
+            'partner_id': [('id', 'in', context['lines_by_partner'].keys())]
         }
 
     def __entering_wizard(self, cr, uid, ids, list_ids, context):
@@ -378,24 +397,25 @@ class good_to_pay(osv.osv_memory):
             cr, uid, list_ids, ['partner_id'], context
         )
         reads = [read for read in reads if read['partner_id']]
-        self.__lines_by_partner[uid] = self.__compile_list_dict(reads)
+        context['lines_by_partner'] = self.__compile_list_dict(reads)
         return {
             'value': {
                 'view_selection': 'complete',
+                'context_saved': context,
             },
-            'domain': self.__calcul_partner_domain(uid),
+            'domain': self.__calcul_partner_domain(uid, context),
         }
 
     def __substract_wo_dups(self, src, dest):
         return list(set(dest) - set(src))
 
-    def __check_add_del(self, uid, ids):
+    def __check_add_del(self, uid, ids, context):
         """ -1 : del, 0: equal (should not happen), 1: add
         """
 
         src_set = set(
             itertools.chain.from_iterable(
-                self.__lines_by_partner[uid].values()
+                context['lines_by_partner'].values()
             )
         )
         dst_set = set(ids)
@@ -406,16 +426,17 @@ class good_to_pay(osv.osv_memory):
             return -1, src_set - dst_set
         return 0, []
 
-    def __delete_line(self, diff, uid):
+    def __delete_line(self, diff, uid, context):
         res = {}
         line = list(diff)[0]
-        for key, value in self.__lines_by_partner[uid].items():
-            if line in self.__lines_by_partner[uid][key]:
-                self.__lines_by_partner[uid][key] = list(set(value) - diff)
-                if not self.__lines_by_partner[uid][key]:
-                    del self.__lines_by_partner[uid][key]
+        for key, value in context['lines_by_partner'].items():
+            if line in context['lines_by_partner'][key]:
+                context['lines_by_partner'][key] = list(set(value) - diff)
+                if not context['lines_by_partner'][key]:
+                    del context['lines_by_partner'][key]
                     res['partner_id'] = None
                     res['view_selection'] = 'complete'
+                    res['context_saved'] = context
         return res
 
     def __add_line(self, cr, uid, ids, context):
@@ -426,25 +447,30 @@ class good_to_pay(osv.osv_memory):
         reads = [read for read in reads if read['partner_id']]
         dict_ids = self.__compile_list_dict(reads)
         for partner_id in dict_ids.keys():
-            if partner_id in self.__lines_by_partner[uid]:
-                self.__lines_by_partner[uid][partner_id].extend(
+            if partner_id in context['lines_by_partner']:
+                context['lines_by_partner'][partner_id].extend(
                     self.__substract_wo_dups(
-                        self.__lines_by_partner[uid][partner_id],
+                        context['lines_by_partner'][partner_id],
                         dict_ids[partner_id]
                     )
                 )
             else:
-                self.__lines_by_partner[uid][partner_id] = dict_ids[partner_id]
+                context['lines_by_partner'][partner_id] = dict_ids[partner_id]
+        return {'context_saved': context}
 
     def __compute_sum_and_nb_lines(self, cr, uid, context):
         res = {}
         line_ids = itertools.chain.from_iterable(
-            self.__lines_by_partner[uid].values()
+            context['lines_by_partner'].values()
         )
         aml_osv = self.pool.get('account.move.line')
         reads = aml_osv.read(cr, uid, line_ids, ['credit', 'debit'], context)
-        total_credit = reduce(lambda x, y: x + y, [read['credit'] for read in reads])
-        total_debit = reduce(lambda x, y: x + y, [read['debit'] for read in reads])
+        total_credit = reduce(
+            lambda x, y: x + y, [read['credit'] for read in reads]
+        )
+        total_debit = reduce(
+            lambda x, y: x + y, [read['debit'] for read in reads]
+        )
         res['total_amount'] = total_credit - total_debit
         res['nb_lines'] = len(reads)
         return res
@@ -454,27 +480,30 @@ class good_to_pay(osv.osv_memory):
     ):
 
         values = {}
-        type, diff = self.__check_add_del(uid, list_ids)
+        type, diff = self.__check_add_del(uid, list_ids, context)
         if type == -1:
-            values = self.__delete_line(diff, uid)
+            values = self.__delete_line(diff, uid, context)
         elif type == 1:
-            self.__add_line(cr, uid, diff, context)
+            values = self.__add_line(cr, uid, diff, context)
         else:
             return {'value': {}}
 
         return {
-            'domain': self.__calcul_partner_domain(uid),
+            'domain': self.__calcul_partner_domain(uid, context),
             'value': values
         }
 
     def __view_changed(self, cr, uid, ids, list_ids, context):
-        return {'value': {}}
+        context['state_line_ids'] = None
+        return {'value': {'context_saved': context}}
 
     def __partner_changed(self, cr, uid, ids, list_ids, context):
-        return {'value': {}}
+        context['state_line_ids'] = None
+        return {'value': {'context_saved': context}}
 
     def onchange_line_ids(
-        self, cr, uid, ids, selector, partner_id, line_ids, context=None
+        self, cr, uid, ids, selector, partner_id,
+        line_ids, context_saved, context=None
     ):
         """ print the line selected or the line filtered by state
             4 states : 'entering_wizard'
@@ -483,6 +512,8 @@ class good_to_pay(osv.osv_memory):
                        'add_del_element' = None
         """
 
+        context_saved = leval(context_saved)
+
         # We cut the ids from the magic tuple [(6, False, [ids])]
         list_ids = line_ids[0][2]
 
@@ -490,25 +521,25 @@ class good_to_pay(osv.osv_memory):
 
         # and we store the ids in the many2many
         # depending on the state we are.
-        if self.__state_line_ids[uid] == 'entering_wizard':
-            res = self.__entering_wizard(cr, uid, ids, list_ids, context)
-        elif not self.__state_line_ids[uid]:
+        if context_saved['state_line_ids'] == 'entering_wizard':
+            res = self.__entering_wizard(cr, uid, ids, list_ids, context_saved)
+        elif not context_saved['state_line_ids']:
             res = self.__add_del_element(
-                cr, uid, ids, selector, partner_id, list_ids, context
+                cr, uid, ids, selector, partner_id, list_ids, context_saved
             )
-        elif self.__state_line_ids[uid] == 'partner_changed':
-            self.__state_line_ids[uid] = None
-            res = self.__partner_changed(cr, uid, ids, list_ids, context)
-        elif self.__state_line_ids[uid] == 'view_changed':
-            self.__state_line_ids[uid] = None
-            res = self.__view_changed(cr, uid, ids, list_ids, context)
-        if self.__lines_by_partner[uid]:
+        elif context_saved['state_line_ids'] == 'partner_changed':
+            res = self.__partner_changed(cr, uid, ids, list_ids, context_saved)
+        elif context_saved['state_line_ids'] == 'view_changed':
+            res = self.__view_changed(cr, uid, ids, list_ids, context_saved)
+        if context_saved['lines_by_partner']:
             res['value'].update(
-                self.__compute_sum_and_nb_lines(cr, uid, context)
+                self.__compute_sum_and_nb_lines(cr, uid, context_saved)
             )
         else:
             res['value'].update(
                 {'nb_lines': 0, 'total_amount': 0.0}
             )
+
+        res['value']['context_saved'] = str(res.get('context_saved', context_saved))
 
         return res

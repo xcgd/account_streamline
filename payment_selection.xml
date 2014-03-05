@@ -13,11 +13,12 @@
                         <field name="generate_report" />
                         <field name="total_amount" readonly="1" />
                         <field name="nb_lines" readonly="1" />
-                        <field name="view_selection" on_change="onchange_view_selector(view_selection, partner_id)"/>
-                        <field name="partner_id" attrs="{'invisible': [('view_selection', '=', 'complete')]}" options="{'create': False, 'create_edit': False}" on_change="onchange_partner_id(partner_id)"/>
+                        <field name="context_saved" invisible="1" />
+                        <field name="view_selection" on_change="onchange_view_selector(view_selection, partner_id, context_saved)"/>
+                        <field name="partner_id" attrs="{'invisible': [('view_selection', '=', 'complete')]}" options="{'create': False, 'create_edit': False}" on_change="onchange_partner_id(partner_id, context_saved)"/>
 
                     </group>
-                    <field name="line_ids" on_change="onchange_line_ids(view_selection, partner_id, line_ids)"
+                    <field name="line_ids" on_change="onchange_line_ids(view_selection, partner_id, line_ids, context_saved)"
                       domain="['|', ('reconcile_id', '=', False), ('reconcile_partial_id', '!=', False), ('account_id.type', 'in', ['payable','receivable']), ('state', '=', 'valid'), ('move_id.state', '=', 'posted')]">
                         <tree>
                             <field invisible="1" name="state"/>
