@@ -93,9 +93,7 @@ class good_to_pay(osv.osv_memory):
             'res.partner',
             string='Selected Partner',
         ),
-        'context_saved': fields.char(
-            size=4096,
-        ),
+        'context_saved': fields.text(),
     }
 
     def default_get(self, cr, uid, field_list=None, context=None):
