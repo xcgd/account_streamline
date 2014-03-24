@@ -149,16 +149,15 @@ class good_to_pay(osv.osv_memory):
                 .print_payment_suggestion(cr, uid, active_ids,
                                           context=context))
 
-    def __check_partner_debits(self, cr, uid, context):
+    def __check_partner_debits(self, cr, uid, context_saved, context):
         """Loop through selected partners to ensure they all have more credit
         than debit.
         :return False and the first partner having a debit balance, otherwise
         return True.
         """
-
         aml_osv = self.pool.get('account.move.line')
 
-        for partner_id, line_ids in context['lines_by_partner'].items():
+        for partner_id, line_ids in context_saved['lines_by_partner'].items():
             total_credit = 0.0
             total_debit = 0.0
             reads = aml_osv.read(
@@ -172,12 +171,6 @@ class good_to_pay(osv.osv_memory):
         return True, None
 
     def good_to_pay(self, cr, uid, ids, context=None):
-        test, partner_name = self.__check_partner_debits(cr, uid, context)
-        if not test:
-            raise osv.except_osv(
-                _('Error'),
-                _('The voucher for the partner %s is debit.' % partner_name)
-            )
 
         aml_osv = self.pool.get('account.move.line')
         avl_osv = self.pool.get('account.voucher.line')
@@ -190,10 +183,20 @@ class good_to_pay(osv.osv_memory):
         action = {'type': 'ir.actions.act_window_close'}
 
         for form in self.read(cr, uid, ids, context=context):
+            context_saved = leval(form['context_saved'])
+            test, partner_name = self.__check_partner_debits(
+                cr, uid, context_saved, context
+            )
+            if not test:
+                raise osv.except_osv(
+                    _('Error'),
+                    _('The voucher for the partner %s is debit.' %
+                      partner_name)
+                )
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
-                    leval(form['context_saved'])['lines_by_partner'].values()
+                    context_saved['lines_by_partner'].values()
                 )
             )
             for aml in aml_osv.browse(
