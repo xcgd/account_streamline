@@ -183,6 +183,23 @@ class good_to_pay(osv.osv_memory):
         action = {'type': 'ir.actions.act_window_close'}
 
         for form in self.read(cr, uid, ids, context=context):
+            partner_dict = {}
+            lines = aml_osv.browse(cr, uid, form['line_ids'], context=context)
+            for line in lines:
+                partner = line.partner_id.id
+                account = line.account_id.id
+                if partner in partner_dict:
+                    if partner_dict[partner] != account:
+                        raise osv.except_osv(
+                            _('Error'),
+                            _(
+                                'Cannot select two lines with two different ' \
+                                'accounts for the same partner.'
+                            )
+                        )
+                else:
+                    partner_dict[partner] = account
+
             context_saved = leval(form['context_saved'])
             test, partner_name = self.__check_partner_debits(
                 cr, uid, context_saved, context
@@ -270,7 +287,10 @@ class good_to_pay(osv.osv_memory):
                 line_vals = dict()
                 line_vals['name'] = aml.name
                 line_vals['voucher_id'] = voucher_id
-                line_vals['account_id'] = partner.property_account_payable.id
+                # Voucher lines must use the same account as the move lines,
+                # in order to be able to reconcile them with the move lines
+                # created during the validation of the voucher.
+                line_vals['account_id'] = aml.account_id.id
                 line_vals['type'] = 'dr' if aml.credit else 'cr'
                 line_vals['move_line_id'] = aml.id
 
