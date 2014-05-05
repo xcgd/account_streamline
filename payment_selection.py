@@ -170,6 +170,83 @@ class good_to_pay(osv.osv_memory):
                 return False, read['partner_id'][1]
         return True, None
 
+    def _get_account_conflicts(self, cr, uid, line_ids, context=None):
+        """Find every partner that is found with two or more different accounts
+        in the move lines given in argument.
+        Return those partners associated with their accounts in a dictionary.
+        """
+
+        aml_osv = self.pool.get('account.move.line')
+        partner_dict = {}
+        conflicts = {}
+        lines = aml_osv.browse(cr, uid, line_ids, context=context)
+
+        for line in lines:
+            partner = line.partner_id.id
+            account = line.account_id.id
+            if partner in partner_dict:
+                first_account = partner_dict[partner]
+                if first_account != account:
+                    if partner not in conflicts:
+                        conflicts[partner] = {first_account}
+                    conflicts[partner].add(account)
+            else:
+                partner_dict[partner] = account
+
+        for partner in conflicts:
+            conflicts[partner] = list(conflicts[partner])
+        return conflicts
+
+    def _print_conflicts(
+        self, cr, uid, conflicts, max_accounts=15, max_partners=5, context=None
+    ):
+        """Return a dialog box-friendly representation of the conflicts."""
+
+        tr_accounts = tr_partners = unt_accounts = unt_partners = 0
+        partner_osv = self.pool.get('res.partner')
+        account_osv = self.pool.get('account.account')
+        partner_ids = conflicts.keys()
+        msg = _(
+            u"Different accounts are being referred for the same partner(s):"
+        )
+
+        for partner_id in partner_ids:
+            account_ids = conflicts[partner_id]
+            if tr_partners >= max_partners or tr_accounts >= max_accounts:
+                unt_partners += 1
+                unt_accounts += len(account_ids)
+                continue
+            else:
+                treated_local = 0
+                tr_partners += 1
+
+            partner_name = partner_osv.read(
+                cr, uid, [partner_id], ['name'], context=context
+            )[0]['name']
+            msg += '\n' + partner_name + ':'
+
+            for account_id in account_ids:
+                if tr_accounts >= max_accounts:
+                    break
+                else:
+                    tr_accounts += 1
+                    treated_local += 1
+
+                account = account_osv.read(
+                    cr, uid, [account_id], ['code', 'name'], context=context
+                )[0]
+                msg += '\n*  ' + account['code'] + ' ' + account['name']
+
+            if treated_local != len(account_ids):
+                pattern = _(u"({0} more conflicting accounts)")
+                msg += '\n' + pattern.format(len(account_ids) - treated_local)
+
+        if unt_partners:
+            pattern = _(u"({0} more partners with {1} accounts)")
+            msg += '\n' + pattern.format(unt_partners, unt_accounts)
+
+        return msg
+
     def good_to_pay(self, cr, uid, ids, context=None):
 
         aml_osv = self.pool.get('account.move.line')
@@ -183,22 +260,15 @@ class good_to_pay(osv.osv_memory):
         action = {'type': 'ir.actions.act_window_close'}
 
         for form in self.read(cr, uid, ids, context=context):
-            partner_dict = {}
-            lines = aml_osv.browse(cr, uid, form['line_ids'], context=context)
-            for line in lines:
-                partner = line.partner_id.id
-                account = line.account_id.id
-                if partner in partner_dict:
-                    if partner_dict[partner] != account:
-                        raise osv.except_osv(
-                            _('Error'),
-                            _(
-                                'Cannot select two lines with two different ' \
-                                'accounts for the same partner.'
-                            )
-                        )
-                else:
-                    partner_dict[partner] = account
+
+            conflicts = self._get_account_conflicts(
+                cr, uid, form['line_ids'], context=context
+            )
+            if conflicts:
+                raise osv.except_osv(
+                    _('Error'),
+                    self._print_conflicts(cr, uid, conflicts, context=context)
+                )
 
             context_saved = leval(form['context_saved'])
             test, partner_name = self.__check_partner_debits(
@@ -375,13 +445,24 @@ class good_to_pay(osv.osv_memory):
         domain.append(('partner_id', '=', partner_id))
         list_ids = context_saved['lines_by_partner'][partner_id]
         context_saved['state_line_ids'] = 'partner_changed'
-        return {
+        res = {
             'value': {
                 'line_ids': [(6, 0, list_ids)],
                 'context_saved': str(context_saved),
             },
             'domain': {'line_ids': domain},
         }
+        conflicts = self._get_account_conflicts(
+            cr, uid, list_ids, context=context
+        )
+        if conflicts:
+            res['warning'] = {
+                'title': _('Warning'),
+                'message': self._print_conflicts(
+                    cr, uid, conflicts, context=context
+                )
+            }
+        return res
 
     def __compile_list_dict(self, list_dict):
         """ This function compile the list of dict into
@@ -392,10 +473,9 @@ class good_to_pay(osv.osv_memory):
             ->  {3556: [20, 59], 5024: [53]}
         """
 
-        if len(list_dict) == 0:
-            return None
-
         res = {}
+        if len(list_dict) == 0:
+            return res
 
         for _dict in list_dict:
             if not _dict['partner_id'][0] in res:
@@ -417,13 +497,24 @@ class good_to_pay(osv.osv_memory):
         )
         reads = [read for read in reads if read['partner_id']]
         context['lines_by_partner'] = self.__compile_list_dict(reads)
-        return {
+        res = {
             'value': {
                 'view_selection': 'complete',
                 'context_saved': context,
             },
             'domain': self.__calcul_partner_domain(uid, context),
         }
+        conflicts = self._get_account_conflicts(
+            cr, uid, list_ids, context=context
+        )
+        if conflicts:
+            res['warning'] = {
+                'title': _('Warning'),
+                'message': self._print_conflicts(
+                    cr, uid, conflicts, context=context
+                )
+            }
+        return res
 
     def __substract_wo_dups(self, src, dest):
         return list(set(dest) - set(src))
