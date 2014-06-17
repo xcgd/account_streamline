@@ -725,10 +725,7 @@ class account_move_line(osv.osv):
                     _('Entry "%s" is not valid !') % line.name
                 )
 
-            # control on second currency : must always be the same TODO
-            # authorise reconciliation on second currency
-            # TODO : the context key should be given by the
-            # reconciliation wizard
+            # control on second currency : must always be the same
             if (
                 context.get('reconcile_second_currency', True) and
                 currency_id and not currency_id == line['currency_id']['id']

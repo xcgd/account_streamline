@@ -117,7 +117,7 @@ class account_move_line_reconcile(osv.TransientModel):
                 _('Your entries are already reconciled'),
             )
         if this['force_by_base']:
-            context['reconcile_second_currency'] = True
-        else:
             context['reconcile_second_currency'] = False
+        else:
+            context['reconcile_second_currency'] = True
         return super(account_move_line_reconcile, self).trans_rec_reconcile_full(cr, uid, ids, context=context)
