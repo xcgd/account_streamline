@@ -97,16 +97,16 @@ class account_move_line_reconcile(osv.TransientModel):
     #TODO : is there a better than override all methods???
     def trans_rec_addendum_writeoff(self, cr, uid, ids, context=None):
         if self.read(cr, uid, ids, context=context)[0]['force_by_base']:
-            context['reconcile_second_currency'] = True
-        else:
             context['reconcile_second_currency'] = False
+        else:
+            context['reconcile_second_currency'] = True
         return super(account_move_line_reconcile, self).trans_rec_addendum_writeoff(cr, uid, ids, context=context)
 
     def trans_rec_reconcile_partial_reconcile(self, cr, uid, ids, context=None):
         if self.read(cr, uid, ids, context=context)[0]['force_by_base']:
-            context['reconcile_second_currency'] = True
-        else:
             context['reconcile_second_currency'] = False
+        else:
+            context['reconcile_second_currency'] = True
         return super(account_move_line_reconcile, self).trans_rec_reconcile_partial_reconcile(cr, uid, ids, context=context)
 
     def trans_rec_reconcile_full(self, cr, uid, ids, context=None):
