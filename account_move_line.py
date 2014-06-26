@@ -25,6 +25,7 @@ from openerp.tools.translate import _
 from openerp import netsvc
 import time
 from lxml import etree
+from openerp.addons.analytic_structure.MetaAnalytic import MetaAnalytic
 
 # fields that are considered as forbidden once the move_id has been posted
 forbidden_fields = ["move_id"]
@@ -51,6 +52,7 @@ class aml_streamline_mail_thread(osv.AbstractModel):
 
 
 class account_move_line(osv.osv):
+    __metaclass__ = MetaAnalytic
     _name = 'account.move.line'
 
     _inherit = [
@@ -119,51 +121,6 @@ class account_move_line(osv.osv):
                     ),
             }
         ),
-        a1_id=fields.many2one(
-            'analytic.code',
-            "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
-                ('nd_id.ns_id.ordering', 'in', ['1']),
-            ],
-            track_visibility='onchange',
-        ),
-        a2_id=fields.many2one(
-            'analytic.code',
-            "Analysis Code 2",
-            domain=[
-                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
-                ('nd_id.ns_id.ordering', '=', ['2']),
-            ],
-            track_visibility='onchange',
-        ),
-        a3_id=fields.many2one(
-            'analytic.code',
-            "Analysis Code 3",
-            domain=[
-                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
-                ('nd_id.ns_id.ordering', '=', '3'),
-            ],
-            track_visibility='onchange',
-        ),
-        a4_id=fields.many2one(
-            'analytic.code',
-            "Analysis Code 4",
-            domain=[
-                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
-                ('nd_id.ns_id.ordering', 'in', ['4']),
-            ],
-            track_visibility='onchange',
-        ),
-        a5_id=fields.many2one(
-            'analytic.code',
-            "Analysis Code 5",
-            domain=[
-                ('nd_id.ns_id.model_name', 'in', ['account_move_line']),
-                ('nd_id.ns_id.ordering', 'in', ['5']),
-            ],
-            track_visibility='onchange',
-        ),
 
         # Redefine these fields for mail-thread tracking.
         # Track the description and the account to know which lines events are
@@ -190,34 +147,7 @@ class account_move_line(osv.osv):
         ),
     )
 
-    def fields_get(
-        self, cr, uid, allfields=None, context=None, write_access=True
-    ):
-        """Override this function to rename analytic fields."""
-
-        ans_obj = self.pool.get('analytic.structure')
-        ans_ids = ans_obj.search(
-            cr, uid,
-            [('model_name', '=', 'account_move_line')],
-            context=context
-        )
-        ans_brs = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = {
-            ans.ordering: ans.nd_id.name
-            for ans in ans_brs
-        }
-
-        res = super(account_move_line, self).fields_get(
-            cr, uid, allfields=allfields, context=context,
-            write_access=write_access
-        )
-
-        for i in xrange(1, 5 + 1):
-            field = 'a%d_id' % i
-            if field in res:
-                res[field]['string'] = ans_dict.get('%d' % i, 'A%d' % i)
-
-        return res
+    _analytic = 'account_move_line'
 
     def __modify_analysis_fields(self, doc, field, ans_dict, context):
         '''
@@ -378,31 +308,18 @@ class account_move_line(osv.osv):
 
         # display analysis codes only when present on a related structure,
         # with dimension name as label
-        ans_ids = ans_obj.search(
-            cr, uid,
-            [('model_name', '=', 'account_move_line')],
-            context=context
+        ans_dict = ans_obj.get_dimensions_names(
+            cr, uid, 'account_move_line', context=context
         )
-        ans_brs = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = {
-            ans.ordering: ans.nd_id.name
-            for ans in ans_brs
-        }
 
         doc = etree.XML(res['arch'])
         if 'fields' in res:
-            field = res['fields']
-            if 'a1_id' in field:
-                self.__modify_analysis_fields(doc, 'a1_id', ans_dict, context)
-            if 'a2_id' in field:
-                self.__modify_analysis_fields(doc, 'a2_id', ans_dict, context)
-            if 'a3_id' in field:
-                self.__modify_analysis_fields(doc, 'a3_id', ans_dict, context)
-            if 'a4_id' in field:
-                self.__modify_analysis_fields(doc, 'a4_id', ans_dict, context)
-            if 'a5_id' in field:
-                self.__modify_analysis_fields(doc, 'a5_id', ans_dict, context)
-            self.__render_columns(doc, res['fields'], context)
+            fields = res['fields']
+            for ordering in ans_dict:
+                anf = 'a{}_id'.format(ordering)
+                if anf in fields:
+                    self.__modify_analysis_fields(doc, anf, ans_dict, context)
+            self.__render_columns(doc, fields, context)
 
         self.convert_modifiers(doc)
 

@@ -51,35 +51,21 @@ class account_move(osv.Model):
         lines = []
 
         ans_obj = self.pool.get('analytic.structure')
-        ans_ids = ans_obj.search(cr, uid,
-                                 [('model_name', '=', 'account_move_line')],
-                                 context=context)
-        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = dict()
-        for ans in ans_br:
-            ans_dict[ans.ordering] = ans.nd_id.name
-
+        ans_dict = ans_obj.get_dimensions_names(
+            cr, uid, 'account_move_line', context=context
+        )
         for move in self.browse(cr, uid, ids, context=context):
-            # line_dict = []
             for aml in move.line_id:
                 dim_list = []
-                if aml.account_id.t1_ctl == '1' and not aml.a1_id:
-                    dim_list.append(ans_dict.get('1', 'A1').encode('utf8'))
-                if aml.account_id.t2_ctl == '1' and not aml.a2_id:
-                    dim_list.append(ans_dict.get('2', 'A2').encode('utf8'))
-                if aml.account_id.t3_ctl == '1' and not aml.a3_id:
-                    dim_list.append((ans_dict.get('3', 'A3').encode('utf8')))
-                if aml.account_id.t4_ctl == '1' and not aml.a4_id:
-                    dim_list.append((ans_dict.get('4', 'A4').encode('utf8')))
-                if aml.account_id.t5_ctl == '1' and not aml.a5_id:
-                    dim_list.append((ans_dict.get('5', 'A5').encode('utf8')))
+                for ordering, name in ans_dict.iteritems():
+                    control_field = aml.account_id['t{0}_ctl'.format(ordering)]
+                    analytic_field = aml['a{0}_id'.format(ordering)]
+                    if control_field == '1' and not analytic_field:
+                        dim_list.append(name)
                 if dim_list:
-                    # line_dict[aml.name.encode('utf8')] = dim_list
-                    tmp = [aml.name.encode('utf8')]
+                    tmp = [aml.name]
                     tmp.append(dim_list)
                     lines += tmp
-            # if lines:
-                # move_dict[move.ref.encode('utf8')] = line_dict
 
         if lines:
             msg_analysis = _(
@@ -110,100 +96,13 @@ class account_move(osv.Model):
                                           context=context,
                                           toolbar=toolbar,
                                           submenu=False)
+
         ans_obj = self.pool.get('analytic.structure')
+        line_id_field = res['fields'].get('line_id')
+        ans_obj.analytic_fields_subview_get(
+            cr, uid, 'account_move_line', line_id_field, context=context
+        )
 
-        # display analysis codes only when present on a related structure,
-        # with dimension name as label
-        ans_ids = ans_obj.search(cr, uid,
-                                 [('model_name', '=', 'account_move_line')],
-                                 context=context)
-        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = dict()
-        for ans in ans_br:
-            ans_dict[ans.ordering] = ans.nd_id.name
-        if 'fields' in res and 'line_id' in res['fields']:
-            doc = etree.XML(res['fields']['line_id']['views']['tree']['arch'])
-            line_fields = res['fields']['line_id']['views']['tree']['fields']
-
-            # TODO Improve how we play with the "modifiers" attribute
-            # (ast.literal_eval?).
-
-            def set_readonly(field, condition):
-                """Add a readonly modifier; preserve previous ones."""
-                elem = doc.xpath("//field[@name='%s']" % field)[0]
-                modifiers = elem.get('modifiers')
-                closing = modifiers.rfind('}')
-                if closing in (-1, 1):  # no dict or empty dict
-                    elem.set(
-                        'modifiers',
-                        '{"readonly": %s}' % condition
-                    )
-                else:
-                    elem.set(
-                        'modifiers',
-                        modifiers[:closing] +
-                        (', "readonly": %s' % condition) +
-                        modifiers[closing:]
-                    )
-
-            def set_analytic_visibility(index):
-                """Add a tree_invisible modifier; preserve previous ones."""
-                elem = doc.xpath("//field[@name='a%d_id']" % index)[0]
-                modifiers = elem.get('modifiers')
-                closing = modifiers.rfind('}')
-                if closing in (-1, 1):  # no dict or empty dict
-                    elem.set('modifiers', '{"tree_invisible": %s}' %
-                        str(not str(index) in ans_dict).lower())
-                else:
-                    elem.set('modifiers', modifiers[:closing] +
-                        ', "tree_invisible": %s' %
-                        str(not str(index) in ans_dict).lower() +
-                        modifiers[closing:])
-
-            user_obj = self.pool.get('res.users')
-            auth_readonly_loose = user_obj.has_group(
-                cr, uid, 'analytic_structure.group_ans_manager'
-            )
-            auth_admin = user_obj.has_group(cr, uid, 'base.group_no_one')
-
-            # Handle fields modifiers on posted / allocated entries
-            for line_field in line_fields:
-                # is authorized
-                if auth_readonly_loose or auth_admin:
-                    # can change these when not allocated
-                    # admin can also change partner_id
-                    if line_field in list_readonly_loose or \
-                            (auth_admin and line_field == 'partner_id'):
-                        set_readonly(line_field, list_readonly_condition_loose)
-                    # can always change those
-                    elif line_field in list_noreadonly:
-                        # do not change modifiers
-                        continue
-                    # other fields cannot be changed when posted
-                    else:
-                        set_readonly(line_field, list_readonly_condition)
-                else:
-                    set_readonly(line_field, list_readonly_condition)
-
-            if 'a1_id' in line_fields:
-                line_fields['a1_id']['string'] = ans_dict.get('1', 'A1')
-                set_analytic_visibility(1)
-            if 'a2_id' in line_fields:
-                line_fields['a2_id']['string'] = ans_dict.get('2', 'A2')
-                set_analytic_visibility(2)
-            if 'a3_id' in line_fields:
-                line_fields['a3_id']['string'] = ans_dict.get('3', 'A3')
-                set_analytic_visibility(3)
-            if 'a4_id' in line_fields:
-                line_fields['a4_id']['string'] = ans_dict.get('4', 'A4')
-                set_analytic_visibility(4)
-            if 'a5_id' in line_fields:
-                line_fields['a5_id']['string'] = ans_dict.get('5', 'A5')
-                set_analytic_visibility(5)
-
-            res['fields']['line_id']['views']['tree']['arch'] = (
-                etree.tostring(doc)
-            )
         return res
 
 

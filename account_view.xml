@@ -11,19 +11,11 @@
                 <xpath expr="//label[@for='note']" position="before">
                     <separator string="Static Analytic"/>
                     <group col="2" colspan="2">
-                        <field name="a1_id"/>
-                        <field name="a2_id"/>
-                        <field name="a3_id"/>
-                        <field name="a4_id"/>
-                        <field name="a5_id"/>
+                        <div class="oe_analytic" />
                     </group>
                     <separator string="Dynamic Analytic"/>
                     <group col="2" colspan="2">
-                        <field name="t1_ctl"/>
-                        <field name="t2_ctl"/>
-                        <field name="t3_ctl"/>
-                        <field name="t4_ctl"/>
-                        <field name="t5_ctl"/>
+                        <div class="oe_analytic" prefix="t" suffix="ctl" />
                     </group>
                     <separator/>
                 </xpath>
@@ -36,11 +28,7 @@
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="a1_id"/>
-                    <field name="a2_id"/>
-                    <field name="a3_id"/>
-                    <field name="a4_id"/>
-                    <field name="a5_id"/>
+                    <div class="oe_analytic" />
                 </xpath>
             </field>
         </record>

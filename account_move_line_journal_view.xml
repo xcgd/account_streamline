@@ -27,11 +27,7 @@
                     <field readonly="1" name="debit" sum="Total Debit"/>
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
-                    <field readonly="1" name="a1_id"/>
-                    <field readonly="1" name="a2_id"/>
-                    <field readonly="1" name="a3_id"/>
-                    <field readonly="1" name="a4_id"/>
-                    <field readonly="1" name="a5_id"/>
+                    <div class="oe_analytic" readonly="1" />
                 </list>
             </field>
         </record>

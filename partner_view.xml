@@ -14,11 +14,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='parent_id']" position="after">
-                    <field name="a1_id"/>
-                    <field name="a2_id"/>
-                    <field name="a3_id"/>
-                    <field name="a4_id"/>
-                    <field name="a5_id"/>
+                    <div class="oe_analytic" />
                 </xpath>
             </field>
         </record>
@@ -32,11 +28,7 @@
                     <xpath expr="//notebook/page[@string='History']" position="after">
                         <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
                             <group>
-                                <field name="a1_id"/>
-                                <field name="a2_id"/>
-                                <field name="a3_id"/>
-                                <field name="a4_id"/>
-                                <field name="a5_id"/>
+                                <div class="oe_analytic" />
                             </group>
                         </page>
                     </xpath>

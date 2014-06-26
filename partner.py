@@ -22,9 +22,11 @@
 from openerp.osv import fields, expression, osv
 from openerp.tools.translate import _
 from lxml import etree
+from openerp.addons.analytic_structure.MetaAnalytic import MetaAnalytic
 
 
 class res_partner_needaction(osv.Model):
+    __metaclass__ = MetaAnalytic
     _name = 'res.partner'
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
@@ -105,43 +107,9 @@ class res_partner_needaction(osv.Model):
                                                store=True),
         siret=fields.char('SIRET', size=14),
         siren=fields.char('SIREN', size=9),
-
-        a1_id=fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '1'),
-            ]
-        ),
-        a2_id=fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '2'),
-            ]
-        ),
-        a3_id=fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '3'),
-            ]
-        ),
-        a4_id=fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '4'),
-            ]
-        ),
-        a5_id=fields.many2one(
-            'analytic.code', "Analysis Code 1",
-            domain=[
-                ('nd_id.ns_id.model_name', '=', 'res_partner'),
-                ('nd_id.ns_id.ordering', '=', '5'),
-            ]
-        ),
     )
+
+    _analytic = 'res_partner'
 
     # To prevent partner duplication
     _sql_constraints = [
@@ -241,94 +209,3 @@ class res_partner_needaction(osv.Model):
             ])
 
         return dom
-
-    # View stuff
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                        context=None, toolbar=False, submenu=False):
-        """
-        Override filds_view_get to display analytic dimensions using
-        analytic structure on res_partner
-        """
-
-        if context is None:
-            context = {}
-
-        res = super(
-            res_partner_needaction, self
-        ).fields_view_get(
-            cr, uid, view_id=view_id,
-            view_type=view_type, context=context,
-            toolbar=toolbar, submenu=False
-        )
-
-        ans_obj = self.pool.get('analytic.structure')
-
-        # display analysis codes only when present on a related structure,
-        # with dimension name as label
-        ans_ids = ans_obj.search(
-            cr, uid,
-            [
-                ('model_name', '=', 'res_partner'),
-            ],
-            context=context
-        )
-
-        ans_br = ans_obj.browse(cr, uid, ans_ids, context=context)
-        ans_dict = dict()
-        for ans in ans_br:
-            ans_dict[ans.ordering] = ans.nd_id.name
-
-        doc = etree.XML(res['arch'])
-
-        pattern = '{"invisible": %(invisible)s,' \
-                  ' "tree_invisible": %(invisible)s}'
-
-        if 'a1_id' in res['fields']:
-            res['fields']['a1_id']['string'] = ans_dict.get('1', 'A1')
-            doc.xpath("//field[@name='a1_id']")[0].set(
-                'modifiers',
-                pattern % {
-                    'invisible': str(not '1' in ans_dict).lower()
-                }
-            )
-
-        if 'a2_id' in res['fields']:
-            res['fields']['a2_id']['string'] = ans_dict.get('2', 'A2')
-            doc.xpath("//field[@name='a2_id']")[0].set(
-                'modifiers',
-                pattern % {
-                    'invisible': str(not '2' in ans_dict).lower()
-                }
-            )
-
-        if 'a3_id' in res['fields']:
-            res['fields']['a3_id']['string'] = ans_dict.get('3', 'A3')
-            doc.xpath("//field[@name='a3_id']")[0].set(
-                'modifiers',
-                pattern % {
-                    'invisible': str(not '3' in ans_dict).lower()
-                }
-            )
-
-        if 'a4_id' in res['fields']:
-            res['fields']['a4_id']['string'] = ans_dict.get('4', 'A4')
-            doc.xpath("//field[@name='a4_id']")[0].set(
-                'modifiers',
-                pattern % {
-                    'invisible': str(not '4' in ans_dict).lower()
-                }
-            )
-
-        if 'a5_id' in res['fields']:
-            res['fields']['a5_id']['string'] = ans_dict.get('5', 'A5')
-            doc.xpath("//field[@name='a5_id']")[0].set(
-                'modifiers',
-                pattern % {
-                    'invisible': str(not '5' in ans_dict).lower()
-                }
-            )
-
-        res['arch'] = etree.tostring(doc)
-
-        return res

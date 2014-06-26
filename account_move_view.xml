@@ -76,11 +76,7 @@
                                     <field name="amount_currency"
                                         invisible="1" />
                                     <field name="state" invisible="1" />
-                                    <field name="a1_id" options='{"no_open": True}'/>
-                                    <field name="a2_id" options='{"no_open": True}'/>
-                                    <field name="a3_id" options='{"no_open": True}'/>
-                                    <field name="a4_id" options='{"no_open": True}'/>
-                                    <field name="a5_id" options='{"no_open": True}'/>
+                                    <div class="oe_analytic" />
                                 </tree>
                             </field>
                         </page>
@@ -103,11 +99,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@string='Reconciliation']" position="after">
                     <group string="Analytic Static">
-                        <field name="a1_id" />
-                        <field name="a2_id" />
-                        <field name="a3_id" />
-                        <field name="a4_id" />
-                        <field name="a5_id" />
+                        <div class="oe_analytic" />
                     </group>
                 </xpath>
             </field>
