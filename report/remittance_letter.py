@@ -40,11 +40,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
         if not company:
             return ''
 
-        bank = br.partner_bank_id
-        if not bank:
-            return ''
-
-        iban = bank.acc_number or ''
+        iban = br.iban or ''
         date = br.date or ''
 
         return (self.translate(company.remittance_letter_top)
