@@ -2,80 +2,49 @@
 <openerp>
     <data>
         <!-- Hide the following menu item for now. -->
-<!--         <menuitem action="action_move_line_tree_readonly" -->
-<!--                   id="menu_action_account_move_line_readonly" -->
-<!--                   parent="account_payment.menu_main_payment" -->
-<!--                   groups="account.group_account_user" /> -->
+        <!-- <menuitem action="action_move_line_tree_readonly" -->
+        <!-- id="menu_action_account_move_line_readonly" -->
+        <!-- parent="account_payment.menu_main_payment" -->
+        <!-- groups="account.group_account_user" /> -->
 
-        <menuitem action="action_move_line_tree_payment"
-                  id="menu_action_account_move_line_payment"
-                  parent="account_payment.menu_main_payment"
-                  groups="account.group_account_user" />
+        <menuitem action="action_move_line_tree_payment" id="menu_action_account_move_line_payment"
+            parent="account_payment.menu_main_payment" groups="account.group_account_user" />
 
-        <menuitem id="menu_account_inquiries"
-                  name="Account Inquiries"
-                  sequence="5"
-                  parent="account.menu_finance"
-                  groups="account.group_account_user,account.group_account_manager" />
+        <menuitem id="menu_account_inquiries" name="Account Inquiries"
+            sequence="5" parent="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager" />
 
-        <menuitem
-            action="action_move_line_tree_complete"
-            id="menu_action_account_move_line_complete"
-            parent="menu_account_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_tree_complete" id="menu_action_account_move_line_complete"
+            parent="menu_account_inquiries" groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_tree_simple"
-            id="menu_action_account_move_line_simple"
-            parent="menu_account_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_tree_simple" id="menu_action_account_move_line_simple"
+            parent="menu_account_inquiries" groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_tree_analytic"
-            id="menu_action_account_move_line_analytic"
-            parent="menu_account_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_tree_analytic" id="menu_action_account_move_line_analytic"
+            parent="menu_account_inquiries" groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_tree_reconciliation"
-            id="menu_action_account_move_line_reconcile"
-            parent="account.periodical_processing_reconciliation"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_tree_reconciliation" id="menu_action_account_move_line_reconcile"
+            parent="account.periodical_processing_reconciliation" groups="account.group_account_user" />
 
-        <menuitem id="menu_journal_inquiries"
-                  name="Journal Inquiries"
-                  sequence="5"
-                  parent="account.menu_finance"
-                  groups="account.group_account_user,account.group_account_manager" />
+        <menuitem id="menu_journal_inquiries" name="Journal Inquiries"
+            sequence="5" parent="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager" />
 
-        <menuitem
-            action="action_move_line_accounting_items_complete_tree"
-            icon="STOCK_JUSTIFY_FILL"
-            id="menu_action_move_line_accounting_items_complete"
-            parent="menu_journal_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_accounting_items_complete_tree"
+            icon="STOCK_JUSTIFY_FILL" id="menu_action_move_line_accounting_items_complete"
+            parent="menu_journal_inquiries" groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_accounting_items_simple_tree"
-            icon="STOCK_JUSTIFY_FILL"
-            id="menu_action_move_line_accounting_items_simple"
-            parent="menu_journal_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_accounting_items_simple_tree"
+            icon="STOCK_JUSTIFY_FILL" id="menu_action_move_line_accounting_items_simple"
+            parent="menu_journal_inquiries" groups="account.group_account_user" />
 
-        <menuitem
-            action="action_move_line_accounting_items_analytic_tree"
-            icon="STOCK_JUSTIFY_FILL"
-            id="menu_action_move_line_accounting_items_analytic"
-            parent="menu_journal_inquiries"
-            groups="account.group_account_user"
-        />
+        <menuitem action="action_move_line_accounting_items_analytic_tree"
+            icon="STOCK_JUSTIFY_FILL" id="menu_action_move_line_accounting_items_analytic"
+            parent="menu_journal_inquiries" groups="account.group_account_user" />
  
+        <record id="account.menu_action_account_moves_all" model="ir.ui.menu">   
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_no_one')])]" />
+        </record>
 
     </data>
 </openerp>
