@@ -48,32 +48,40 @@ class account_move(osv.Model):
         lines in a single message
         """
         # move_dict = {}
-        lines = []
 
         ans_obj = self.pool.get('analytic.structure')
         ans_dict = ans_obj.get_dimensions_names(
             cr, uid, 'account_move_line', context=context
         )
+        required_lines = {}
+        clear_lines = {key: [] for key in ans_dict.iterkeys()}
         for move in self.browse(cr, uid, ids, context=context):
             for aml in move.line_id:
-                dim_list = []
+                required_field_list = []
                 for ordering, name in ans_dict.iteritems():
                     control_field = aml.account_id['t{0}_ctl'.format(ordering)]
                     analytic_field = aml['a{0}_id'.format(ordering)]
                     if control_field == '1' and not analytic_field:
-                        dim_list.append(name)
-                if dim_list:
-                    tmp = [aml.name]
-                    tmp.append(dim_list)
-                    lines += tmp
+                        required_field_list.append(name)
+                    elif control_field == '3' and analytic_field:
+                        clear_lines[ordering].append(aml.id)
+                if required_field_list:
+                    required_lines[aml.name] = required_field_list
 
-        if lines:
+        if required_lines:
             msg_analysis = _(
                 "Unable to post! The following analysis codes are mandatory:"
             )
             msg_analysis += '\n'
-            msg_analysis += yaml.dump(lines)
+            msg_analysis += yaml.safe_dump(required_lines)
             raise osv.except_osv(_('Error!'), msg_analysis)
+
+        if clear_lines:
+            aml_obj = self.pool.get('account.move.line')
+            for ordering, lines in clear_lines.iteritems():
+                if lines:
+                    vals = {'a{0}_id'.format(ordering): False}
+                    aml_obj.write(cr, uid, lines, vals, context=context)
 
     def post(self, cr, uid, ids, context=None):
         """override the post method so all lines can be check against analysis

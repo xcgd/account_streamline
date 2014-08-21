@@ -40,7 +40,7 @@ class account_analytic_structure(osv.Model):
     _para_analytic = {('t', 'ctl'): {
         'model': 'account_move_line',
         'type': fields.selection,
-        'default': 2,
+        'default': '2',
         'args': (CTL_SELECTION, "Move Line Analytic Control"),
         'kwargs': dict(required=True),
     }}
