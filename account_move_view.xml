@@ -81,14 +81,17 @@
                             </field>
                         </page>
                     </notebook>
+                    
                     <group class="oe_subtotal_footer oe_right">
-                    	<div>
-							<label for="amount" string="Solde Montant"/>
+                    	<div attrs="{'invisible': [('state', '!=', 'draft')]}">
+							<label for="balance_base" />
                         </div>
                         <div>
-							<field name="amount" widget="monetary"/> 
+							<field name="balance_base" widget="monetary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                         </div>
                     </group>
+                    
+                    
                     <field name="narration" colspan="4"
                         placeholder="Add an internal note..." nolabel="1"
                         height="50" />

@@ -28,7 +28,17 @@ class account_move(osv.Model):
         'account.move',
         'mail.thread',
     ]
-
+    
+    def _compute_balance(self, cr, uid, ids, field_name, args, context=None):
+		res = {}
+		for move in ids:
+			total = 0.0
+			for l in self.browse(cr, uid, move, context=context).line_id:
+				total += (l.debit or 0.0) - (l.credit or 0.0)
+			res[move] = total
+		    
+		return res
+    
     _columns = {
         # Redefine this field to remove the read-only constraint; it is however
         # carefully propagated to line fields via attributes inserted from the
@@ -39,6 +49,12 @@ class account_move(osv.Model):
             'move_id',
             'Entries'
         ),
+        
+        'balance_base':fields.function(
+			_compute_balance,
+			type='float',
+			string='Balance'
+		),
     }
 
     def _analysis_control(self, cr, uid, ids, context=None):
