@@ -81,14 +81,6 @@
                             </field>
                         </page>
                     </notebook>
-                    <group class="oe_subtotal_footer oe_right">
-                    	<div>
-							<label for="amount" string="Solde Montant"/>
-                        </div>
-                        <div>
-							<field name="amount" widget="monetary"/> 
-                        </div>
-                    </group>
                     <field name="narration" colspan="4"
                         placeholder="Add an internal note..." nolabel="1"
                         height="50" />
