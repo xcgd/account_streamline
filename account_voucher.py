@@ -6,17 +6,26 @@ from openerp.tools.translate import _
 class account_voucher(osv.Model):
     _inherit = "account.voucher"
 
-    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context):
-        # The Remittance Letter bottom part is empty by default.
-        res = {}
-        for id in ids:
-            res[id] = ''
-        return res
+    def _get_iban(self, cr, uid, ids, field_name, arg, context=None):
+        """Empty on purpose - to be overridden."""
+        return {voucher_id: '' for voucher_id in ids}
+
+    def _get_rem_letter_bot(self, cr, uid, ids, field_name, arg, context=None):
+        """Empty on purpose - to be overridden."""
+        return {voucher_id: '' for voucher_id in ids}
 
     _columns = {
-        'remittance_letter_bottom': fields.function(_get_rem_letter_bot,
-                                                    type='text',
-                                                    method=True),
+        'iban': fields.function(
+            _get_iban,
+            method=True,
+            type='char',
+        ),
+
+        'remittance_letter_bottom': fields.function(
+            _get_rem_letter_bot,
+            method=True,
+            type='text',
+        ),
 
         'partner_email': fields.related('partner_id',
                                         'email',
