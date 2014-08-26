@@ -31,6 +31,17 @@
                 </list>
             </field>
         </record>
+        <record id="view_account_journal_form_streamline" model="ir.ui.view">
+			<field name="name">view.account.journal.form.streamline</field>
+			<field name="model">account.journal</field>
+			<field name="inherit_id" ref="account.view_account_journal_form" />
+			<field eval="5" name="priority"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='sequence_id']" position="after">
+					<field name="is_active"/>
+				</xpath>
+			</field>
+		</record>
         <record id="action_move_line_accounting_items_complete_tree"
                 model="ir.actions.act_window">
             <field name="name">Full View</field>

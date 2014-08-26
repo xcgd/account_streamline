@@ -44,3 +44,14 @@ class account_analytic_structure(osv.Model):
         'args': (CTL_SELECTION, "Move Line Analytic Control"),
         'kwargs': dict(required=True),
     }}
+  
+class account_journal(osv.Model):
+	_name = 'account.journal'
+	_inherit = 'account.journal'
+	
+	_columns = {
+	
+	'is_active':fields.boolean(
+		u"Active in Reporting",
+				),
+	}
