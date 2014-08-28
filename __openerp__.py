@@ -44,6 +44,7 @@
         'report/remittance_letter.xml',
         'data/remittance_letter_email_template.xml',
         'security/ir.model.access.csv',
+        'security/record_rules.xml',
     ],
     #'demo_xml': [],
     'test': [],

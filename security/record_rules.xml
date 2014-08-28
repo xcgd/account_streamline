@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+<!-- Define rules for users and managers to Read and Write in Voucher Line's where access is limited -->
+	
+<record model="ir.rule" id="restricted_voucher_lines_rule_users">
+            <field name="name">Restricted Voucher Lines (users)</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher_line" />
+            <field name="domain_force" eval="[
+                ('voucher_id.journal_id.is_limited', '!=', True)
+            ]" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <record model="ir.rule" id="restricted_voucher_lines_rule_managers">
+            <field name="name">Restricted Voucher Lines (managers)</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher_line" />
+            <field name="domain_force" eval="[
+                ('voucher_id.journal_id.is_limited', '=', False)
+            ]" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+        </record>
+        
+<!-- Define rules for users and managers to Read and Write in Voucher's where access is limited -->
+        <record model="ir.rule" id="restricted_vouchers_rule_users">
+            <field name="name">Restricted Vouchers (users)</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher" />
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '!=', True)
+            ]" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        </record>
+        
+        <record model="ir.rule" id="restricted_vouchers_rule_managers">
+            <field name="name">Restricted Vouchers (managers)</field>
+            <field name="model_id" ref="account_voucher.model_account_voucher" />
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '=', False)
+            ]" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+        </record>
+
+<!-- Define rules for users and managers to Read and Write in Move Line's where access is limited -->
+		<record model="ir.rule" id="restricted_move_lines_rule_users">
+            <field name="name">Restricted Move Lines (users)</field>
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '!=', True)
+            ]" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        </record>
+        
+        <record model="ir.rule" id="restricted_move_lines_rule_managers">
+            <field name="name">Restricted Move Lines (managers)</field>
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="domain_force" eval="[ '|',
+                ('journal_id.is_limited', '=', False)
+            ]" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+        </record>
+   
+<!-- Define rules for users and managers to Read and Write in Move's where access is limited -->
+        <record model="ir.rule" id="restricted_moves_rule_users">
+            <field name="name">Restricted Moves (users)</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '!=', True)
+            ]" />
+            <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        </record>
+        
+        <record model="ir.rule" id="restricted_moves_rule_managers">
+            <field name="name">Restricted Moves (managers)</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '=', False)
+            ]" />
+            <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
+        </record>
+
+   </data>
+</openerp>
