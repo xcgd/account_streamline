@@ -39,6 +39,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='sequence_id']" position="after">
 					<field name="is_active"/>
+					<field name="account_id_is_limited" />
 				</xpath>
 			</field>
 		</record>

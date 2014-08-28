@@ -54,4 +54,8 @@ class account_journal(osv.Model):
 	'is_active':fields.boolean(
 		u"Active in Reporting",
 				),
+				
+	'account_id_is_limited':fields.boolean(
+		u"Account limited",
+				),
 	}
