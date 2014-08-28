@@ -8,16 +8,20 @@
             <field name="name">Restricted Voucher Lines (users)</field>
             <field name="model_id" ref="account_voucher.model_account_voucher_line" />
             <field name="domain_force" eval="[
-                ('voucher_id.journal_id.is_limited', '!=', True)
+                ('voucher_id.journal_id.is_limited', '=', False)
             ]" />
             <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="perm_read" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_unlick" eval="1" />
         </record>
 
         <record model="ir.rule" id="restricted_voucher_lines_rule_managers">
             <field name="name">Restricted Voucher Lines (managers)</field>
             <field name="model_id" ref="account_voucher.model_account_voucher_line" />
             <field name="domain_force" eval="[
-                ('voucher_id.journal_id.is_limited', '=', False)
+                ('voucher_id.journal_id.is_limited', '=', True)
             ]" />
             <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
         </record>
@@ -27,16 +31,20 @@
             <field name="name">Restricted Vouchers (users)</field>
             <field name="model_id" ref="account_voucher.model_account_voucher" />
             <field name="domain_force" eval="[
-                ('journal_id.is_limited', '!=', True)
+                ('journal_id.is_limited', '=', False)
             ]" />
             <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="perm_read" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_unlick" eval="1" />
         </record>
         
         <record model="ir.rule" id="restricted_vouchers_rule_managers">
             <field name="name">Restricted Vouchers (managers)</field>
             <field name="model_id" ref="account_voucher.model_account_voucher" />
             <field name="domain_force" eval="[
-                ('journal_id.is_limited', '=', False)
+                ('journal_id.is_limited', '=', True)
             ]" />
             <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
         </record>
@@ -46,16 +54,20 @@
             <field name="name">Restricted Move Lines (users)</field>
             <field name="model_id" ref="account.model_account_move_line" />
             <field name="domain_force" eval="[
-                ('journal_id.is_limited', '!=', True)
+                ('journal_id.is_limited', '=', False)
             ]" />
             <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="perm_read" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_unlick" eval="1" />
         </record>
         
         <record model="ir.rule" id="restricted_move_lines_rule_managers">
             <field name="name">Restricted Move Lines (managers)</field>
             <field name="model_id" ref="account.model_account_move_line" />
-            <field name="domain_force" eval="[ '|',
-                ('journal_id.is_limited', '=', False)
+            <field name="domain_force" eval="[
+                ('journal_id.is_limited', '=', True)
             ]" />
             <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
         </record>
@@ -65,16 +77,21 @@
             <field name="name">Restricted Moves (users)</field>
             <field name="model_id" ref="account.model_account_move" />
             <field name="domain_force" eval="[
-                ('journal_id.is_limited', '!=', True)
+                ('journal_id.is_limited', '=', False)
             ]" />
             <field name="groups" eval="[(4, ref('base.group_user'))]" />
+            <field name="perm_read" eval="1" />
+            <field name="perm_write" eval="1" />
+            <field name="perm_create" eval="1" />
+            <field name="perm_unlick" eval="1" />
         </record>
+        
         
         <record model="ir.rule" id="restricted_moves_rule_managers">
             <field name="name">Restricted Moves (managers)</field>
             <field name="model_id" ref="account.model_account_move" />
             <field name="domain_force" eval="[
-                ('journal_id.is_limited', '=', False)
+                ('journal_id.is_limited', '=', True)
             ]" />
             <field name="groups" eval="[(4, ref('account.group_account_manager'))]" />
         </record>
