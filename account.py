@@ -29,6 +29,16 @@ CTL_SELECTION = (
     ('3', 'Forbidden')
 )
 
+class account_account(osv.Model):
+	_name = 'account.account'
+	_inherit = 'account.account'
+	
+	_columns = {
+	
+	'is_limited':fields.boolean(
+		u"Limited access",
+		help="When selected, only the financial manager can read and write",),
+	}
 
 class account_analytic_structure(osv.Model):
     __metaclass__ = MetaAnalytic
@@ -55,7 +65,7 @@ class account_journal(osv.Model):
 		u"Active in Reporting",
 				),
 				
-	'account_id_is_limited':fields.boolean(
-		u"Account limited",
-				),
+	'is_limited':fields.boolean(
+		u"Limited access",
+		help="When selected, only the financial manager can read and write",),
 	}
