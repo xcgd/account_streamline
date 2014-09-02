@@ -97,7 +97,7 @@ class email_remittance(orm.TransientModel):
 
         # Send 1 email per voucher. force_send=True to send instantly rather
         # than scheduling for later delivery.
-        email_template_obj = self.pool.get('email.template')
+        email_template_obj = self.pool['email.template']
         for voucher in this.vouchers:
             email_ids.append(email_template_obj.send_mail(cr, uid,
                 this.email_template.id, voucher.id, force_send=True,
