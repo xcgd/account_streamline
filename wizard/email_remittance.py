@@ -100,9 +100,12 @@ class email_remittance(orm.TransientModel):
         # than scheduling for later delivery.
         email_template_obj = self.pool['email.template']
         for voucher in this.vouchers:
-            email_ids.append(email_template_obj.send_mail(cr, uid,
-                this.email_template.id, voucher.id, force_send=True,
-                context=context))
+            # Only send mail to partner that have a mail address
+            if voucher.partner_id.email:
+                email_ids.append(email_template_obj.send_mail(
+                    cr, uid,
+                    this.email_template.id, voucher.id, force_send=True,
+                    context=context))
 
         self.write(cr, uid, ids,
                    { 'emails': [(6, 0, email_ids)] },
