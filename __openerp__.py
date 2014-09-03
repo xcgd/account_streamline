@@ -4,7 +4,7 @@
 ##############################################################################
 {
     "name": "Account Streamline",
-    "version": "1.8.0-dev",
+    "version": "1.8.1",
     "author": "XCG Consulting",
     "category": 'Accounting',
     "description": """Enhancements to the account module to streamline its
