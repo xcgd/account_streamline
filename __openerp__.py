@@ -9,10 +9,6 @@
     "category": 'Accounting',
     "description": """Enhancements to the account module to streamline its
     usage.
-
-* In Configuration>Parameter>System Parameters, configure
-account_streamline.allow_voucher_no_mail: to allow no mail for partners, change
- the default value of 0 to 1 (or true).
     """,
     'website': 'http://www.openerp-experts.com',
     'init_xml': [],
@@ -49,7 +45,6 @@ account_streamline.allow_voucher_no_mail: to allow no mail for partners, change
         'data/remittance_letter_email_template.xml',
         'security/ir.model.access.csv',
         'security/record_rules.xml',
-        'data/ir.config_parameter.xml',
     ],
     #'demo_xml': [],
     'test': [],
