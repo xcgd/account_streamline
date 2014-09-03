@@ -62,11 +62,11 @@ class remittance_letter_parser(report_sxw.rml_parse):
             ],
             context=self.localcontext)
         if not trans_ids:
-            return message
+            return '' if message is False else message
         translated_value = trans_obj.browse(
             self.cr, self.uid, trans_ids[0], context=self.localcontext).value
         # Replace False by empty string (False indicating a missing value)
-        if translated_value == False:
+        if translated_value is False:
             return ''
         return translated_value
 
