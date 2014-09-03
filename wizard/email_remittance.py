@@ -56,7 +56,7 @@ class email_remittance(orm.TransientModel):
         if 'active_ids' not in context:
             return {}
 
-        voucher_obj = self.pool.get('account.voucher')
+        voucher_obj = self.pool['account.voucher']
         vouchers = voucher_obj.browse(cr, uid, context['active_ids'],
                                       context=context)
 
@@ -74,8 +74,9 @@ class email_remittance(orm.TransientModel):
             return {}
 
         # Grab the default email template.
-        email_template_obj = self.pool.get('email.template')
-        email_template = email_template_obj.search(cr, uid,
+        email_template_obj = self.pool['email.template']
+        email_template = email_template_obj.search(
+            cr, uid,
             email_template_domain, context=context)
 
         if not email_template:
@@ -107,8 +108,9 @@ class email_remittance(orm.TransientModel):
                    { 'emails': [(6, 0, email_ids)] },
                    context=context)
 
-        view_obj = self.pool.get('ir.ui.view')
-        view_id = view_obj.search(cr, uid,
+        view_obj = self.pool['ir.ui.view']
+        view_id = view_obj.search(
+            cr, uid,
             [('name', '=', 'email.remittance.done')])
 
         return {
