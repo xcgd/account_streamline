@@ -16,7 +16,7 @@ class email_remittance(orm.TransientModel):
     _columns = {
         'email_template': fields.many2one(
             'email.template',
-            string=_('Email template'),
+            string="Email template",
             domain=email_template_domain,
             required=True,
             readonly=True),
@@ -26,7 +26,7 @@ class email_remittance(orm.TransientModel):
             'email_remittance_partner_rel',
             'email_remittance_id',
             'partner_id',
-            _('Partners'),
+            "Partners",
             required=True,
             readonly=True),
 
@@ -35,7 +35,7 @@ class email_remittance(orm.TransientModel):
             'email_remittance_voucher_rel',
             'email_remittance_id',
             'voucher_id',
-            _('Vouchers'),
+            "Vouchers",
             required=True,
             readonly=True),
 
@@ -44,7 +44,7 @@ class email_remittance(orm.TransientModel):
             'email_remittance_email_rel',
             'email_remittance_id',
             'email_id',
-            _('Sent emails'),
+            "Sent emails",
             readonly=True),
     }
 
