@@ -54,9 +54,12 @@ class remittance_letter_parser(report_sxw.rml_parse):
         ''' Translate text according to the currently selected language. '''
 
         trans_obj = self.pool.get('ir.translation')
-        trans_ids = trans_obj.search(self.cr, self.uid,
-            [('src', '=', message),
-             ('lang', '=', self.localcontext['lang'])],
+        trans_ids = trans_obj.search(
+            self.cr, self.uid,
+            [
+                ('src', '=', message),
+                ('lang', '=', self.localcontext['lang'])
+            ],
             context=self.localcontext)
         if not trans_ids:
             return message
