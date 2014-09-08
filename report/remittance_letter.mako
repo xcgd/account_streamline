@@ -53,7 +53,7 @@ ${css}
                 <tr><td>${part}</td></tr>
                 %endif
             %endfor
-            <tr><td>${object.partner_id.email}</td></tr>
+            <tr><td>${object.partner_id.email or ''}</td></tr>
         </table>
     </div>
 </div>
