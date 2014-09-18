@@ -14,7 +14,7 @@
             <field name="perm_read" eval="1" />
             <field name="perm_write" eval="1" />
             <field name="perm_create" eval="1" />
-            <field name="perm_unlick" eval="1" />
+            <field name="perm_unlink" eval="1" />
         </record>
 
         <record model="ir.rule" id="restricted_voucher_lines_rule_managers">
@@ -37,7 +37,7 @@
             <field name="perm_read" eval="1" />
             <field name="perm_write" eval="1" />
             <field name="perm_create" eval="1" />
-            <field name="perm_unlick" eval="1" />
+            <field name="perm_unlink" eval="1" />
         </record>
         
         <record model="ir.rule" id="restricted_vouchers_rule_managers">
@@ -60,7 +60,7 @@
             <field name="perm_read" eval="1" />
             <field name="perm_write" eval="1" />
             <field name="perm_create" eval="1" />
-            <field name="perm_unlick" eval="1" />
+            <field name="perm_unlink" eval="1" />
         </record>
         
         <record model="ir.rule" id="restricted_move_lines_rule_managers">
@@ -83,7 +83,7 @@
             <field name="perm_read" eval="1" />
             <field name="perm_write" eval="1" />
             <field name="perm_create" eval="1" />
-            <field name="perm_unlick" eval="1" />
+            <field name="perm_unlink" eval="1" />
         </record>
         
         
