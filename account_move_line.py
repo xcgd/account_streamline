@@ -626,6 +626,7 @@ class account_move_line(osv.osv):
             context = {}
 
         company_list = []
+        unrec_ids = []
 
         # Better than a constraint in the account_move_reconcile object
         # as it would be raised at the end, wasting time and resources
@@ -648,7 +649,6 @@ class account_move_line(osv.osv):
                   'to be reconciled.')
                 )
 
-        import pdb; pdb.set_trace()
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled
             # lines we compute allocation totals in both currencies
@@ -690,7 +690,9 @@ class account_move_line(osv.osv):
             partner_id = line.partner_id and line.partner_id.id or False
             currency_id = line.currency_id and line.currency_id.id or False
 
-        pdb.set_trace()
+            # get only relevant ids of lines to reconcile
+            unrec_ids.append(line.id)
+
         # we need some browse records
         account = account_obj.browse(cr, uid, account_id, context=context)
         company_currency = account.company_id.currency_id
@@ -821,7 +823,9 @@ class account_move_line(osv.osv):
                 # the following case should never happen but still...
                 if account_id == exchange_diff_acc_id:
                     exchange_diff_line_ids = [exchange_diff_line_ids[1]]
-                ids += exchange_diff_line_ids
+
+                # add the created lines to the reconcile block
+                unrec_ids += exchange_diff_line_ids
 
             # create write off transaction
             if not currency_obj.is_zero(cr, uid, company_currency, writeoff):
@@ -901,26 +905,27 @@ class account_move_line(osv.osv):
                 # the following case should never happen but still...
                 if account_id == writeoff_acc_id:
                     writeoff_line_ids = [writeoff_line_ids[1]]
-                ids += writeoff_line_ids
 
-        pdb.set_trace()
+                # add the created lines to the reconcile block
+                unrec_ids += writeoff_line_ids
+
         # marking the lines as reconciled does not change their validity,
         # so there is no need to revalidate their moves completely.
         reconcile_context = dict(context, novalidate=True)
         r_id = move_rec_obj.create(cr, uid,
                                    {'type': type,
-                                    'line_id':
-                                        map(lambda x: (4, x, False), ids),
-                                    'line_partial_ids':
-                                        map(lambda x: (3, x, False), ids),
                                     },
                                    context=reconcile_context)
 
+        # Do not use the magic tuples as it is extremely costly on large collections
+        self.write(cr, uid, unrec_ids, {'reconcile_id': r_id,
+                                        'reconcile_partial_id': False,
+                                        },
+                   context=context)
+
         wf_service = netsvc.LocalService("workflow")
-        # the id of the move.reconcile is written in
-        # the move.line (self) by the create method above
-        # because of the way the line_id are defined: (4, x, False)
-        for id in ids:
+        # trigger the workflow on any item listening to move lines
+        for id in unrec_ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
