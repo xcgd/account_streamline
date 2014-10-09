@@ -29,6 +29,13 @@ class account_move(osv.Model):
         'mail.thread',
     ]
 
+    def _links_get(self, cr, uid, context=None):
+        """Gets links value for reference field"""
+        obj = self.pool.get('res.request.link')
+        ids = obj.search(cr, uid, [])
+        res = obj.read(cr, uid, ids, ['object', 'name'], context)
+        return [(r['object'], r['name']) for r in res]
+
     _columns = {
         # Redefine this field to remove the read-only constraint; it is however
         # carefully propagated to line fields via attributes inserted from the
@@ -39,6 +46,11 @@ class account_move(osv.Model):
             'move_id',
             'Entries'
         ),
+        'object_reference': fields.reference(
+            u"Linked Object",
+            selection=_links_get,
+            size=128,
+        )
     }
 
     def _analysis_control(self, cr, uid, ids, context=None):

@@ -35,6 +35,7 @@
                             <field name="date" />
                             <field name="to_check" />
                             <field name="amount" invisible="1" />
+                            <field name="object_reference" attrs="{'invisible': [('object_reference', '=', False)]}" readonly="True"/>
                         </group>
                     </group>
                     <notebook>
