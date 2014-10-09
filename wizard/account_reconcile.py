@@ -50,8 +50,9 @@ class account_move_line_reconcile(osv.TransientModel):
         credit = debit = credit_curr = debit_curr = 0
         account_id = company_currency_id = trans_currency_id = force = False
         count = 0
+        unrec_lines = context['active_ids']
         for line in account_move_line_obj.browse(cr, uid, context['active_ids'], context=context):
-            if not line.reconcile_id and not line.reconcile_id.id:
+            if not line.reconcile_id:
                 count += 1
                 credit += line.credit
                 debit += line.debit
@@ -64,6 +65,12 @@ class account_move_line_reconcile(osv.TransientModel):
                     force = True
                 else:
                     trans_currency_id = line.currency_id.id
+            else:
+                unrec_lines.remove(line.id)
+
+        # continue only with unreconciled lines
+        context['active_ids'] = unrec_lines
+
         res = {'trans_nbr': count,
                'account_id': account_id,
                'force_by_base': force,
