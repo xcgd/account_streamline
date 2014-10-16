@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-16 09:57+0000\n"
-"PO-Revision-Date: 2014-10-16 12:08+0200\n"
+"PO-Revision-Date: 2014-10-16 12:55+0200\n"
 "Last-Translator: Vincent Lhote-Hatakeyama <vincent.lhote@xcg-consulting.fr>\n"
 "Language-Team: XCG Consulting\n"
 "Language: fr\n"
@@ -101,7 +101,7 @@ msgstr "Le bon pour le partenaire %s est débiteur."
 #: code:addons/account_streamline/account_move_line.py:762
 #, python-format
 msgid "You have to configure an account for the exchange gain/loss."
-msgstr ""
+msgstr "Vous devez créer un compte de gain/perte de change."
 
 #. module: account_streamline
 #: view:account.move.line.goodtopay:0
@@ -191,6 +191,8 @@ msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
 #: constraint:account.move.line:0
 msgid "The amount expressed in the secondary currency must be positive when the journal item is a debit and negative when if it is a credit."
 msgstr ""
+"Le montant exprimé dans la devise de transaction doit être positif lorsque "
+"l'écriture comptable est au débit et négatif au crédit"
 
 #. module: account_streamline
 #: constraint:account.move:0
@@ -221,6 +223,7 @@ msgstr ""
 #: help:account.move.line.streamline.mail.thread,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
+"Si cette case est cochée, les nouveaux messages requièrent votre attention."
 
 #. module: account_streamline
 #: field:account.move.line,currency_rate:0
@@ -286,6 +289,8 @@ msgstr ""
 #: help:account.move.line.streamline.mail.thread,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contient un résumé de la discussion (nombre de messages, ...). Ce résumé est "
+"directement au format html pour être inséré dans les vues kanban."
 
 #. module: account_streamline
 #: code:addons/account_streamline/payment_selection.py:460
@@ -454,7 +459,7 @@ msgstr "Accès limité"
 #. module: account_streamline
 #: field:account.journal,is_active:0
 msgid "Active in Reporting"
-msgstr ""
+msgstr "Actif dans les rapports"
 
 #. module: account_streamline
 #: field:account.move.line,credit_curr:0
@@ -655,7 +660,7 @@ msgstr ""
 #: code:addons/account_streamline/payment_selection.py:34
 #, python-format
 msgid "The line %s is already reconciled."
-msgstr ""
+msgstr "Cette ligne %s est déjà lettrée."
 
 #. module: account_streamline
 #: view:account.account:0
@@ -854,7 +859,7 @@ msgstr "Annuler"
 #: code:addons/account_streamline/account_move_line.py:766
 #, python-format
 msgid "Exchange difference"
-msgstr ""
+msgstr "Écart de change"
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,generate_report:0
@@ -1064,7 +1069,7 @@ msgstr "Représente le montant en débit dans la monnaie de transaction"
 #: help:account.move.line,message_ids:0
 #: help:account.move.line.streamline.mail.thread,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Messages et historique de communication"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_res_users
