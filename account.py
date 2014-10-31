@@ -30,15 +30,15 @@ CTL_SELECTION = (
 )
 
 class account_account(osv.Model):
-	_name = 'account.account'
-	_inherit = 'account.account'
-	
-	_columns = {
-	
-	'is_limited':fields.boolean(
-		u"Limited access",
-		help="When selected, only the financial manager can read and write",),
-	}
+    _name = 'account.account'
+    _inherit = 'account.account'
+
+    _columns = {
+
+    'is_limited':fields.boolean(
+        u"Limited access",
+        help="When selected, only the financial manager can read and write",),
+    }
 
 class account_analytic_structure(osv.Model):
     __metaclass__ = MetaAnalytic
@@ -54,14 +54,14 @@ class account_analytic_structure(osv.Model):
         'args': (CTL_SELECTION, "Move Line Analytic Control"),
         'kwargs': dict(required=True),
     }}
-  
+
 class account_journal(osv.Model):
-	_name = 'account.journal'
-	_inherit = 'account.journal'
-	
-	_columns = {
-	
-	'is_limited':fields.boolean(
-		u"Limited access",
-		help="When selected, only the financial manager can read and write",),
-	}
+    _name = 'account.journal'
+    _inherit = 'account.journal'
+
+    _columns = {
+
+    'is_limited':fields.boolean(
+        u"Limited access",
+        help="When selected, only the financial manager can read and write",),
+    }
