@@ -61,10 +61,6 @@ class account_journal(osv.Model):
 	
 	_columns = {
 	
-	'is_active':fields.boolean(
-		u"Active in Reporting",
-				),
-				
 	'is_limited':fields.boolean(
 		u"Limited access",
 		help="When selected, only the financial manager can read and write",),

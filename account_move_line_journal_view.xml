@@ -38,7 +38,6 @@
 			<field eval="5" name="priority"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='sequence_id']" position="after">
-					<field name="is_active"/>
 					<field name="is_limited" />
 				</xpath>
 			</field>
