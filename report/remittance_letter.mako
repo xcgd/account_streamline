@@ -30,99 +30,18 @@ ${css}
     margin-top: 40px;
     margin-bottom: 40px;
 }
-body {
-    font-family: helvetica;
-}
-
-table {
-    border-collapse: collapse;
-    margin: 0px;
-    padding: 0px;
-}
 
 /* header */
 
 <!-- Header is define in data/voucher_report_header -->
-
-.pagenum {
-    font-size: 8px;
-    padding-top: 72px;
-    padding-right: 10px;
-    text-align: right;
-}
-
-.page span.text {
-    padding: 10px;
-}
-
-/* address */
-
-
-.address {
-    clear: both;
-    float: left;
-    width: 100%;
-    font-size: 12px;
-}
-
-.address table {
-    margin-left: 100px;
-    text-align: left;
-
-}
-
-.address table th {
-    font-size: 16px;
-    padding-bottom: 4px;
-}
-
-.address table td {
-    font-size: 12px;
-}
-
-.addressleft,
-.addressright {
-    width: 50%;
-    margin: 20px 0;
-    font-size: 16px;
-}
-
-.addressleft {
-    float: left;
-    margin-top: 30px;
-}
-
-.addressright {
-    float: right;
-    margin-top: 30px;
-}
-
-.address .shipping{
-    margin-top:10px;
-    margin-left:40px;
-    font-size: 12px;
-    }
-
-.address .recipient {
-    margin-top: 15px;
-    font-size: 12px;
-}
-
-.address td.addresstitle {
-    font-weight: bold;
-}
 
 /* table */
 
 .basic_table {
     font-size: 12px;
     width:100%;
-
-
 }
-.text{
-    font-sign:12px;
-}
+
 .basic_table th,
 .basic_table td {
     border: 1px solid lightGrey;
@@ -195,34 +114,6 @@ table {
 .list_table tfoot th {
     text-align: right;
 
-}
-
-.list_table td.signature {
-    padding-top: 30px;
-    text-align: center;
-}
-
-.list_table td.signature title,
-.list_table td.signature name {
-    font-size: 12px;
-}
-
-.list_table td.signature img {
-    margin-bottom: 14px;
-    margin-top: 14px;
-    width: 140px;
-}
-
-.note,
-.footer {
-    margin: 20px auto;
-    text-align: center;
-}
-
-.note {
-    font-size: 9px;
-    font-weight: bold;
-    text-decoration: underline;
 }
 
 .footer {
