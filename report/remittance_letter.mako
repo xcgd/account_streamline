@@ -16,14 +16,13 @@ ${css}
 
 .remittance_letter_message {
     clear: both;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 80px;
+    margin-bottom: 60px;
 }
 
 .remittance_letter_total {
     margin-top: 30px;
     padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
     text-align: right;
 }
 
@@ -34,7 +33,6 @@ ${css}
 }
 body {
     font-family: helvetica;
-    font-size: 7px;
 }
 
 table {
@@ -62,21 +60,6 @@ table {
     height: 80px;
 }
 
-.header .title {
-    font-size: 14px;
-    /* font-weight: bold; */
-    padding-top: 68px;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-align: center;
-}
-
-.header_sep {
-    clear: both;
-    height: 20px;
-}
-
 .pagenum {
     font-size: 8px;
     padding-top: 72px;
@@ -95,15 +78,17 @@ table {
     clear: both;
     float: left;
     width: 100%;
+    font-size: 12px;
 }
 
 .address table {
     margin-left: 100px;
     text-align: left;
+
 }
 
 .address table th {
-    font-size: 12px;
+    font-size: 16px;
     padding-bottom: 4px;
 }
 
@@ -115,25 +100,28 @@ table {
 .addressright {
     width: 50%;
     margin: 20px 0;
+    font-size: 16px;
 }
 
 .addressleft {
     float: left;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .addressright {
     float: right;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .address .shipping{
     margin-top:10px;
     margin-left:40px;
+    font-size: 12px;
     }
 
 .address .recipient {
     margin-top: 15px;
+    font-size: 12px;
 }
 
 .address td.addresstitle {
@@ -143,23 +131,23 @@ table {
 /* table */
 
 .basic_table {
-    border-collapse: collapse;
-    clear: both;
-    font-size: 8px;
-    margin: auto;
-    padding: 20px;
-    text-align: center;
-}
+    font-size: 12px;
+    width:100%;
 
+
+}
+.text{
+    font-sign:12px;
+}
 .basic_table th,
 .basic_table td {
     border: 1px solid lightGrey;
-    padding: 5px;
+    text-align:center;
 }
 
 .list_table {
-    border-collapse: collapse;
-    margin: auto;
+    font-size:12px;
+    border: 1px solid lightGrey;
     text-align: center;
     width: 100%;
     margin-top: 30px;
@@ -167,21 +155,24 @@ table {
 
 .list_table td {
     border-top: 1px solid lightGrey;
-    font-size: 9px;
+    border: 1px solid lightGrey;
+    font-size: 12px;
     padding-right: 3px;
     padding-left: 3px;
     padding-top: 3px;
     padding-bottom:3px;
     text-align: left;
+    border-bottom: 1px solid lightGrey;
 }
 
 .list_table th {
-    border-bottom: 1px solid black;
+    border: 1px solid lightGrey;
     text-align: center;
-    font-size: 8px;
+    font-size: 12px;
     font-weight: bold;
     padding-right: 3px
     padding-left: 3px
+    border-bottom: 1px solid lightGrey;
 }
 
 .list_table thead {
@@ -190,11 +181,12 @@ table {
 
 .list_table td.amount,
 .list_table th.amount {
-    text-align: right;
+
 }
 
 .list_table tr.line {
     margin-bottom: 10px;
+    text-align:center;
 }
 
 .list_table th.date {
@@ -202,17 +194,22 @@ table {
 }
 
 .list_table tfoot {
-    font-size: 10px;
+    font-size: 12px;
 }
-
+.totaux td{
+    font-size:12px;
+    width:80%;
+    padding-right: 5px;
+    padding-left: 5px;
+}
 .list_table tfoot th {
     padding-top: 10px;
 }
 
 .list_table tfoot td,
 .list_table tfoot th {
-    border: none;
     text-align: right;
+
 }
 
 .list_table td.signature {
@@ -222,7 +219,7 @@ table {
 
 .list_table td.signature title,
 .list_table td.signature name {
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .list_table td.signature img {
@@ -310,11 +307,24 @@ table {
         %endfor
     </tbody>
 </table>
+ <table class="totaux">
+    <tfoot class="totals">
+        <tr>
+            <td colspan="4"/>
+            <td><b>${_(u"Total TTC")} :</b></td>
+            <td class="amount" style="white-space:nowrap">${ formatLang(line.amount, currency_obj=object.currency_id) }</td>
+        </tr>
+    </tfoot></br></br>
+    <br/><br/>
+    <table>
+    %if object.narration:
+        <tr>
+            <p class="descriptif"><u>${_(u"Notes Internes" or '') }</u></p>
+            <p class="comment">${object.narration|formatText} </p>
+        </tr>
+        %endif
+    </table>
 
-<h2 class="remittance_letter_total">
-	${ _('Total:') }
-	${ formatLang(object.amount, currency_obj=object.currency_id) }
-</h2>
 
 <!-- Voucher-specific bottom information. -->
 ${ object.remittance_letter_bottom }
