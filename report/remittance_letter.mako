@@ -11,7 +11,6 @@ ${css}
 
 .remittance_letter_bottom {
     padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
 }
 
 .remittance_letter_message {
@@ -43,22 +42,7 @@ table {
 
 /* header */
 
-.header {
-    height: 80px;
-    border-bottom: 1px solid grey;
-    padding-bottom: 10px;
-}
-
-.header .logo,
-.header .title {
-    float: left;
-    width: 33%;
-}
-
-.header .logo img {
-    padding: 0px 20px;
-    height: 80px;
-}
+<!-- Header is define in data/voucher_report_header -->
 
 .pagenum {
     font-size: 8px;
@@ -161,7 +145,7 @@ table {
     padding-left: 3px;
     padding-top: 3px;
     padding-bottom:3px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid lightGrey;
 }
 
@@ -177,11 +161,12 @@ table {
 
 .list_table thead {
     display: table-header-group;
+    text-align: center;
 }
 
 .list_table td.amount,
 .list_table th.amount {
-
+    text-align: center;
 }
 
 .list_table tr.line {
@@ -298,7 +283,7 @@ table {
     <tbody>
         %for line in object.line_ids:
         <tr class="line">
-            <td>${ line.move_line_id.move_id.ref }</td>
+            <td>${ line.move_line_id.move_id.internal_sequence_number } / ${ line.move_line_id.move_id.ref }</td>
             <td>${ line.date_original }</td>
             <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
@@ -316,14 +301,6 @@ table {
         </tr>
     </tfoot></br></br>
     <br/><br/>
-    <table>
-    %if object.narration:
-        <tr>
-            <p class="descriptif"><u>${_(u"Notes Internes" or '') }</u></p>
-            <p class="comment">${object.narration|formatText} </p>
-        </tr>
-        %endif
-    </table>
 
 
 <!-- Voucher-specific bottom information. -->

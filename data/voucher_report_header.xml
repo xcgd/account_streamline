@@ -88,12 +88,10 @@ table {
 .address table td {
     font-size: 12px;
 }
-
 .addressright {
     width: 50%;
     margin: 20px 0;
 }
-
 .addressright {
     float: right;
 }

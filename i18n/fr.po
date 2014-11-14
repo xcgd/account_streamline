@@ -1040,7 +1040,7 @@ msgstr "Générer sur %s"
 #: report:addons/account_streamline/report/payment_suggestion.mako:65
 #: report:addons/account_streamline/report/remittance_letter.mako:69
 msgid "Transaction reference"
-msgstr "Transaction de référence"
+msgstr "Référence de transaction"
 
 #. module: account_streamline
 #: sql_constraint:res.partner:0
