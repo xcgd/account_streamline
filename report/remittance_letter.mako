@@ -35,6 +35,42 @@ ${css}
 
 <!-- Header is define in data/voucher_report_header -->
 
+/* address */
+
+<!-- Overide address here to redefine specially address stylesheet -->
+
+.addressleft,
+.addressright {
+    width: 50%;
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.addressleft {
+    float: left;
+    margin-top: 30px;
+}
+
+.addressright {
+    float: right;
+    margin-top: 30px;
+}
+
+.address .shipping{
+    margin-top:10px;
+    margin-left:40px;
+    font-size: 12px;
+    }
+
+.address .recipient {
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.address td.addresstitle {
+    font-weight: bold;
+}
+
 /* table */
 
 .basic_table {
@@ -100,7 +136,7 @@ ${css}
 .list_table tfoot {
     font-size: 12px;
 }
-.totaux td{
+.totals td{
     font-size:12px;
     width:80%;
     padding-right: 5px;
@@ -113,12 +149,8 @@ ${css}
 .list_table tfoot td,
 .list_table tfoot th {
     text-align: right;
-
 }
 
-.footer {
-    border-top: 1px solid grey;
-}
 </style>
 
 %for object in objects:
@@ -182,15 +214,15 @@ ${css}
         </tr>
         %endfor
     </tbody>
-</table>
- <table class="totaux">
     <tfoot class="totals">
         <tr>
-            <td colspan="4"/>
+            <td colspan="3"/>
             <td><b>${_(u"Total TTC")} :</b></td>
             <td class="amount" style="white-space:nowrap">${ formatLang(line.amount, currency_obj=object.currency_id) }</td>
         </tr>
-    </tfoot></br></br>
+    </tfoot>
+    </table>
+    </br></br>
     <br/><br/>
 
 
