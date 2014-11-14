@@ -38,7 +38,7 @@ ${css}
 .addressleft,
 .addressright {
     width: 50%;
-    margin: 20px 0;
+    margin: 10px 0;
     font-size: 16px;
 }
 
@@ -54,13 +54,15 @@ ${css}
 
 .address .shipping{
     margin-top:10px;
-    margin-left:40px;
+    margin-left:0px;
     font-size: 12px;
+    font-weight: bold;
     }
 
 .address .recipient {
     margin-top: 15px;
     font-size: 12px;
+    font-weight: bold;
 }
 
 .address td.addresstitle {
