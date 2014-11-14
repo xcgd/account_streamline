@@ -31,13 +31,9 @@ ${css}
     margin-bottom: 40px;
 }
 
-/* header */
+/* Header is define in data/voucher_report_header */
 
-<!-- Header is define in data/voucher_report_header -->
-
-/* address */
-
-<!-- Overide address here to redefine specially address stylesheet -->
+/* Overide address here to redefine specially address stylesheet */
 
 .addressleft,
 .addressright {
