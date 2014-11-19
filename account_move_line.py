@@ -595,18 +595,88 @@ class account_move_line(osv.osv):
             cr, uid, vals, context=context
         )
 
+    def _check_lines_to_reconcile(self, cr, uid, lines, context=None):
+        """
+        This method make several integrity checks
+        :param cr:
+        :param uid:
+        :param lines:
+        :param context:
+        :return:
+        """
+
+    def reconcile_partial(self, cr, uid, ids, type='auto',
+                          writeoff_acc_id=False, writeoff_period_id=False,
+                          writeoff_journal_id=False, context=None):
+        """This method is completely overridden in order
+        to include a full multicurrency support
+        The context will determine if second currency is used
+        for reconciliation or not 'reconcile_second_currency'
+        Many optimisations and integrity controls are added.
+        Finally, the original code is documented for an easier maintenance.
+        """
+        move_rec_obj = self.pool.get('account.move.reconcile')
+        merges = []
+        unmerge = []
+        total = 0.0
+        merges_rec = []
+        company_list = []
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
+            company_list.append(line.company_id.id)
+
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.account_id.currency_id:
+                currency_id = line.account_id.currency_id
+            else:
+                currency_id = line.company_id.currency_id
+            if line.reconcile_id:
+                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
+            if line.reconcile_partial_id:
+                for line2 in line.reconcile_partial_id.line_partial_ids:
+                    if not line2.reconcile_id:
+                        if line2.id not in merges:
+                            merges.append(line2.id)
+                        if line2.account_id.currency_id:
+                            total += line2.amount_currency
+                        else:
+                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
+                merges_rec.append(line.reconcile_partial_id.id)
+            else:
+                unmerge.append(line.id)
+                if line.account_id.currency_id:
+                    total += line.amount_currency
+                else:
+                    total += (line.debit or 0.0) - (line.credit or 0.0)
+        if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
+            res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
+            return res
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
+        r_id = move_rec_obj.create(cr, uid, {
+            'type': type,
+            'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
+        }, context=reconcile_context)
+        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
+        return True
+
     def reconcile(self, cr, uid, ids, type='auto',
                   writeoff_acc_id=False, writeoff_period_id=False,
                   writeoff_journal_id=False, context=None):
-        '''This method is completely overridden in ordering
+        """This method is completely overridden in order
         to include a full multicurrency support
         The context will determine if second currency is used
         for reconciliation or not 'reconcile_second_currency'
         In addition, when matching the transaction amounts,
         differences must be processed as both exchange difference and
-        write-off, when applicable. Finally, the original code is
+        write-off, when applicable. Many optimisations and integrity
+        controls are added. Finally, the original code is
         documented for an easier maintenance.
-        '''
+        """
         account_obj = self.pool.get('account.account')
         move_obj = self.pool.get('account.move')
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -652,6 +722,11 @@ class account_move_line(osv.osv):
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled
             # lines we compute allocation totals in both currencies
+
+            account_id = line.account_id.id
+            partner_id = line.partner_id and line.partner_id.id or False
+            currency_id = line.currency_id and line.currency_id.id or False
+
             if line.state != 'valid':
                 raise osv.except_osv(
                     _('Error!'),
@@ -685,10 +760,6 @@ class account_move_line(osv.osv):
             amount_currency_writeoff += (
                 (line.debit_curr or 0.0) - (line.credit_curr or 0.0)
             )
-
-            account_id = line.account_id.id
-            partner_id = line.partner_id and line.partner_id.id or False
-            currency_id = line.currency_id and line.currency_id.id or False
 
             # get only relevant ids of lines to reconcile
             unrec_ids.append(line.id)
