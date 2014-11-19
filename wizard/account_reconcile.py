@@ -44,7 +44,7 @@ class account_move_line_reconcile(osv.TransientModel):
         '''
         This is rewritten to get amount in both currencies
         '''
-        account_move_line_obj = self.pool.get('account.move.line')
+        account_move_line_obj = self.pool['account.move.line']
         if context is None:
             context = {}
         credit = debit = credit_curr = debit_curr = 0

@@ -53,7 +53,7 @@ class remittance_letter_parser(report_sxw.rml_parse):
     def translate(self, message):
         ''' Translate text according to the currently selected language. '''
 
-        trans_obj = self.pool.get('ir.translation')
+        trans_obj = self.pool['ir.translation']
         trans_ids = trans_obj.search(
             self.cr, self.uid,
             [

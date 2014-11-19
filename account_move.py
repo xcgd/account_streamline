@@ -49,7 +49,7 @@ class account_move(osv.Model):
         """
         # move_dict = {}
 
-        ans_obj = self.pool.get('analytic.structure')
+        ans_obj = self.pool['analytic.structure']
         ans_dict = ans_obj.get_dimensions_names(
             cr, uid, 'account_move_line', context=context
         )
@@ -77,7 +77,7 @@ class account_move(osv.Model):
             raise osv.except_osv(_('Error!'), msg_analysis)
 
         if clear_lines:
-            aml_obj = self.pool.get('account.move.line')
+            aml_obj = self.pool['account.move.line']
             for ordering, lines in clear_lines.iteritems():
                 if lines:
                     vals = {'a{0}_id'.format(ordering): False}
@@ -105,7 +105,7 @@ class account_move(osv.Model):
                                           toolbar=toolbar,
                                           submenu=False)
 
-        ans_obj = self.pool.get('analytic.structure')
+        ans_obj = self.pool['analytic.structure']
         line_id_field = res['fields'].get('line_id')
         ans_obj.analytic_fields_subview_get(
             cr, uid, 'account_move_line', line_id_field, context=context
@@ -133,7 +133,7 @@ class mail_message(osv.Model):
         # Avoid recursion...
         if domain and ['model', '=', 'account.move.line'] not in domain:
 
-            am_obj = self.pool.get('account.move')
+            am_obj = self.pool['account.move']
 
             line_domain = []
 

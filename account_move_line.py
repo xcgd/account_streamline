@@ -61,7 +61,7 @@ class account_move_line(osv.osv):
     ]
 
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
-        move_line_osv = self.pool.get("account.move.line")
+        move_line_osv = self.pool['account.move.line']
         result = {}
         move_lines = move_line_osv.browse(cr, uid, ids, context=context)
         for move_line in move_lines:
@@ -304,7 +304,7 @@ class account_move_line(osv.osv):
                             view_type=view_type, context=context,
                             toolbar=toolbar, submenu=False)
 
-        ans_obj = self.pool.get('analytic.structure')
+        ans_obj = self.pool['analytic.structure']
 
         # display analysis codes only when present on a related structure,
         # with dimension name as label
@@ -335,8 +335,8 @@ class account_move_line(osv.osv):
             context = {}
         if not context.get('journal_id', False):
             return False
-        jrn = self.pool.get('account.journal').browse(cr, uid,
-                                                      context['journal_id'])
+        jrn = self.pool['account.journal'].browse(cr, uid,
+                                                  context['journal_id'])
         cur = jrn.currency and jrn.currency.id or jrn.company_id.currency_id.id
         return cur or False
 
@@ -372,7 +372,7 @@ class account_move_line(osv.osv):
                                                            fields,
                                                            context=context)
 
-        move_obj = self.pool.get('account.move')
+        move_obj = self.pool['account.move']
         if context.get('journal_id'):
             total_curr = 0.0
             # in account.move form view, it is not possible total
@@ -413,8 +413,8 @@ class account_move_line(osv.osv):
             context = {}
 
         # some data to evaluate
-        account_obj = self.pool.get('account.account')
-        cur_obj = self.pool.get('res.currency')
+        account_obj = self.pool['account.account']
+        cur_obj = self.pool['res.currency']
         amount_trans = vals.get('amount_currency', 0.0)
         amount_curr = (
             vals.get('debit_curr', 0.0) -
@@ -490,7 +490,7 @@ class account_move_line(osv.osv):
             date=date, journal=journal, context=context
         )
         # the context is already updated by the previous statement
-        context_rate = currency_id and self.pool.get('res.currency').browse(
+        context_rate = currency_id and self.pool['res.currency'].browse(
             cr, uid, currency_id, context=context).rate
 
         if 'value' in result:
@@ -615,7 +615,7 @@ class account_move_line(osv.osv):
         Many optimisations and integrity controls are added.
         Finally, the original code is documented for an easier maintenance.
         """
-        move_rec_obj = self.pool.get('account.move.reconcile')
+        move_rec_obj = self.pool['account.move.reconcile']
         merges = []
         unmerge = []
         total = 0.0
@@ -651,7 +651,7 @@ class account_move_line(osv.osv):
                     total += line.amount_currency
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
-        if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
+        if self.pool['res.currency'].is_zero(cr, uid, currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
@@ -677,11 +677,11 @@ class account_move_line(osv.osv):
         controls are added. Finally, the original code is
         documented for an easier maintenance.
         """
-        account_obj = self.pool.get('account.account')
-        move_obj = self.pool.get('account.move')
-        move_rec_obj = self.pool.get('account.move.reconcile')
-        partner_obj = self.pool.get('res.partner')
-        currency_obj = self.pool.get('res.currency')
+        account_obj = self.pool['account.account']
+        move_obj = self.pool['account.move']
+        move_rec_obj = self.pool['account.move.reconcile']
+        partner_obj = self.pool['res.partner']
+        currency_obj = self.pool['res.currency']
         credit = debit = credit_curr = debit_curr = 0.0
         amount_currency_writeoff = writeoff = currency_rate_difference = 0.0
         account_id = False

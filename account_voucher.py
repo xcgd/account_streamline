@@ -37,7 +37,7 @@ class account_voucher(osv.Model):
         ''' Create a payment_suggestion object to which the report should be
         attached; let it handle the rest of the logic. '''
 
-        return (self.pool.get('payment.suggestion')
+        return (self.pool['payment.suggestion']
                 .print_payment_suggestion(cr, uid, ids, context=context))
 
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
@@ -56,21 +56,21 @@ class account_voucher(osv.Model):
         '''
         if context is None:
             context = {}
-        move_line_obj = self.pool.get('account.move.line')
-        currency_obj = self.pool.get('res.currency')
-        tax_obj = self.pool.get('account.tax')
+        move_line_obj = self.pool['account.move.line']
+        currency_obj = self.pool['res.currency']
+        tax_obj = self.pool['account.tax']
         tot_line = line_total
         rec_lst_ids = []
 
         date = self.read(cr, uid, voucher_id, ['date'], context=context)['date']
         ctx = context.copy()
         ctx.update({'date': date})
-        voucher = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context=ctx)
+        voucher = self.pool['account.voucher'].browse(cr, uid, voucher_id, context=ctx)
         voucher_currency = voucher.journal_id.currency or voucher.company_id.currency_id
         ctx.update({
             'voucher_special_currency_rate': voucher_currency.rate * voucher.payment_rate,
             'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False, })
-        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        prec = self.pool['decimal.precision'].precision_get(cr, uid, 'Account')
         for line in voucher.line_ids:
             # create one move line per voucher line where amount is not 0.0
             # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
