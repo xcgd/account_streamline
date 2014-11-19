@@ -698,6 +698,7 @@ class account_move_line(osv.osv):
         company_list = []
         unrec_ids = []
 
+        # XXX VLH: Is that really catching reconciled lines???
         # Better than a constraint in the account_move_reconcile object
         # as it would be raised at the end, wasting time and resources
         if not unrec_lines:
@@ -706,6 +707,7 @@ class account_move_line(osv.osv):
                 _('Entry is already reconciled.')
             )
 
+        # Maybe change the SELECT to use count(distinct (a,p))?
         cr.execute('SELECT account_id, partner_id '
                    'FROM account_move_line '
                    'WHERE id IN %s '
