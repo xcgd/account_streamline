@@ -595,15 +595,42 @@ class account_move_line(osv.osv):
             cr, uid, vals, context=context
         )
 
-    def _check_lines_to_reconcile(self, cr, uid, lines, context=None):
+    def _get_lines_to_reconcile(self, cr, uid, ids, context={}):
+        """This method make several integrity checks, and return the
+        lines that are not reconciled among the ids provided.
+        :param cr: cursor
+        :param uid: user id
+        :param ids: list of id (int or long) of move lines
+        :param context: the context
+        :return: iterable of browse_record
         """
-        This method make several integrity checks
-        :param cr:
-        :param uid:
-        :param lines:
-        :param context:
-        :return:
-        """
+        # if some lines are already reconciled, they are just ignored
+        lines = self.browse(cr, uid, ids, context=context)
+        unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
+
+        # Better than a constraint in the account_move_reconcile object
+        # as it would be raised at the end, wasting time and resources
+        if not unrec_lines:
+            raise osv.except_osv(
+                _('Error!'),
+                _('Entry is already reconciled.')
+            )
+            
+        # Maybe change the SELECT to use count(distinct (a,p))?
+        cr.execute('SELECT account_id, partner_id '
+                   'FROM account_move_line '
+                   'WHERE id IN %s '
+                   'GROUP BY account_id,partner_id',
+                   (tuple(ids),))
+        r = cr.fetchall()
+        if len(r) > 1:
+            raise osv.except_osv(
+                _('Error!'),
+                _('All entries must have the same account AND same partner '
+                  'to be reconciled.')
+                )
+
+        return unrec_lines
 
     def reconcile_partial(self, cr, uid, ids, type='auto',
                           writeoff_acc_id=False, writeoff_period_id=False,
@@ -689,8 +716,7 @@ class account_move_line(osv.osv):
         currency_id = False
 
         # if some lines are already reconciled, they are just ignored
-        lines = self.browse(cr, uid, ids, context=context)
-        unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
+        unrec_lines = self._get_lines_to_reconcile(cr, uid, ids, context)
 
         if context is None:
             context = {}
@@ -701,29 +727,6 @@ class account_move_line(osv.osv):
         # unrec_ids will be used to store all the id for this reconcile, and
         # also all the newly created lines too
         unrec_ids = []
-
-        # Only keep unreconciled lines (rather than an error if there is some)
-        # Better than a constraint in the account_move_reconcile object
-        # as it would be raised at the end, wasting time and resources
-        if not unrec_lines:
-            raise osv.except_osv(
-                _('Error!'),
-                _('Entry is already reconciled.')
-            )
-
-        # Maybe change the SELECT to use count(distinct (a,p))?
-        cr.execute('SELECT account_id, partner_id '
-                   'FROM account_move_line '
-                   'WHERE id IN %s '
-                   'GROUP BY account_id,partner_id',
-                   (tuple(ids),))
-        r = cr.fetchall()
-        if len(r) > 1:
-            raise osv.except_osv(
-                _('Error!'),
-                _('All entries must have the same account AND same partner '
-                  'to be reconciled.')
-                )
 
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled
