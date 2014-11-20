@@ -1001,10 +1001,14 @@ class account_move_line(osv.osv):
         for id in unrec_ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
-        if lines and lines[0]:
+        # TODO Can remove the test as unrec_lines can not be empty there
+        # (tested before)
+        if unrec_lines and unrec_lines[0]:
+            # TODO the partner could be set in the previous for loop, as it
+            # must be the same. It could also be done once before that loop
             partner_id = (
-                lines[0].partner_id and
-                lines[0].partner_id.id or
+                unrec_lines[0].partner_id and
+                unrec_lines[0].partner_id.id or
                 False
             )
             if (
