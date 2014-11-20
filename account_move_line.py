@@ -698,7 +698,7 @@ class account_move_line(osv.osv):
         company_list = []
         unrec_ids = []
 
-        # XXX VLH: Is that really catching reconciled lines???
+        # Only keep unreconciled lines (rather than an error if there is some)
         # Better than a constraint in the account_move_reconcile object
         # as it would be raised at the end, wasting time and resources
         if not unrec_lines:
