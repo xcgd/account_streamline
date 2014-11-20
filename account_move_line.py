@@ -695,7 +695,11 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
 
+        # XXX a sql request might faster there (rather than calculating until
+        # a company is not in the list
         company_list = []
+        # unrec_ids will be used to store all the id for this reconcile, and
+        # also all the newly created lines too
         unrec_ids = []
 
         # Only keep unreconciled lines (rather than an error if there is some)
