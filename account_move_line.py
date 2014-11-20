@@ -1001,23 +1001,17 @@ class account_move_line(osv.osv):
         for id in unrec_ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
-        # TODO Can remove the test as unrec_lines can not be empty there
-        # (tested before)
-        if unrec_lines and unrec_lines[0]:
-            # TODO the partner could be set in the previous for loop, as it
-            # must be the same. It could also be done once before that loop
-            partner_id = (
-                unrec_lines[0].partner_id and
-                unrec_lines[0].partner_id.id or
-                False
+        # tested before in the method that there is an unrec_line
+        # also done before is finding partner_id that need to be the same
+        # for all unrec_lines
+        if (
+            partner_id and
+            not partner_obj.has_something_to_reconcile(
+                cr, uid, partner_id, context=context
             )
-            if (
-                partner_id and
-                not partner_obj.has_something_to_reconcile(
-                    cr, uid, partner_id, context=context
-                )
-            ):
-                partner_obj.mark_as_reconciled(
-                    cr, uid, [partner_id], context=context
-                )
+        ):
+            partner_obj.mark_as_reconciled(
+                cr, uid, [partner_id], context=context
+            )
+
         return r_id
