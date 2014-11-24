@@ -604,6 +604,8 @@ class account_move_line(osv.osv):
         :param context: the context (a dictionary)
         :return: iterable of browse_record
         """
+        if context is None:
+            context = {}
         # if some lines are already reconciled, they are just ignored
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
