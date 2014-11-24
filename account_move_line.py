@@ -716,21 +716,16 @@ class account_move_line(osv.osv):
         unmerge = []
         total = 0.0
         merges_rec = []
-        company_list = []
         if context is None:
             context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
-            company_list.append(line.company_id.id)
+        # if some lines are already reconciled, they are just ignored
+        unrec_lines = self._get_lines_to_reconcile(cr, uid, ids, context)
 
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in unrec_lines:
             if line.account_id.currency_id:
                 currency_id = line.account_id.currency_id
             else:
                 currency_id = line.company_id.currency_id
-            if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
