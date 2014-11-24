@@ -681,9 +681,9 @@ class account_move_line(osv.osv):
                 currency_id and not currency_id == line['currency_id']['id']
             ):
                 raise osv.except_osv(
-                    _('Error!'),
-                    _('All entries must have the same second currency! '
-                      'Reconcile on company currency otherwise.')
+                    _("Error!"),
+                    _("All entries must have the same second currency! "
+                      "Reconcile on company currency otherwise.")
                 )
 
             credit += line.credit or 0.0
