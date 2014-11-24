@@ -601,7 +601,7 @@ class account_move_line(osv.osv):
         :param cr: cursor
         :param uid: user id
         :param ids: list of id (int or long) of move lines
-        :param context: the context
+        :param context: the context (a dictionary)
         :return: iterable of browse_record
         """
         # if some lines are already reconciled, they are just ignored
