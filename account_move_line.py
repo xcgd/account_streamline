@@ -697,9 +697,18 @@ class account_move_line(osv.osv):
 
             # get only relevant ids of lines to reconcile
             unrec_ids.append(line.id)
+
+        # Get account to check for reconcile flag
+        account_obj = self.pool['account.account']
+        account = account_obj.browse(cr, uid, account_id, context=context)
+        if not account.reconcile:
+            raise osv.except_osv(
+                _("Error"),
+                _("The account is not defined to be reconciled!")
+            )
         return (credit, debit, credit_curr, debit_curr,
             amount_currency_writeoff, writeoff, currency_rate_difference,
-            account_id, partner_id , currency_id, unrec_ids)
+            account, partner_id , currency_id, unrec_ids)
 
     def reconcile_partial(self, cr, uid, ids, type='auto',
                           writeoff_acc_id=False, writeoff_period_id=False,
@@ -768,7 +777,6 @@ class account_move_line(osv.osv):
         controls are added. Finally, the original code is
         documented for an easier maintenance.
         """
-        account_obj = self.pool['account.account']
         move_obj = self.pool['account.move']
         move_rec_obj = self.pool['account.move.reconcile']
         partner_obj = self.pool['res.partner']
@@ -784,20 +792,13 @@ class account_move_line(osv.osv):
         # also all the newly created lines too
 
         (credit, debit, credit_curr, debit_curr, amount_currency_writeoff,
-            writeoff, currency_rate_difference, account_id, partner_id ,
+            writeoff, currency_rate_difference, account, partner_id ,
             currency_id, unrec_ids) = self._compute(
                 cr, uid, unrec_lines, context)
 
         # we need some browse records
-        account = account_obj.browse(cr, uid, account_id, context=context)
         company_currency = account.company_id.currency_id
         currency = currency_obj.browse(cr, uid, currency_id, context=context)
-
-        if not account.reconcile:
-            raise osv.except_osv(
-                _("Error"),
-                _("The account is not defined to be reconciled!")
-            )
 
         # Use date in context or today
         date = context.get('date_p', time.strftime('%Y-%m-%d'))
@@ -871,7 +872,7 @@ class account_move_line(osv.osv):
                         'name': libelle,
                         'debit': self_debit,
                         'credit': self_credit,
-                        'account_id': account_id,
+                        'account_id': account.id,
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
@@ -912,11 +913,11 @@ class account_move_line(osv.osv):
                     cr, uid,
                     [
                         ('move_id', '=', exchange_diff_move_id),
-                        ('account_id', '=', account_id)
+                        ('account_id', '=', account.id)
                     ]
                 )
                 # the following case should never happen but still...
-                if account_id == exchange_diff_acc_id:
+                if account.id == exchange_diff_acc_id:
                     exchange_diff_line_ids = [exchange_diff_line_ids[1]]
 
                 # add the created lines to the reconcile block
@@ -951,7 +952,7 @@ class account_move_line(osv.osv):
                         'name': libelle,
                         'debit': self_debit,
                         'credit': self_credit,
-                        'account_id': account_id,
+                        'account_id': account.id,
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
@@ -994,11 +995,11 @@ class account_move_line(osv.osv):
                     cr, uid,
                     [
                         ('move_id', '=', writeoff_move_id),
-                        ('account_id', '=', account_id)
+                        ('account_id', '=', account.id)
                     ],
                 )
                 # the following case should never happen but still...
-                if account_id == writeoff_acc_id:
+                if account.id == writeoff_acc_id:
                     writeoff_line_ids = [writeoff_line_ids[1]]
 
                 # add the created lines to the reconcile block
