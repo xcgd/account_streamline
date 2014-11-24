@@ -706,9 +706,29 @@ class account_move_line(osv.osv):
                 _("Error"),
                 _("The account is not defined to be reconciled!")
             )
+
+        company_currency = account.company_id.currency_id
+        currency_obj = self.pool['res.currency']
+        currency = currency_obj.browse(cr, uid, currency_id, context=context)
+        # Use date in context or today
+        date = context.get('date_p', time.strftime('%Y-%m-%d'))
+        # We will be using a context key to define the
+        # reconciliation currency (base or trans)
+        if context.get('reconcile_second_currency', True):
+            # the actual write off is the conversion of the second
+            # currency net amount to base currency at current date
+            writeoff = currency_obj.compute(
+                cr, uid, currency.id, company_currency.id,
+                amount_currency_writeoff, context={'date': date}
+            )
+            currency_rate_difference = debit - credit - writeoff
+        else:
+            writeoff = debit - credit
+
         return (credit, debit, credit_curr, debit_curr,
             amount_currency_writeoff, writeoff, currency_rate_difference,
-            account, partner_id , currency_id, unrec_ids)
+            account, partner_id , currency, unrec_ids, partial_reconcile_ids
+        )
 
     def reconcile_partial(self, cr, uid, ids, type='auto',
                           writeoff_acc_id=False, writeoff_period_id=False,
@@ -752,6 +772,7 @@ class account_move_line(osv.osv):
                 else:
                     total += (line.debit or 0.0) - (line.credit or 0.0)
         if self.pool['res.currency'].is_zero(cr, uid, currency_id, total):
+            # TODO split reconcile in two to avoid doing _check and _compute twice
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
@@ -793,12 +814,11 @@ class account_move_line(osv.osv):
 
         (credit, debit, credit_curr, debit_curr, amount_currency_writeoff,
             writeoff, currency_rate_difference, account, partner_id ,
-            currency_id, unrec_ids) = self._compute(
+            currency, unrec_ids, partial_reconcile_ids) = self._compute(
                 cr, uid, unrec_lines, context)
 
         # we need some browse records
         company_currency = account.company_id.currency_id
-        currency = currency_obj.browse(cr, uid, currency_id, context=context)
 
         # Use date in context or today
         date = context.get('date_p', time.strftime('%Y-%m-%d'))
@@ -808,19 +828,6 @@ class account_move_line(osv.osv):
         #     date = context['date_p']
         # else:
         #     date = time.strftime('%Y-%m-%d')
-
-        # We will be using a context key to define the
-        # reconciliation currency (base or trans)
-        if context.get('reconcile_second_currency', True):
-            # the actual write off is the conversion of the second
-            # currency net amount to base currency at current date
-            writeoff = currency_obj.compute(
-                cr, uid, currency.id, company_currency.id,
-                amount_currency_writeoff, context={'date': date}
-            )
-            currency_rate_difference = debit - credit - writeoff
-        else:
-            writeoff = debit - credit
 
         if context.get('fy_closing'):
             # We don't want to generate any write-off
@@ -876,7 +883,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': 0.0
@@ -892,7 +899,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': 0.0
@@ -956,7 +963,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency':-1 * amount_currency_writeoff
@@ -972,7 +979,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': amount_currency_writeoff
