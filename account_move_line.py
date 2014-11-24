@@ -654,6 +654,9 @@ class account_move_line(osv.osv):
         # unrec_ids will be used to store all the id for this reconcile, and
         # also all the newly created lines too
         unrec_ids = []
+        is_partial = context.get('reconcile_partial', False)
+        # Added to avoid trying to add same lines twice if doing partial
+        merges_rec = set()
 
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled
@@ -699,6 +702,20 @@ class account_move_line(osv.osv):
 
             # get only relevant ids of lines to reconcile
             unrec_ids.append(line.id)
+            # if the reconcile is partial, count also non reconciled but
+            # partially reconciled lines with same partial id as one
+            # of our reconciled line
+            if (
+                is_partial
+                and line.reconcile_partial_id
+                and line.reconcile_partial_id not in merges_rec
+            ):
+                merges_rec.add(object)
+                for line2 in line.reconcile_partial_id.line_partial_ids:
+                    if not line2.reconcile_id:
+                        if line2.id not in unrec_lines:
+                            # only put it at the end
+                            unrec_lines.append(line2.id)
 
         # Get account to check for reconcile flag
         account_obj = self.pool['account.account']
@@ -729,7 +746,7 @@ class account_move_line(osv.osv):
 
         return (credit, debit, credit_curr, debit_curr,
             amount_currency_writeoff, writeoff, currency_rate_difference,
-            account, partner_id , currency, unrec_ids, partial_reconcile_ids
+            account, partner_id , currency, unrec_ids, merges_rec
         )
 
     def reconcile_partial(self, cr, uid, ids, type='auto',
@@ -743,48 +760,43 @@ class account_move_line(osv.osv):
         Finally, the original code is documented for an easier maintenance.
         """
         move_rec_obj = self.pool['account.move.reconcile']
-        merges = []
-        unmerge = []
-        total = 0.0
-        merges_rec = []
         if context is None:
             context = {}
         # if some lines are already reconciled, they are just ignored
         unrec_lines = self._get_lines_to_reconcile(cr, uid, ids, context)
 
-        for line in unrec_lines:
-            if line.account_id.currency_id:
-                currency_id = line.account_id.currency_id
-            else:
-                currency_id = line.company_id.currency_id
-            if line.reconcile_partial_id:
-                for line2 in line.reconcile_partial_id.line_partial_ids:
-                    if not line2.reconcile_id:
-                        if line2.id not in merges:
-                            merges.append(line2.id)
-                        if line2.account_id.currency_id:
-                            total += line2.amount_currency
-                        else:
-                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
-                merges_rec.append(line.reconcile_partial_id.id)
-            else:
-                unmerge.append(line.id)
-                if line.account_id.currency_id:
-                    total += line.amount_currency
-                else:
-                    total += (line.debit or 0.0) - (line.credit or 0.0)
-        if self.pool['res.currency'].is_zero(cr, uid, currency_id, total):
-            # TODO split reconcile in two to avoid doing _check and _compute twice
-            res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
+        compute_context = dict(context, reconcile_partial=True)
+        (credit, debit, credit_curr, debit_curr, amount_currency_writeoff,
+            writeoff, currency_rate_difference, account_id, partner_id ,
+            currency_id, unrec_ids, merges_rec) = self._compute(
+                cr, uid, unrec_lines, compute_context)
+
+        # FIXME when to do normal reconcile? maybe base on writeoff?
+        if self.pool['res.currency'].is_zero(cr, uid, currency_id, writeoff):
+            # TODO split reconcile in two to avoid doing _check/_compute twice
+            res = self.reconcile(
+                cr, uid, unrec_ids, context=context,
+                writeoff_acc_id=writeoff_acc_id,
+                writeoff_period_id=writeoff_period_id,
+                writeoff_journal_id=writeoff_journal_id)
             return res
         # marking the lines as reconciled does not change their validity, so there is no need
         # to revalidate their moves completely.
         reconcile_context = dict(context, novalidate=True)
-        r_id = move_rec_obj.create(cr, uid, {
-            'type': type,
-            'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        }, context=reconcile_context)
-        move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=reconcile_context)
+        r_id = move_rec_obj.create(cr, uid,
+                                   {'type': type,
+                                    },
+                                   context=reconcile_context)
+        # Do not use the magic tuples as it is extremely costly on large collections
+        # XXX we do not need to put reconcile_id to None/False, right?
+        self.write(cr, uid, unrec_ids, {'reconcile_partial_id': r_id,
+                                        },
+                   context=reconcile_context)
+        merges_rec.add(r_id)
+        # FIXME This method does not do any currency magic, it might need to
+        # be replaced
+        move_rec_obj.reconcile_partial_check(
+            cr, uid, list(merges_rec), context=reconcile_context)
         return True
 
     def reconcile(self, cr, uid, ids, type='auto',
