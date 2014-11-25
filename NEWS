@@ -1,4 +1,77 @@
-1.9.4
+account_streamline 1.10.1
 
-* Deteled is_active account_journal (was not used)
+- Add adressleft in remittance letter.
+- Improve tables and total in remittance letter.
+- Address display is now in bold
 
+account_streamline 1.10
+
+Production release
+
+account_streamline 1.9.4
+
+- Deteled is_active account_journal (was not used)
+
+account_streamline 1.9.3
+
+- [l10n] Updated French translation 
+
+account_streamline 1.9.2
+
+- TKT/2014/00663 [imp] changed reference in remittance letter to be the one of the account_move.
+- [l10n] Updated French translation
+
+account_streamline 1.9.1
+
+- Adding a reference on the move to know which object created it
+
+account_streamline 1.9.0.1
+
+- [l10n] Improved French translation
+
+account_streamline 1.9
+
+- [fix] Security rule on unlink
+
+account_streamline 1.8.5
+
+- TKT/2014/00289. [fix] Remove action and view for email_remittance wizard when email were sent.
+
+account_streamline 1.8.4
+
+- [fix]ed email partner display in remittence letter.  
+
+account_streamline 1.8.2
+
+∅
+
+account_streamline 1.8.1
+
+- Remove button Cancel Entries for account moves.
+- Only mail partner with a mail address.
+- TKT/2014/00286 [fix] Avoid False in report 
+
+account_streamline 1.8
+
+Production release
+
+account_streamline 1.7.4
+
+- Add field 'account_id_is_limited' in Journal Form View. Add record rules for users and managers when move, move_lines, voucher or vouchers_lines are limited.
+
+account_streamline 1.6.0.1 (merged in 1.7.2)
+
+- allow other module to change iban in reports
+
+account_streamline 1.7
+
+- Add field 'is_active' in journal form view.
+- Remove menu_item 'Journal Items' for all groups except superuser
+- Updated to use newer analytic_structure module.
+- [Fix]ed the context for the partial depreciation and addendum writeoff wizards
+
+account_streamline 1.6.2
+
+- [Fix]ed an issue with multi-currency reconciliations
+
+account_streamline 1.6
