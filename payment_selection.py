@@ -182,6 +182,8 @@ class good_to_pay(osv.osv_memory):
         lines = aml_osv.browse(cr, uid, line_ids, context=context)
 
         for line in lines:
+            if not line.partner_id:
+                continue
             partner = line.partner_id.id
             account = line.account_id.id
             if partner in partner_dict:
