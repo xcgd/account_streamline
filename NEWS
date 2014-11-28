@@ -1,3 +1,7 @@
+account_streamline 1.10.2
+
+- Bring back button_cancel to its default behaviour
+
 account_streamline 1.10.1
 
 - Add adressleft in remittance letter.
