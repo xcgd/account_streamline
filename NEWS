@@ -1,3 +1,7 @@
+account_streamline 1.9.3.2 (merged in 1.10.3)
+
+- TKT/2014/01029 - Fix account display (also used in balance) by reusing fix from an openerp branch on bazaar
+
 account_streamline 1.10.2
 
 - Bring back button_cancel to its default behaviour
