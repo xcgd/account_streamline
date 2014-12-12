@@ -497,9 +497,30 @@ class good_to_pay(osv.osv_memory):
     def __entering_wizard(self, cr, uid, ids, list_ids, context):
         move_line_osv = self.pool.get('account.move.line')
         reads = move_line_osv.read(
-            cr, uid, list_ids, ['partner_id'], context
+            cr, uid, list_ids, ['partner_id'], context=context
         )
-        reads = [read for read in reads if read['partner_id']]
+
+        # The "partner_id" field of accounting lines is not compulsory; we
+        # however need it to produce vouchers.
+        line_ids_wo_partner = [
+            read['id'] for read in reads if not read['partner_id']
+        ]
+        if line_ids_wo_partner:
+            lines_wo_partner = move_line_osv.browse(
+                cr, uid, line_ids_wo_partner, context=context
+            )
+            moves_wo_partner = u", ".join({
+                line_wo_partner.id: line_wo_partner.move_id.name
+                for line_wo_partner in lines_wo_partner
+            }.itervalues())
+            raise osv.except_osv(
+                _(u"Error"),
+                _(
+                    u"Partners undefined in the following accounting move "
+                    u"entries: %s."
+                ) % moves_wo_partner
+            )
+
         context['lines_by_partner'] = self.__compile_list_dict(reads)
         res = {
             'value': {
