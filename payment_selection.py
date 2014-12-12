@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
+from ast import literal_eval as leval
+from copy import deepcopy
+import itertools
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from collections import defaultdict
-import itertools
-from copy import deepcopy
 
-from ast import literal_eval as leval
 
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
 msg_invalid_partner_type = _('Partner %s is not a supplier.')
@@ -97,7 +97,7 @@ class good_to_pay(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, field_list=None, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             return {}
 
         vals = {}
@@ -307,9 +307,8 @@ class good_to_pay(osv.osv_memory):
                     raise osv.except_osv(_('Error!'), msg)
 
                 partner_id = aml.partner_id.id
-                partner = aml.partner_id
 
-                if not partner_id in supplier_to_voucher_map:
+                if partner_id not in supplier_to_voucher_map:
                     # we don't have a voucher for this supplier yet...
                     # just create a new one for our own use
                     vals = dict()
@@ -439,7 +438,10 @@ class good_to_pay(osv.osv_memory):
     ):
         context_saved = leval(context_saved)
         domain = deepcopy(move_line_domain)
-        if context_saved['state_line_ids'] == 'entering_wizard' or not partner_id:
+        if (
+            context_saved['state_line_ids'] == 'entering_wizard' or
+            not partner_id
+        ):
             return {
                 'value': {},
                 'domain': {'line_ids': domain}
@@ -652,6 +654,8 @@ class good_to_pay(osv.osv_memory):
                 {'nb_lines': 0, 'total_amount': 0.0}
             )
 
-        res['value']['context_saved'] = str(res.get('context_saved', context_saved))
+        res['value']['context_saved'] = str(
+            res.get('context_saved', context_saved)
+        )
 
         return res
