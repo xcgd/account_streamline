@@ -1044,7 +1044,7 @@ msgstr "Référence de transaction"
 
 #. module: account_streamline
 #: sql_constraint:res.partner:0
-msgid "The name of the partner must be unique !"
+msgid "The name of the partner must be unique!"
 msgstr "Le nom du partenaire doit être unique !"
 
 #. module: account_streamline
