@@ -1034,7 +1034,7 @@ msgstr "Lettrage partiel"
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:99
 msgid "Generated on %s"
-msgstr "Générer sur %s"
+msgstr "Généré le %s"
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:65
