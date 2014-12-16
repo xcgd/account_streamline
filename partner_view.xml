@@ -14,7 +14,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='parent_id']" position="after">
-                    <div class="oe_analytic" />
+                    <button class="oe_analytic" />
                 </xpath>
             </field>
         </record>
@@ -25,10 +25,10 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//notebook/page[@string='History']" position="after">
+                    <xpath expr="//notebook" position="inside">
                         <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
                             <group>
-                                <div class="oe_analytic" />
+                                <button class="oe_analytic" />
                             </group>
                         </page>
                     </xpath>
