@@ -6,7 +6,7 @@
             <field name="model">account.move.line</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <list string="Journal Items" editable="bottom" create="false" version="7.0">
+                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
                     <field readonly="1" name="state" />
                     <field readonly="1" name="partner_id"/>
                     <field readonly="1" name="period_id"/>
@@ -28,7 +28,7 @@
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
                     <button class="oe_analytic" readonly="1" />
-                </list>
+                </tree>
             </field>
         </record>
 
@@ -36,7 +36,7 @@
             <field name="name">account.move.line.tree.reconciliation</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <list string="Lettrage Ecritures Compatble"
+                <tree string="Lettrage Ecritures Compatble"
                                              create="false"
                                              version="7.0">
                     <field readonly="1" name="journal_id" />
@@ -59,7 +59,7 @@
                     <field readonly="1" name="reconcile_id" />
                     <field readonly="1" name="reconcile_partial_id" />
                     <field readonly="1" name="date_reconcile" />
-                </list>
+                </tree>
             </field>
         </record>
 

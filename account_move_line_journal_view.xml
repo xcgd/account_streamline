@@ -7,7 +7,7 @@
             <field name="model">account.move.line</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <list string="Journal Items" editable="bottom" create="false" version="7.0">
+                <tree string="Journal Items" editable="bottom" create="false" version="7.0">
                     <field readonly="1" name="state"/>
                     <field readonly="1" name="partner_id"/>
                     <field readonly="1" name="period_id"/>
@@ -28,7 +28,7 @@
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
                     <button class="oe_analytic" readonly="1" />
-                </list>
+                </tree>
             </field>
         </record>
         <record id="view_account_journal_form_streamline" model="ir.ui.view">
