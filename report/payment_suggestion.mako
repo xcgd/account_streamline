@@ -1,8 +1,43 @@
 <style type="text/css">
 ${css}
+.addressleft,
+.addressright {
+    width: 50%;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.addressleft {
+    float: left;
+    margin-top: 30px;
+}
+
+.addressright {
+    float: right;
+    margin-top: 30px;
+}
+
+.address .shipping{
+    margin-top:10px;
+    margin-left:0px;
+    font-size: 12px;
+    font-weight: bold;
+    }
+
+.address .recipient {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.address td.addresstitle {
+    font-weight: bold;
+    font-size: 12px;
+}
 
 .line td {
     text-align: center;
+    font-size: 12px;
 }
 
 .avoid_page_break {
@@ -21,6 +56,7 @@ ${css}
 }
 
 .payment_suggestion_total, .payment_suggestion_total_main {
+    clear:both;
     margin-top: 30px;
     padding: 10px 10px 10px 10px;
     border: 1px #000000 solid;
@@ -37,7 +73,31 @@ ${css}
 
 <% partners = get_partners(object) %>
 
-<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
+<div class="address">
+    <div class="addressright">
+        <table class="recipient">
+            %if object.voucher_ids:
+            <tr><td class="name">${object.voucher_ids[0].company_id.name or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street2 or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.zip or ''} ${object.voucher_ids[0].company_id.city or ''}</td></tr>
+            %endif
+        </table>
+    </div>
+    <div class="addressleft">
+        <table class="shipping">
+            <tr><th class="addresstitle"></th></tr>
+            %if object.voucher_ids:
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.name or'' }</td></tr>
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.street or'' }</td></tr>
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.street2 or'' }</td></tr>
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.zip or'' } ${object.voucher_ids[0].line_ids[0].partner_id.city or ''}</td></tr>
+            %endif
+        </table>
+    </div>
+</div>
+&nbsp;&nbsp;
+<!-- Using h2 as the font-size property doesn't seem to affect divs...-->
 <h2 class="payment_suggestion_total_main">
 	${ _('Journal: %s') % object.voucher_ids[0].journal_id.name }<br/>
 	<% voucher_count, partner_count, total = get_totals(partners) %>
@@ -57,7 +117,6 @@ without their report row being repeated) but this solution is already quite good
 <https://bitbucket.org/xcg/account_streamline/issue/38>. -->
 <div class="avoid_page_break">
 
-<h2 class="payment_suggestion_partner">${ partner.name }</h2>
 
 <table class="list_table">
     <thead>
@@ -85,7 +144,7 @@ without their report row being repeated) but this solution is already quite good
         %endfor
     </tbody>
 </table>
-
+&nbsp;&nbsp;
 <h2 class="payment_suggestion_total">
 	${ _('Total for %s:') % partner.name }
 	${ formatLang(partner_total, currency_obj=vouchers[0].currency_id) }
