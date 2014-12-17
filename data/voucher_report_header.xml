@@ -245,7 +245,7 @@ ${css}
 <%page expression_filter="entity"/>
 <% setLang(voucher.partner_id.lang) %>
 <div class="header">
-    <div class="logo">${helper.embed_image('png', voucher.partner_id.company_id.logo)|n}</div>
+    <div class="logo">${helper.embed_image('png', voucher.company_id.logo)|n}</div>
     <div class="title">${ title(voucher) }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
