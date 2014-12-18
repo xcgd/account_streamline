@@ -40,6 +40,10 @@ ${css}
     font-size: 12px;
 }
 
+.pre_line th {
+    font-size: 12px;;
+}
+
 .avoid_page_break {
 	page-break-inside: avoid;
 }
@@ -49,15 +53,10 @@ ${css}
     padding: 10px 10px 10px 10px;
 }
 
-.payment_suggestion_partner {
+.payment_suggestion_total_main  {
 	clear: both;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
-.payment_suggestion_total, .payment_suggestion_total_main {
-    clear:both;
     margin-top: 30px;
+    margin-right: 450px;
     padding: 10px 10px 10px 10px;
     border: 1px #000000 solid;
 }
@@ -120,7 +119,7 @@ without their report row being repeated) but this solution is already quite good
 
 <table class="list_table">
     <thead>
-        <tr>
+        <tr class="pre_line">
             <th>${ _('Transaction reference') }</th>
             <th>${ _('Description') }</th>
             <th>${ _('Invoice date') }</th>
