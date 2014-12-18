@@ -117,10 +117,7 @@ ${css}
     <div class="addressright">
         <table class="recipient">
             %if object.voucher_ids:
-            <tr><td class="name">${object.voucher_ids[0].company_id.name or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].company_id.street or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].company_id.street2 or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].company_id.zip or ''} ${object.voucher_ids[0].company_id.city or ''}</td></tr>
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.name or'' }</td></tr>
             %endif
         </table>
     </div>
@@ -128,10 +125,10 @@ ${css}
         <table class="shipping">
             <tr><th class="addresstitle"></th></tr>
             %if object.voucher_ids:
-            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.name or'' }</td></tr>
-            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.street or'' }</td></tr>
-            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.street2 or'' }</td></tr>
-            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.zip or'' } ${object.voucher_ids[0].line_ids[0].partner_id.city or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.name or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street2 or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.zip or ''} ${object.voucher_ids[0].company_id.city or ''}</td></tr>
             %endif
         </table>
     </div>
