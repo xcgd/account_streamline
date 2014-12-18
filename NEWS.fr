@@ -1,3 +1,7 @@
+account_streamline 1.10.5
+
+- Amélioration du template Suggestion de Paiement
+
 account_streamline 1.10.1
 
 - Ajout de l'adresse du partenaire dans le rapport Avis de règlement.
