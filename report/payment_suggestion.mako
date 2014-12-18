@@ -43,6 +43,47 @@ ${css}
 .pre_line th {
     font-size: 12px;;
 }
+.basic_table th,
+.basic_table td {
+    border: 1px solid lightGrey;
+    text-align:center;
+}
+
+.list_table {
+    font-size:12px;
+    border: 1px solid lightGrey;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.list_table td {
+    border-top: 1px solid lightGrey;
+    border: 1px solid lightGrey;
+    font-size: 12px;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 3px;
+    padding-bottom:3px;
+    text-align: center;
+    border-bottom: 1px solid lightGrey;
+}
+
+.list_table th {
+    border: 1px solid lightGrey;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding-right: 3px;
+    padding-left: 3px;
+    border-bottom: 1px solid lightGrey;
+}
+
+.list_table td.amount,
+.list_table th.amount {
+    text-align: center;
+}
+
 
 .avoid_page_break {
 	page-break-inside: avoid;
@@ -56,9 +97,9 @@ ${css}
 .payment_suggestion_total_main  {
 	clear: both;
     margin-top: 30px;
-    margin-right: 450px;
+    margin-right: 70%;
     padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
+    border: 1px solid lightGrey;
 }
 
 .payment_suggestion_total {
