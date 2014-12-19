@@ -14,6 +14,16 @@ class account_voucher(osv.Model):
         """Empty on purpose - to be overridden."""
         return {voucher_id: '' for voucher_id in ids}
 
+    def _get_report_remittance_letter_name(
+        self, cr, uid, ids, field_name, arg, context=None):
+        """Give the remittance letter report name for storing
+        """
+        # Do not change to a dictionary comprehension, it would break this 
+        result = dict()
+        for voucher_id in ids:
+            result[voucher_id] = _("RemittanceLetter.pdf")
+        return result
+
     _columns = {
         'iban': fields.function(
             _get_iban,
@@ -31,6 +41,14 @@ class account_voucher(osv.Model):
                                         'email',
                                         type='char',
                                         string=_('Partner email')),
+
+        # This field is only for a report translation
+        'report_remittance_letter_name': fields.function(
+            _get_report_remittance_letter_name,
+            method=True,
+            type='text',
+            store=False,
+        ),
     }
 
     def print_payment_suggestion(self, cr, uid, ids, context=None):

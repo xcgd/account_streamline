@@ -1,3 +1,6 @@
+
+- [i18n] Make remittance letter attachment name translatable.
+
 account_streamline 1.10.5
 
 - TKT/2014/00681: Improvment of payment suggestion template.
