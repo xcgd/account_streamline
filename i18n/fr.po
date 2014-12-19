@@ -1,5 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
+# * account
 # * account_streamline
 # Alexandre BRUN, 2014.
 # Vincent Lhote-Hatakeyama <vincent.lhote@xcg-consulting.fr>, 2014.
@@ -8,7 +9,7 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-12 16:34+0000\n"
-"PO-Revision-Date: 2014-12-12 17:37+0100\n"
+"PO-Revision-Date: 2014-12-19 14:55+0100\n"
 "Last-Translator: Houzéfa Abbasbhay <houzefa.abba@xcg-consulting.fr>\n"
 "Language-Team: XCG Consulting\n"
 "Language: fr\n"
@@ -1148,6 +1149,15 @@ msgstr "Sélection de paiements bons à payer"
 #: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_simple
 msgid "Simple View"
 msgstr "Vue simple"
+
+#. module: account
+#: view:account.unreconcile:0
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disabled"
+msgstr ""
+"Si vous annulez ces lettrages, vous devez aussi vérifier tous les éléments "
+"qui sont liés à ces écritures car ils ne seront pas désactivés"
 
 #~ msgid "Active in Reporting"
 #~ msgstr "Actif dans les rapports"
