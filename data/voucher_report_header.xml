@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <!-- Default header for reports that depend on account.voucher objects. -->
 
@@ -269,12 +269,12 @@ ${css}
 <% voucher = get_voucher(object) %>
 <% setLang(voucher.partner_id.lang) %>
 <p class="footer">
-    ${voucher.partner_id.company_id.name}
-%if voucher.partner_id.company_id.company_registry:
- - ${voucher.partner_id.company_id.company_registry}
+    ${voucher.company_id.name}
+%if voucher.company_id.company_registry:
+ - ${voucher.company_id.company_registry}
 %endif
-%if voucher.partner_id.company_id.vat:
- - ${voucher.partner_id.company_id.vat}
+%if voucher.company_id.vat:
+ - ${voucher.company_id.vat}
 %endif
 </p>
 <br/>
