@@ -10,7 +10,7 @@
     "description": """Enhancements to the account module to streamline its
     usage.
     """,
-    'website': 'http://www.openerp-experts.com',
+    'website': 'http://odoo.consulting/',
     'init_xml': [],
     "depends": [
         'base',
