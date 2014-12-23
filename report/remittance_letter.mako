@@ -216,7 +216,7 @@ ${css}
         <tr>
             <td colspan="3"/>
             <td><b>${_(u"Total TTC")} :</b></td>
-            <td class="amount" style="white-space:nowrap">${ formatLang(line.amount, currency_obj=object.currency_id) }</td>
+            <td class="amount" style="white-space:nowrap">${ formatLang(object.amount, currency_obj=object.currency_id) }</td>
         </tr>
     </tfoot>
     </table>
