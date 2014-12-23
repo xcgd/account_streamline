@@ -1,3 +1,7 @@
+NEXT
+
+- Correction des totaux des avis de règlement.
+
 account_streamline 1.10.5
 
 - Amélioration du template Suggestion de Paiement
