@@ -642,7 +642,7 @@ class account_move_line(osv.osv):
             if line.state != 'valid':
                 raise osv.except_osv(
                     _('Error!'),
-                    _('Entry "%s" is not valid !') % line.name
+                    _('Entry "%s" is not valid!') % line.name
                 )
 
             # control on second currency : must always be the same

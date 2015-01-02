@@ -1,4 +1,8 @@
-NEXT
+account_streamline 1.11.2
+
+- [TKT/2014/01154] [i18n] Fixed move_state related field to use translation as selection
+
+account_streamline 1.11.1
 
 - Fix remittance letter totals.
 
