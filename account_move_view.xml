@@ -52,6 +52,7 @@
 
                                     <field name="name" />
                                     <field name="partner_id"
+                                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                         on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)" />
                                     <field name="account_id"
                                         on_change="onchange_account_id(account_id)"
