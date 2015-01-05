@@ -27,7 +27,7 @@
                     <field readonly="1" name="debit" sum="Total Debit"/>
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
-                    <div class="oe_analytic" readonly="1" />
+                    <button class="oe_analytic" readonly="1" />
                 </list>
             </field>
         </record>
@@ -38,7 +38,6 @@
 			<field eval="5" name="priority"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='sequence_id']" position="after">
-					<field name="is_active"/>
 					<field name="is_limited" />
 				</xpath>
 			</field>

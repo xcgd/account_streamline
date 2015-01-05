@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
+from ast import literal_eval as leval
+from copy import deepcopy
+import itertools
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from collections import defaultdict
-import itertools
-from copy import deepcopy
 
-from ast import literal_eval as leval
 
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
 msg_invalid_partner_type = _('Partner %s is not a supplier.')
@@ -97,7 +97,7 @@ class good_to_pay(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, field_list=None, context=None):
-        if not 'active_ids' in context:
+        if 'active_ids' not in context:
             return {}
 
         vals = {}
@@ -182,6 +182,8 @@ class good_to_pay(osv.osv_memory):
         lines = aml_osv.browse(cr, uid, line_ids, context=context)
 
         for line in lines:
+            if not line.partner_id:
+                continue
             partner = line.partner_id.id
             account = line.account_id.id
             if partner in partner_dict:
@@ -305,9 +307,8 @@ class good_to_pay(osv.osv_memory):
                     raise osv.except_osv(_('Error!'), msg)
 
                 partner_id = aml.partner_id.id
-                partner = aml.partner_id
 
-                if not partner_id in supplier_to_voucher_map:
+                if partner_id not in supplier_to_voucher_map:
                     # we don't have a voucher for this supplier yet...
                     # just create a new one for our own use
                     vals = dict()
@@ -437,7 +438,10 @@ class good_to_pay(osv.osv_memory):
     ):
         context_saved = leval(context_saved)
         domain = deepcopy(move_line_domain)
-        if context_saved['state_line_ids'] == 'entering_wizard' or not partner_id:
+        if (
+            context_saved['state_line_ids'] == 'entering_wizard' or
+            not partner_id
+        ):
             return {
                 'value': {},
                 'domain': {'line_ids': domain}
@@ -493,9 +497,30 @@ class good_to_pay(osv.osv_memory):
     def __entering_wizard(self, cr, uid, ids, list_ids, context):
         move_line_osv = self.pool['account.move.line']
         reads = move_line_osv.read(
-            cr, uid, list_ids, ['partner_id'], context
+            cr, uid, list_ids, ['partner_id'], context=context
         )
-        reads = [read for read in reads if read['partner_id']]
+
+        # The "partner_id" field of accounting lines is not compulsory; we
+        # however need it to produce vouchers.
+        line_ids_wo_partner = [
+            read['id'] for read in reads if not read['partner_id']
+        ]
+        if line_ids_wo_partner:
+            lines_wo_partner = move_line_osv.browse(
+                cr, uid, line_ids_wo_partner, context=context
+            )
+            moves_wo_partner = u", ".join({
+                line_wo_partner.id: line_wo_partner.move_id.name
+                for line_wo_partner in lines_wo_partner
+            }.itervalues())
+            raise osv.except_osv(
+                _(u"Error"),
+                _(
+                    u"Partners undefined in the following accounting move "
+                    u"entries: %s."
+                ) % moves_wo_partner
+            )
+
         context['lines_by_partner'] = self.__compile_list_dict(reads)
         res = {
             'value': {
@@ -650,6 +675,8 @@ class good_to_pay(osv.osv_memory):
                 {'nb_lines': 0, 'total_amount': 0.0}
             )
 
-        res['value']['context_saved'] = str(res.get('context_saved', context_saved))
+        res['value']['context_saved'] = str(
+            res.get('context_saved', context_saved)
+        )
 
         return res

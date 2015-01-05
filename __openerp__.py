@@ -4,13 +4,13 @@
 ##############################################################################
 {
     "name": "Account Streamline",
-    "version": "1.9",
+    "version": "1.11.1",
     "author": "XCG Consulting",
     "category": 'Accounting',
     "description": """Enhancements to the account module to streamline its
     usage.
     """,
-    'website': 'http://www.openerp-experts.com',
+    'website': 'http://odoo.consulting/',
     'init_xml': [],
     "depends": [
         'base',

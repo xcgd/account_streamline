@@ -1,9 +1,89 @@
 <style type="text/css">
 ${css}
+.addressleft,
+.addressright {
+    width: 50%;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.addressleft {
+    float: left;
+    margin-top: 30px;
+}
+
+.addressright {
+    float: right;
+    margin-top: 30px;
+}
+
+.address .shipping{
+    margin-top:10px;
+    margin-left:0px;
+    font-size: 12px;
+    font-weight: bold;
+    }
+
+.address .recipient {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.address td.addresstitle {
+    font-weight: bold;
+    font-size: 12px;
+}
 
 .line td {
     text-align: center;
+    font-size: 12px;
 }
+
+.pre_line th {
+    font-size: 12px;;
+}
+.basic_table th,
+.basic_table td {
+    border: 1px solid lightGrey;
+    text-align:center;
+}
+
+.list_table {
+    font-size:12px;
+    border: 1px solid lightGrey;
+    text-align: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.list_table td {
+    border-top: 1px solid lightGrey;
+    border: 1px solid lightGrey;
+    font-size: 12px;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 3px;
+    padding-bottom:3px;
+    text-align: center;
+    border-bottom: 1px solid lightGrey;
+}
+
+.list_table th {
+    border: 1px solid lightGrey;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding-right: 3px;
+    padding-left: 3px;
+    border-bottom: 1px solid lightGrey;
+}
+
+.list_table td.amount,
+.list_table th.amount {
+    text-align: center;
+}
+
 
 .avoid_page_break {
 	page-break-inside: avoid;
@@ -14,16 +94,12 @@ ${css}
     padding: 10px 10px 10px 10px;
 }
 
-.payment_suggestion_partner {
+.payment_suggestion_total_main  {
 	clear: both;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-
-.payment_suggestion_total, .payment_suggestion_total_main {
     margin-top: 30px;
+    margin-right: 70%;
     padding: 10px 10px 10px 10px;
-    border: 1px #000000 solid;
+    border: 1px solid lightGrey;
 }
 
 .payment_suggestion_total {
@@ -37,7 +113,28 @@ ${css}
 
 <% partners = get_partners(object) %>
 
-<!-- Using h2 as the font-size property doesn't seem to affect divs... -->
+<div class="address">
+    <div class="addressright">
+        <table class="recipient">
+            %if object.voucher_ids:
+            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.name or'' }</td></tr>
+            %endif
+        </table>
+    </div>
+    <div class="addressleft">
+        <table class="shipping">
+            <tr><th class="addresstitle"></th></tr>
+            %if object.voucher_ids:
+            <tr><td class="name">${object.voucher_ids[0].company_id.name or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.street2 or ''}</td></tr>
+            <tr><td class="name">${object.voucher_ids[0].company_id.zip or ''} ${object.voucher_ids[0].company_id.city or ''}</td></tr>
+            %endif
+        </table>
+    </div>
+</div>
+&nbsp;&nbsp;
+<!-- Using h2 as the font-size property doesn't seem to affect divs...-->
 <h2 class="payment_suggestion_total_main">
 	${ _('Journal: %s') % object.voucher_ids[0].journal_id.name }<br/>
 	<% voucher_count, partner_count, total = get_totals(partners) %>
@@ -57,11 +154,10 @@ without their report row being repeated) but this solution is already quite good
 <https://bitbucket.org/xcg/account_streamline/issue/38>. -->
 <div class="avoid_page_break">
 
-<h2 class="payment_suggestion_partner">${ partner.name }</h2>
 
 <table class="list_table">
     <thead>
-        <tr>
+        <tr class="pre_line">
             <th>${ _('Transaction reference') }</th>
             <th>${ _('Description') }</th>
             <th>${ _('Invoice date') }</th>
@@ -85,7 +181,7 @@ without their report row being repeated) but this solution is already quite good
         %endfor
     </tbody>
 </table>
-
+&nbsp;&nbsp;
 <h2 class="payment_suggestion_total">
 	${ _('Total for %s:') % partner.name }
 	${ formatLang(partner_total, currency_obj=vouchers[0].currency_id) }

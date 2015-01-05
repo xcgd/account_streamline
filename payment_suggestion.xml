@@ -2,16 +2,6 @@
 <openerp>
     <data>
 
-        <!-- View for Payment Suggestions. -->
-
-        <record id="payment_suggestion_view" model="ir.ui.view">
-            <field name="name">payment.suggestion.view</field>
-            <field name="model">payment.suggestion</field>
-            <field name="arch" type="xml">
-                <field name="voucher_ids" />
-            </field>
-        </record>
-
         <!-- Contextual action to generate a Payment Suggestion. -->
 
         <record id="action_payment_suggestion" model="ir.actions.server">

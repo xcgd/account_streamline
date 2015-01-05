@@ -1,0 +1,6 @@
+#. module: account
+#: view:account.unreconcile:0
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disabled"
+msgstr ""

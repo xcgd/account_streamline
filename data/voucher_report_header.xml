@@ -88,12 +88,10 @@ table {
 .address table td {
     font-size: 12px;
 }
-
 .addressright {
     width: 50%;
     margin: 20px 0;
 }
-
 .addressright {
     float: right;
 }
@@ -247,7 +245,7 @@ ${css}
 <%page expression_filter="entity"/>
 <% setLang(voucher.partner_id.lang) %>
 <div class="header">
-    <div class="logo">${helper.embed_image('png', voucher.partner_id.company_id.logo)|n}</div>
+    <div class="logo">${helper.embed_image('png', voucher.company_id.logo)|n}</div>
     <div class="title">${ title(voucher) }</div>
     <div class="pagenum">
         <span class="text"><span class="page"></span> / <span class="topage"></span></span>
@@ -271,9 +269,13 @@ ${css}
 <% voucher = get_voucher(object) %>
 <% setLang(voucher.partner_id.lang) %>
 <p class="footer">
-    ${voucher.partner_id.company_id.name} -
-    ${voucher.partner_id.company_id.company_registry} -
-    ${voucher.partner_id.company_id.vat}
+    ${voucher.company_id.name}
+%if voucher.company_id.company_registry:
+ - ${voucher.company_id.company_registry}
+%endif
+%if voucher.company_id.vat:
+ - ${voucher.company_id.vat}
+%endif
 </p>
 <br/>
 <br/>

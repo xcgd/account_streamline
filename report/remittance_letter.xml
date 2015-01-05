@@ -7,7 +7,7 @@
         <report id="account_streamline.remittance_letter" name="account_streamline.remittance_letter"
             auto="False" model="account.voucher"
             file="account_streamline/report/remittance_letter.mako" string="Remittance Letter"
-            webkit_header="account_streamline.voucher_report_header" attachment="'RemittanceLetter'"
+            webkit_header="account_streamline.voucher_report_header" attachment="object.report_remittance_letter_name"
             report_type="webkit" attachment_use="True" usage="default" />
 
     </data>

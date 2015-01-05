@@ -5,9 +5,9 @@ from datetime import datetime
 from openerp import pooler
 from openerp.report import report_sxw
 from openerp.tools.translate import _
-from osv import osv
+from openerp.osv import osv
 
-from report_webkit.webkit_report import WebKitParser
+from openerp.addons.report_webkit.webkit_report import WebKitParser
 
 
 class payment_suggestion_parser(report_sxw.rml_parse):

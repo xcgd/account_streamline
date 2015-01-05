@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Account Analytic Online, for OpenERP
-#    Copyright (C) 2013 XCG Consulting (www.xcg-consulting.fr)
+#    Copyright (C) 2013, 2015 XCG Consulting (www.xcg-consulting.fr)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -35,6 +35,8 @@ msg_cannot_remove_line = _(
     'You cannot remove line(s) from an already posted entry')
 msg_invalid_journal = _('You cannot move line(s) between journal types')
 
+# Copied from account.py of module account because it is not in a variable
+ENUM_MOVE_STATE = [('draft','Unposted'), ('posted','Posted')]
 
 class aml_streamline_mail_thread(osv.AbstractModel):
     """Inherit from mail.thread by copy (with a different name) and bypass its
@@ -97,8 +99,9 @@ class account_move_line(osv.osv):
         currency_id=fields.many2one('res.currency',
                                     'Currency',
                                     help="The mandatory currency code"),
-        move_state=fields.related("move_id", "state",
-                                  type="char", string="status", readonly=True),
+        move_state=fields.related('move_id', 'state',
+                                  type='selection', string="Status",
+                                  selection=ENUM_MOVE_STATE, readonly=True),
         debit_curr=fields.float('Debit T',
                                 digits_compute=dp.get_precision('Account'),
                                 help="This is the debit amount "
@@ -668,8 +671,8 @@ class account_move_line(osv.osv):
 
             if line.state != 'valid':
                 raise osv.except_osv(
-                    _("Error!"),
-                    _("Entry \"%s\" is not valid !") % line.name
+                    _('Error!'),
+                    _('Entry "%s" is not valid!') % line.name
                 )
 
             if company_list and not line.company_id.id in company_list:

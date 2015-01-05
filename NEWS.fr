@@ -1,0 +1,89 @@
+NEXT
+
+- Correction des totaux des avis de règlement.
+
+account_streamline 1.10.5
+
+- Amélioration du template Suggestion de Paiement
+
+account_streamline 1.10.1
+
+- Ajout de l'adresse du partenaire dans le rapport Avis de règlement.
+- Les adresses sont désormais en gras.
+- Amélioration des tables et des totaux dans le rapport Avis de règlement.
+
+
+account_streamline 1.10
+
+Production release
+
+account_streamline 1.9.4
+
+- Suppression du champ is_active_account_journal (pas utilisé)
+
+account_streamline 1.9.3
+
+- [l10n] Mise à jour des traductions en français. 
+
+account_streamline 1.9.2
+
+
+- TKT/2014/00663 [imp] Changement de la référence dans l'avis de règlement pour pointer vers celle de la ligne.
+- [l10n] Mise à jour des traductions en français. 
+
+account_streamline 1.9.1
+
+- Ajout d'une référence sur le mouvement pour savoir quel objet l'a créér.
+
+account_streamline 1.9.0.1
+
+- [l10n] Mise à jour des traductions en français. 
+
+account_streamline 1.9
+
+- [Correction] Règles de sécurité sur le unlink
+
+account_streamline 1.8.5
+
+- TKT/2014/00289. [Correction] Retirer l'action et la vue du wizard remittance letter lorsque le courrier électronique a été envoyé .
+
+account_streamline 1.8.4
+
+- [fix]Correction de l'affichage de l'email du partenaire dans l'avis de règlement.  
+
+account_streamline 1.8.2
+
+∅
+
+account_streamline 1.8.1
+
+- Retirer bouton Annuler l'entrée des factures.
+- Seul partenaire mail avec une adresse mail.
+- TKT/2014/00286 [fix] Eviter le Faux dans les rapports.
+
+account_streamline 1.8
+
+Production release
+
+account_streamline 1.7.4
+
+- Ajouter un champ ' account_id_is_limited ' dans la vue Formulaire du journal. Ajouter des règles d'enregistrement pour les utilisateurs et les gestionnaires lors des moves, move_lines , voucher ou vouchers_lines sont limitées.
+
+account_streamline 1.6.0.1 (merged in 1.7.2)
+
+- Permettre à d'autres modules de changer l'Iban dans les rapports. 
+
+
+account_streamline 1.7
+
+- Ajout du champ 'is_active' dans la vue Formulaire du Journal.
+- Retirer les menu 'Journal Items' pour tout les groupes sauf l'administrateur.
+- Mise à jour pour utiliser une version plus récente d'analytic structure.
+- [Fix]ed the context for the partial depreciation and addendum writeoff wizards
+- Correction du contexte de la dépréciation et ajout partiel des assistants de radiation
+
+account_streamline 1.6.2
+
+- [Fix]Correction d'une erreur avec reconciliation multi-devises.
+
+account_streamline 1.6

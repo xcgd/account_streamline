@@ -13,7 +13,7 @@
                             groups="account.group_account_invoice" />
                         <button name="button_cancel" states="posted"
                             string="Cancel Entry" type="object"
-                            groups="base.group_no_one" />
+                            groups="base.group_account_invoice" />
                         <field name="state" widget="statusbar" />
                     </header>
                     <label for="name" class="oe_edit_only"
@@ -35,6 +35,7 @@
                             <field name="date" />
                             <field name="to_check" />
                             <field name="amount" invisible="1" />
+                            <field name="object_reference" attrs="{'invisible': [('object_reference', '=', False)]}" readonly="True"/>
                         </group>
                     </group>
                     <notebook>
@@ -51,6 +52,7 @@
 
                                     <field name="name" />
                                     <field name="partner_id"
+                                        domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
                                         on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)" />
                                     <field name="account_id"
                                         on_change="onchange_account_id(account_id)"

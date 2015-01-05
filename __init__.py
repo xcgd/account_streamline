@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import account
 import account_move
 import account_move_line
