@@ -78,7 +78,7 @@ class res_partner_needaction(osv.Model):
                 lambda self, cr, uid, obj, ctx=None: (
                     not self.pool.get('account.account').browse(
                         cr, uid,
-                        obj['property_account_payable'],
+                        obj['property_account_payable'].id,
                         context=ctx
                     ).type == 'payable'
                 )
@@ -89,7 +89,7 @@ class res_partner_needaction(osv.Model):
                 lambda self, cr, uid, obj, ctx=None: (
                     not self.pool.get('account.account').browse(
                         cr, uid,
-                        obj['property_account_receivable']
+                        obj['property_account_receivable'].id
                     ).type == 'receivable'
                 )
             )
