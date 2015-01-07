@@ -20,7 +20,6 @@
         'account_sequence',
         'mail',
         'analytic_structure',
-        'advanced_filter',
         'report_webkit',
     ],
     "data": [
