@@ -111,11 +111,6 @@ class res_partner_needaction(osv.Model):
 
     _analytic = 'res_partner'
 
-    # To prevent partner duplication
-    _sql_constraints = [
-        ('name', 'UNIQUE (name)', 'The name of the partner must be unique!')
-    ]
-
     ##################################################
     # -------------------Override------------------- #
     ##################################################
