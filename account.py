@@ -43,10 +43,9 @@ class account_account(osv.Model):
     }
 
     # Cherry pick of http://bazaar.launchpad.net/~openerp-dev/openobject-addons/7.0-opw-591897-acl/revision/9115#account/account.py
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        old_ctx = context
+        context = old_ctx.copy() if old_ctx else {}
         split_args = []
         pos = 0
         while pos < len(args):

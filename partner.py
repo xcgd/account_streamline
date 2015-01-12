@@ -119,8 +119,8 @@ class res_partner_needaction(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         """ Override to control notifications """
-        if context is None:
-            context = {}
+        old_ctx = context
+        context = old_ctx.copy() if old_ctx else {}
         context.update(
             {'mail_create_nolog': True, 'mail_create_nosubscribe': True})
 
