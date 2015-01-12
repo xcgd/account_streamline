@@ -28,7 +28,7 @@
                     <xpath expr="//notebook" position="inside">
                         <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
                             <group>
-                                <button class="oe_analytic" />
+                                <div class="oe_analytic" />
                             </group>
                         </page>
                     </xpath>
