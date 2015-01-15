@@ -1,3 +1,8 @@
+account_streamline 1.12
+
+- Payment suggestion: Remove an invalid address block (payment suggestions can be generated for multiple partners) 
+- Removed references to advanced filter
+
 account_streamline 1.11.2
 
 - [TKT/2014/01154] [i18n] Fixed move_state related field to use translation as selection
