@@ -39,6 +39,7 @@
         'report_webkit',
     ],
     "data": [
+        'res_config_view.xml',
         'data/partner_data.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/email_remittance.xml',

@@ -1,3 +1,9 @@
+account_streamline 1.12.1
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- [TKT/2014/00319] Added check unicity check on (account.move ref field, account.move.line partner_id field)
+- [CONFIG] The above check can be disabled by company (in Configuration>Configuration>Accounting)
+
 account_streamline 1.12
 
 - Payment suggestion: Remove an invalid address block (payment suggestions can be generated for multiple partners) 

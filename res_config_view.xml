@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- res.config form view -->
+        <record model="ir.ui.view" id="view_account_streamline_settings_form">
+            <field name="name">account_streamline.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="model">account.config.settings</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='group_multi_currency']" position="before">
+                    <div>
+                        <field name="allow_duplicate_ref_on_account_move_same_account" class="oe_inline"/>
+                        <label for="allow_duplicate_ref_on_account_move_same_account"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,7 +1,31 @@
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2013-2015 XCG Consulting (http://www.xcg-consulting.fr/)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import logging
 from openerp.osv import fields, expression, osv
 from openerp.tools.translate import _
 import yaml
 from lxml import etree
+from openerp import SUPERUSER_ID
+
+_logger = logging.getLogger(__name__)
 
 # account.move.line fields that don't become read-only when the account.move
 # object is posted.
@@ -125,6 +149,61 @@ class account_move(osv.Model):
 
         return res
 
+    def _check_duplicate_ref_on_account_move_same_account(
+        self, cr, uid, ids, context=None
+    ):
+        """ Check that if the company does not allow duplicate ref/account.
+        That it is not 
+        """
+        am_brl = self.browse(cr, uid, ids, context)
+        for am_br in am_brl:
+            if (
+                not am_br.company_id.
+                    allow_duplicate_ref_on_account_move_same_account
+            ):
+                # check that there is no other line with same
+                # partner but different ref on the move
+                # Use SUPERUSER_ID to be sure to find all
+                am_same_ref_ids = self.search(
+                    cr, SUPERUSER_ID,
+                    [('ref', '=', am_br.ref), ('id', '!=', am_br.id)],
+                    context=context)
+                if am_same_ref_ids:
+                    _logger.debug("Found ref %s in other account move"
+                        % am_br.ref)
+                    # make a set of the values for easy comparison
+                    partners = {line.partner_id.id for line in am_br.line_id}
+                    _logger.debug(partners)
+                    am_same_ref_brl = self.browse(
+                        cr, SUPERUSER_ID, am_same_ref_ids, context)
+                    # check that partner is not the same if ref are
+                    for am_same_ref_br in am_same_ref_brl:
+                        for aml_br in am_same_ref_br.line_id:
+                            if aml_br.partner_id.id in partners:
+                                _logger.debug(
+                                    "Found same partner in move %(move)d line "
+                                    "%(line)d" % {
+                                        'move': am_br.id, 'line': aml_br.id})
+                                return False
+                            else:
+                                _logger.debug("Found different partner "
+                                    "%(partner)s in move %(move)d line "
+                                    "%(line)d" % {
+                                        'move': am_br.id,
+                                        'line': aml_br.id,
+                                        'partner':aml_br.partner_id.id})
+                else:
+                    _logger.debug("Ref %s unique in account move"
+                        % am_br.ref)
+        return True
+
+    _constraints = [
+        (
+            _check_duplicate_ref_on_account_move_same_account,
+            "Duplicate reference on same partner with that account on this journal",
+            ['ref']
+        ),
+    ]
 
 class mail_message(osv.Model):
     _inherit = 'mail.message'
