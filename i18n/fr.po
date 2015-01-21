@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-02 13:49+0000\n"
-"PO-Revision-Date: 2015-01-02 14:51+0200\n"
+"POT-Creation-Date: 2015-01-21 10:11+0000\n"
+"PO-Revision-Date: 2015-01-21 11:14+0200\n"
 "Last-Translator: Vincent Hatakeyama <vincent.lhote@xcg-consulting.fr>\n"
 "Language-Team: XCG Consulting\n"
 "Language: fr\n"
@@ -26,6 +26,11 @@ msgid "Reconciliation"
 msgstr "Lettrage"
 
 #. module: account_streamline
+#: model:ir.model,name:account_streamline.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
+
+#. module: account_streamline
 #: view:account.move.line.reconcile:0
 #: code:addons/account_streamline/account_move_line.py:847
 #, python-format
@@ -33,7 +38,7 @@ msgid "Write-Off"
 msgstr "Écart de règlement"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:142
+#: report:addons/account_streamline/report/payment_suggestion.mako:135
 msgid "Partner count: %d"
 msgstr "Nombre de partenaires : %d"
 
@@ -166,7 +171,7 @@ msgid "Total Debit"
 msgstr "Débit total"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move.py:89
+#: code:addons/account_streamline/account_move.py:113
 #: code:addons/account_streamline/account_move_line.py:550
 #: code:addons/account_streamline/account_move_line.py:557
 #: code:addons/account_streamline/account_move_line.py:566
@@ -239,7 +244,7 @@ msgid "Used rate"
 msgstr "Taux utilisé"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:141
+#: report:addons/account_streamline/report/payment_suggestion.mako:134
 msgid "Voucher count: %d"
 msgstr "Bons de règlement : %d"
 
@@ -349,6 +354,12 @@ msgid "Mark as good to pay"
 msgstr "Marquer en Bon à payer"
 
 #. module: account_streamline
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view or consolidation."
+msgstr ""
+"You cannot create journal items on an account of type view or consolidation."
+
+#. module: account_streamline
 #: view:email.remittance:0
 #: field:email.remittance,partners:0
 msgid "Partners"
@@ -366,7 +377,7 @@ msgid "Transaction Currency"
 msgstr "Devise de transaction"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move.py:84
+#: code:addons/account_streamline/account_move.py:108
 #, python-format
 msgid "Unable to post! The following analysis codes are mandatory:"
 msgstr ""
@@ -378,6 +389,13 @@ msgstr ""
 msgid "You cannot add line(s) into an already posted entry"
 msgstr ""
 "Vous ne pouvez pas ajouter d’écritures à l’intérieur d'entrées déjà postées."
+
+#. module: account_streamline
+#: constraint:account.move:0
+msgid "Duplicate reference on same partner with that account on this journal"
+msgstr ""
+"Il existe déjà une pièce comptable avec la même référence sur ce compte de "
+"tiers"
 
 #. module: account_streamline
 #: field:account.move,message_follower_ids:0
@@ -399,12 +417,12 @@ msgid "Debit"
 msgstr "Débit"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:139
+#: report:addons/account_streamline/report/payment_suggestion.mako:132
 msgid "Journal: %s"
 msgstr "Journal : %s"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:165
+#: report:addons/account_streamline/report/payment_suggestion.mako:158
 #: report:addons/account_streamline/report/remittance_letter.mako:199
 msgid "Debit/Credit"
 msgstr "Débit/Crédit"
@@ -441,12 +459,6 @@ msgstr ""
 #: field:email.remittance,email_template:0
 msgid "Email template"
 msgstr "Modèle de courriel"
-
-#. module: account_streamline
-#: code:addons/account_streamline/payment_selection.py:211
-#, python-format
-msgid "Different accounts are being referred for the same partner(s):"
-msgstr "Plus d’un compte pour un même partenaire :"
 
 #. module: account_streamline
 #: code:addons/account_streamline/payment_suggestion.py:18
@@ -499,6 +511,12 @@ msgid "All entries must have the same second currency! Reconcile on company curr
 msgstr "Toutes les entrées doivent être dans la même devise."
 
 #. module: account_streamline
+#: code:addons/account_streamline/report/payment_suggestion.py:130
+#, python-format
+msgid "No draft voucher selected."
+msgstr "Pas bon de règlement à l'état brouillon sélectionné."
+
+#. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:633
 #: code:addons/account_streamline/account_move_line.py:764
 #: code:addons/account_streamline/account_move_line.py:829
@@ -525,7 +543,7 @@ msgid "No Account Base Code and Account Tax Code!"
 msgstr "Pas de compte code de base et compte de code général des impôts !"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:186
+#: report:addons/account_streamline/report/payment_suggestion.mako:179
 msgid "Total for %s:"
 msgstr "Total pour %s:"
 
@@ -557,16 +575,10 @@ msgid "change"
 msgstr "change"
 
 #. module: account_streamline
-#: code:addons/account_streamline/report/payment_suggestion.py:130
+#: code:addons/account_streamline/payment_selection.py:211
 #, python-format
-msgid "No draft voucher selected."
-msgstr "Pas bon de règlement à l'état brouillon sélectionné."
-
-#. module: account_streamline
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-"Vous ne pouvez pas créer d’écriture comptable sur un compte de type vue."
+msgid "Different accounts are being referred for the same partner(s):"
+msgstr "Plus d’un compte pour un même partenaire :"
 
 #. module: account_streamline
 #: field:account.move.line.reconcile,writeoff_curr:0
@@ -602,7 +614,7 @@ msgstr ""
 "sélectionner une vue multi-devise sur le journal."
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:164
+#: report:addons/account_streamline/report/payment_suggestion.mako:157
 #: report:addons/account_streamline/report/remittance_letter.mako:200
 msgid "Currency"
 msgstr "Devise"
@@ -630,7 +642,7 @@ msgid "Number of lines"
 msgstr "Nombre de lignes"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:199
+#: report:addons/account_streamline/report/payment_suggestion.mako:192
 msgid "Signature:"
 msgstr "Signature :"
 
@@ -698,7 +710,6 @@ msgstr "Non-lu"
 #: field:account.voucher,iban:0
 #: field:account.voucher,remittance_letter_bottom:0
 #: field:account.voucher,report_remittance_letter_name:0
-#: field:res.users,employee_id:0
 msgid "unknown"
 msgstr "inconnu"
 
@@ -711,6 +722,12 @@ msgstr "Montant total"
 #: selection:account.move.line,move_state:0
 msgid "Unposted"
 msgstr "Non posté"
+
+#. module: account_streamline
+#: view:account.move.line.goodtopay:0
+#: view:account.move.line.reconcile:0
+msgid "or"
+msgstr "ou"
 
 #. module: account_streamline
 #: field:account.move,message_is_follower:0
@@ -900,6 +917,12 @@ msgid "Check Customer Account"
 msgstr "Vérifier compte client"
 
 #. module: account_streamline
+#: field:account.config.settings,allow_duplicate_ref_on_account_move_same_account:0
+#: field:res.company,allow_duplicate_ref_on_account_move_same_account:0
+msgid "Allow duplicate (reference, account) on journals"
+msgstr "Autoriser transaction en double"
+
+#. module: account_streamline
 #: view:account.move:0
 msgid "Add an internal note..."
 msgstr "Ajouter une note interne…"
@@ -955,7 +978,7 @@ msgid "Payment Method"
 msgstr "Méthode de paiement"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:162
+#: report:addons/account_streamline/report/payment_suggestion.mako:155
 msgid "Description"
 msgstr "Description"
 
@@ -1000,7 +1023,7 @@ msgid "Partner email"
 msgstr "Adresse de messagerie du partenaire"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:143
+#: report:addons/account_streamline/report/payment_suggestion.mako:136
 msgid "Total: %s"
 msgstr "Total : %s"
 
@@ -1039,7 +1062,7 @@ msgstr ""
 "sont autorisées."
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:163
+#: report:addons/account_streamline/report/payment_suggestion.mako:156
 #: report:addons/account_streamline/report/remittance_letter.mako:198
 msgid "Invoice date"
 msgstr "Date de facturation"
@@ -1057,12 +1080,12 @@ msgid "Partial Reconcile"
 msgstr "Lettrage partiel"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:195
+#: report:addons/account_streamline/report/payment_suggestion.mako:188
 msgid "Generated on %s"
 msgstr "Généré le %s"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:161
+#: report:addons/account_streamline/report/payment_suggestion.mako:154
 #: report:addons/account_streamline/report/remittance_letter.mako:197
 msgid "Transaction reference"
 msgstr "Référence de transaction"
@@ -1116,7 +1139,7 @@ msgid "All entries must have the same account to be reconciled."
 msgstr "Toutes les écritures doivent avoir le même compte pour être lettrés."
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/payment_suggestion.mako:166
+#: report:addons/account_streamline/report/payment_suggestion.mako:159
 #: report:addons/account_streamline/report/remittance_letter.mako:201
 msgid "Amount"
 msgstr "Montant"
@@ -1127,10 +1150,9 @@ msgid "account.group_account_user"
 msgstr "account.group_account_user"
 
 #. module: account_streamline
-#: view:account.move.line.goodtopay:0
-#: view:account.move.line.reconcile:0
-msgid "or"
-msgstr "ou"
+#: field:account.journal,is_active:0
+msgid "Is Active"
+msgstr "Est actif"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_move_line_streamline_mail_thread
@@ -1167,6 +1189,10 @@ msgstr "Sélection de paiements bons à payer"
 msgid "Simple View"
 msgstr "Vue simple"
 
+#~ msgid "You cannot create journal items on an account of type view."
+#~ msgstr ""
+#~ "Vous ne pouvez pas créer d’écriture comptable sur un compte de type vue."
+
 #, python-format
 #~ msgid "Entry \"%s\" is not valid !"
 #~ msgstr "L’entrée « %s » n'est pas valide !"
@@ -1190,13 +1216,6 @@ msgstr "Vue simple"
 #~ msgid "when selected, only the financial manager can read and write"
 #~ msgstr ""
 #~ "Lorsqu'il est activé, seul le directeur financier peut lire et écrire"
-
-#~ msgid ""
-#~ "You cannot create journal items on an account of type view or "
-#~ "consolidation."
-#~ msgstr ""
-#~ "You cannot create journal items on an account of type view or "
-#~ "consolidation."
 
 #~ msgid "Sent emails"
 #~ msgstr "Emails envoyés"
