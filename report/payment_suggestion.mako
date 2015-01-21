@@ -114,13 +114,6 @@ ${css}
 <% partners = get_partners(object) %>
 
 <div class="address">
-    <div class="addressright">
-        <table class="recipient">
-            %if object.voucher_ids:
-            <tr><td>${object.voucher_ids[0].line_ids[0].partner_id.name or'' }</td></tr>
-            %endif
-        </table>
-    </div>
     <div class="addressleft">
         <table class="shipping">
             <tr><th class="addresstitle"></th></tr>

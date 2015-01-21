@@ -12,3 +12,4 @@ import payment_suggestion
 import report
 import wizard
 import res_company
+import res_config

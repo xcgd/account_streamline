@@ -1,2 +1,24 @@
-This is a module for Odoo/OpenERP. It contains enhancements to the account module to streamline its usage.
+Account Streamline
+==================
 
+This is a module for Odoo/OpenERP. It contains enhancements for a better Odoo
+accounting experience.
+
+Once installed you will have access to:
+
+  - a real multi-currency accounting system were all accounting lines
+  will have the base amount (D & C) and the transaction amount in currency
+  (D & C) filled. The pivot currency is the base amount.
+
+  - a new analytic system that allows to dynamically define analysis
+  dimensions and then assigne them to analysis structures, for mode
+  information please see our article (in French) http://bit.ly/1IpbKRS
+
+  - a few security enhancements to garantee that an posted accounting entry
+  cannot be modified by anyone
+
+  - some performance enhancements per example account allocations are
+  roughly 9 times quicker than the standard version
+
+  - some fixes during the account allocation in the writeoff calculations
+  and exchange difference calculation 
