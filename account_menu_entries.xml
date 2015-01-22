@@ -8,8 +8,14 @@
         <!-- groups="account.group_account_user" /> -->
 
         <menuitem 
-            action="action_move_line_tree_payment" 
-            id="menu_action_account_move_line_payment"
+            action="action_move_line_tree_payable_payment" 
+            id="menu_action_account_move_line_payable_payment"
+            parent="account_payment.menu_main_payment" 
+            groups="account.group_account_user" 
+         />
+        <menuitem 
+            action="action_move_line_tree_receivable_payment" 
+            id="menu_action_account_move_line_receivable_payment"
             parent="account_payment.menu_main_payment" 
             groups="account.group_account_user" 
          />
