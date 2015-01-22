@@ -204,7 +204,7 @@ ${css}
     <tbody>
         %for line in object.line_ids:
         <tr class="line">
-            <td>${ line.move_line_id.move_id.internal_sequence_number } / ${ line.move_line_id.move_id.ref }</td>
+            <td>${ line.move_line_id.name}</td>
             <td>${ line.date_original }</td>
             <td>${ debit_credit(line) }</td>
             <td>${ line.currency_id.name }</td>
