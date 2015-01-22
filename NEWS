@@ -1,6 +1,7 @@
 account_streamline next
 
 - [TKT/2014/00429] Differentiate payable payment and receivable payment selections
+- [TKT/2014/00429] Add filters credit/debit on customer payment menu
 
 account_streamline 1.12.1
 ~~~~~~~~~~~~~~~~~~~~~~~~~
