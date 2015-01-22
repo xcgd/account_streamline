@@ -16,5 +16,20 @@
 
             </field>
         </record>
+
+        <record id="view_voucher_filter_customer_pay" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_voucher_filter_customer_pay" />
+            <field name="arch" type="xml">
+
+                <field name="partner_id" position="before">
+                    <filter string="To Credit" domain="[('amount','&lt;=',0)]" help="Vouchers to Credit"/>
+                    <filter string="To Debit" domain="[('amount','&gt;=',0)]" help="Vouchers to Debit"/>
+                </field>
+
+            </field>
+        </record>
+
     </data>
 </openerp>
