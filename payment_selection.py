@@ -149,27 +149,6 @@ class good_to_pay(osv.TransientModel):
                 .print_payment_suggestion(cr, uid, active_ids,
                                           context=context))
 
-    def __check_partner_debits(self, cr, uid, context_saved, context):
-        """Loop through selected partners to ensure they all have more credit
-        than debit.
-        :return False and the first partner having a debit balance, otherwise
-        return True.
-        """
-        aml_osv = self.pool['account.move.line']
-
-        for partner_id, line_ids in context_saved['lines_by_partner'].items():
-            total_credit = 0.0
-            total_debit = 0.0
-            reads = aml_osv.read(
-                cr, uid, line_ids, ['credit', 'debit', 'partner_id'], context
-            )
-            for read in reads:
-                total_credit += read['credit']
-                total_debit += read['debit']
-            if total_credit <= total_debit:
-                return False, read['partner_id'][1]
-        return True, None
-
     def _get_account_conflicts(self, cr, uid, line_ids, context=None):
         """Find every partner that is found with two or more different accounts
         in the move lines given in argument.
@@ -273,15 +252,7 @@ class good_to_pay(osv.TransientModel):
                 )
 
             context_saved = leval(form['context_saved'])
-            test, partner_name = self.__check_partner_debits(
-                cr, uid, context_saved, context
-            )
-            if not test:
-                raise osv.except_osv(
-                    _('Error'),
-                    _('The voucher for the partner %s is debit.' %
-                      partner_name)
-                )
+            # Both debit and credit are allowed, no checks anymore
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
@@ -294,7 +265,7 @@ class good_to_pay(osv.TransientModel):
                 # first we need to make sure the line is acceptable to be
                 # used in a voucher (ie: account is marked as payable
 
-                if not aml.account_id.type == 'payable':
+                if aml.account_id.type not in ('payable', 'receivable'):
                     msg = msg_invalid_line_type % aml.account_id.type
                     raise osv.except_osv(_('Error!'), msg)
 

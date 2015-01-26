@@ -1,7 +1,9 @@
-account_streamline next
+account_streamline 1.13
+~~~~~~~~~~~~~~~~~~~~~~~
 
 - [TKT/2014/00429] Differentiate payable payment and receivable payment selections
 - [TKT/2014/00429] Add filters credit/debit on customer payment menu
+- [TKT/2014/00429] Allow debits and receivable in mark as good to pay wizard
 
 account_streamline 1.12.1
 ~~~~~~~~~~~~~~~~~~~~~~~~~
