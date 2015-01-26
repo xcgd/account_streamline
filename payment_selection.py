@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Account Analytic Online, for OpenERP
-#    Copyright (C) 2013 XCG Consulting (www.xcg-consulting.fr)
+#    Copyright (C) 2013-2015 XCG Consulting (www.xcg-consulting.fr)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -45,7 +45,7 @@ move_line_domain = [
 ]
 
 
-class good_to_pay(osv.osv_memory):
+class good_to_pay(osv.TransientModel):
     """create vouchers for all invoices that have been selected
     """
 
