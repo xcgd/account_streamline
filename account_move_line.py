@@ -63,7 +63,7 @@ class account_move_line(osv.osv):
     ]
 
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
-        move_line_osv = self.pool.get("account.move.line")
+        move_line_osv = self.pool['account.move.line']
         result = {}
         move_lines = move_line_osv.browse(cr, uid, ids, context=context)
         for move_line in move_lines:
@@ -307,7 +307,7 @@ class account_move_line(osv.osv):
                             view_type=view_type, context=context,
                             toolbar=toolbar, submenu=False)
 
-        ans_obj = self.pool.get('analytic.structure')
+        ans_obj = self.pool['analytic.structure']
 
         # display analysis codes only when present on a related structure,
         # with dimension name as label
@@ -338,8 +338,8 @@ class account_move_line(osv.osv):
             context = {}
         if not context.get('journal_id', False):
             return False
-        jrn = self.pool.get('account.journal').browse(cr, uid,
-                                                      context['journal_id'])
+        jrn = self.pool['account.journal'].browse(cr, uid,
+                                                  context['journal_id'])
         cur = jrn.currency and jrn.currency.id or jrn.company_id.currency_id.id
         return cur or False
 
@@ -375,7 +375,7 @@ class account_move_line(osv.osv):
                                                            fields,
                                                            context=context)
 
-        move_obj = self.pool.get('account.move')
+        move_obj = self.pool['account.move']
         if context.get('journal_id'):
             total_curr = 0.0
             # in account.move form view, it is not possible total
@@ -416,8 +416,8 @@ class account_move_line(osv.osv):
             context = {}
 
         # some data to evaluate
-        account_obj = self.pool.get('account.account')
-        cur_obj = self.pool.get('res.currency')
+        account_obj = self.pool['account.account']
+        cur_obj = self.pool['res.currency']
         amount_trans = vals.get('amount_currency', 0.0)
         amount_curr = (
             vals.get('debit_curr', 0.0) -
@@ -493,7 +493,7 @@ class account_move_line(osv.osv):
             date=date, journal=journal, context=context
         )
         # the context is already updated by the previous statement
-        context_rate = currency_id and self.pool.get('res.currency').browse(
+        context_rate = currency_id and self.pool['res.currency'].browse(
             cr, uid, currency_id, context=context).rate
 
         if 'value' in result:
@@ -598,52 +598,90 @@ class account_move_line(osv.osv):
             cr, uid, vals, context=context
         )
 
-    def reconcile(self, cr, uid, ids, type='auto',
-                  writeoff_acc_id=False, writeoff_period_id=False,
-                  writeoff_journal_id=False, context=None):
-        '''This method is completely overridden in ordering
-        to include a full multicurrency support
-        The context will determine if second currency is used
-        for reconciliation or not 'reconcile_second_currency'
-        In addition, when matching the transaction amounts,
-        differences must be processed as both exchange difference and
-        write-off, when applicable. Finally, the original code is
-        documented for an easier maintenance.
-        '''
-        account_obj = self.pool.get('account.account')
-        move_obj = self.pool.get('account.move')
-        move_rec_obj = self.pool.get('account.move.reconcile')
-        partner_obj = self.pool.get('res.partner')
-        currency_obj = self.pool.get('res.currency')
+    def _get_lines_to_reconcile(self, cr, uid, ids, context={}):
+        """This method make several integrity checks, and return the
+        lines that are not reconciled among the ids provided.
+        :param cr: cursor
+        :param uid: user id
+        :param ids: list of id (int or long) of move lines
+        :param context: the context (a dictionary)
+        :return: iterable of browse_record
+        """
+        if context is None:
+            context = {}
+        # if some lines are already reconciled, they are just ignored
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
+
+        # Better than a constraint in the account_move_reconcile object
+        # as it would be raised at the end, wasting time and resources
+        if not unrec_lines:
+            raise osv.except_osv(
+                _('Error!'),
+                _('Entry is already reconciled.')
+            )
+            
+        # Maybe change the SELECT to use count(distinct (a,p))?
+        cr.execute('SELECT account_id, partner_id '
+                   'FROM account_move_line '
+                   'WHERE id IN %s '
+                   'GROUP BY account_id,partner_id',
+                   (tuple(ids),))
+        r = cr.fetchall()
+        if len(r) > 1:
+            raise osv.except_osv(
+                _('Error!'),
+                _('All entries must have the same account AND same partner '
+                  'to be reconciled.')
+                )
+
+        return unrec_lines
+
+    def _compute(self, cr, uid, unrec_lines, context={}):
+        """Compute debit and credit and some associated values on a list of
+        unreconciled move lines.
+        Also do the following checks::
+        - that each line is valid,
+        - that each line are on the same company
+        - that all line have the same second currency if not reconciling on
+        company currency.
+        """
         credit = debit = credit_curr = debit_curr = 0.0
         amount_currency_writeoff = writeoff = currency_rate_difference = 0.0
         account_id = False
         partner_id = False
         currency_id = False
-
-        if context is None:
-            context = {}
-
+        # XXX a SQL request might faster there (rather than calculating until
+        # a company is not in the list
         company_list = []
-        for line in self.browse(cr, uid, ids, context=context):
-            if company_list and not line.company_id.id in company_list:
-                raise osv.except_osv(
-                    _('Warning!'),
-                    _('To reconcile the entries company '
-                      'should be the same for all entries.')
-                )
-            company_list.append(line.company_id.id)
+        # unrec_ids will be used to store all the id for this reconcile, and
+        # also all the newly created lines too
+        unrec_ids = []
+        is_partial = context.get('reconcile_partial', False)
+        # Added to avoid trying to add same lines twice if doing partial
+        merges_rec = set()
 
         for line in unrec_lines:
             # these are the received lines filtered out of already reconciled
             # lines we compute allocation totals in both currencies
+
+            account_id = line.account_id.id
+            partner_id = line.partner_id and line.partner_id.id or False
+            currency_id = line.currency_id and line.currency_id.id or False
+
             if line.state != 'valid':
                 raise osv.except_osv(
                     _('Error!'),
                     _('Entry "%s" is not valid!') % line.name
                 )
+
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(
+                    _("Warning!"),
+                    _("To reconcile the entries company "
+                      "should be the same for all entries.")
+                )
+            company_list.append(line.company_id.id)
 
             # control on second currency : must always be the same
             if (
@@ -651,17 +689,9 @@ class account_move_line(osv.osv):
                 currency_id and not currency_id == line['currency_id']['id']
             ):
                 raise osv.except_osv(
-                    _('Error!'),
-                    _('All entries must have the same second currency! '
-                      'Reconcile on company currency otherwise.')
-                )
-            # control on account : reconciliation must be on one account only
-            # TODO : check accuracy of this control
-            if account_id and not account_id == line['account_id']['id']:
-                raise osv.except_osv(
-                    _('Error!'),
-                    _('All entries must have the same '
-                      'account to be reconciled.')
+                    _("Error!"),
+                    _("All entries must have the same second currency! "
+                      "Reconcile on company currency otherwise.")
                 )
 
             credit += line.credit or 0.0
@@ -673,24 +703,37 @@ class account_move_line(osv.osv):
                 (line.debit_curr or 0.0) - (line.credit_curr or 0.0)
             )
 
-            account_id = line.account_id.id
-            partner_id = line.partner_id and line.partner_id.id or False
-            currency_id = line.currency_id and line.currency_id.id or False
+            # get only relevant ids of lines to reconcile
+            unrec_ids.append(line.id)
+            # if the reconcile is partial, count also non reconciled but
+            # partially reconciled lines with same partial id as one
+            # of our reconciled line
+            if (
+                is_partial
+                and line.reconcile_partial_id
+                and line.reconcile_partial_id not in merges_rec
+            ):
+                merges_rec.add(object)
+                for line2 in line.reconcile_partial_id.line_partial_ids:
+                    if not line2.reconcile_id:
+                        if line2.id not in unrec_lines:
+                            # only put it at the end
+                            unrec_lines.append(line2.id)
 
-        # we need some browse records
+        # Get account to check for reconcile flag
+        account_obj = self.pool['account.account']
         account = account_obj.browse(cr, uid, account_id, context=context)
-        company_currency = account.company_id.currency_id
-        currency = currency_obj.browse(cr, uid, currency_id, context=context)
+        if not account.reconcile:
+            raise osv.except_osv(
+                _("Error"),
+                _("The account is not defined to be reconciled!")
+            )
 
+        company_currency = account.company_id.currency_id
+        currency_obj = self.pool['res.currency']
+        currency = currency_obj.browse(cr, uid, currency_id, context=context)
         # Use date in context or today
         date = context.get('date_p', time.strftime('%Y-%m-%d'))
-        # If date_p in context => take this date
-        # this is so old school...
-        # if context.has_key('date_p') and context['date_p']:
-        #     date = context['date_p']
-        # else:
-        #     date = time.strftime('%Y-%m-%d')
-
         # We will be using a context key to define the
         # reconciliation currency (base or trans)
         if context.get('reconcile_second_currency', True):
@@ -704,24 +747,104 @@ class account_move_line(osv.osv):
         else:
             writeoff = debit - credit
 
-        cr.execute('SELECT account_id, reconcile_id '
-                   'FROM account_move_line '
-                   'WHERE id IN %s '
-                   'GROUP BY account_id,reconcile_id',
-                   (tuple(ids),))
-        r = cr.fetchall()
-        # TODO: move this check to a constraint in the
-        # account_move_reconcile object
-        if not unrec_lines:
-            raise osv.except_osv(
-                _('Error!'),
-                _('Entry is already reconciled.')
-            )
-        if r[0][1] is not None:
-            raise osv.except_osv(
-                _('Error!'),
-                _('Some entries are already reconciled.')
-            )
+        return (credit, debit, credit_curr, debit_curr,
+            amount_currency_writeoff, writeoff, currency_rate_difference,
+            account, partner_id , currency, unrec_ids, merges_rec
+        )
+
+    def reconcile_partial(self, cr, uid, ids, type='auto',
+                          writeoff_acc_id=False, writeoff_period_id=False,
+                          writeoff_journal_id=False, context=None):
+        """This method is completely overridden in order
+        to include a full multicurrency support
+        The context will determine if second currency is used
+        for reconciliation or not 'reconcile_second_currency'
+        Many optimisations and integrity controls are added.
+        Finally, the original code is documented for an easier maintenance.
+        """
+        move_rec_obj = self.pool['account.move.reconcile']
+        if context is None:
+            context = {}
+        # if some lines are already reconciled, they are just ignored
+        unrec_lines = self._get_lines_to_reconcile(cr, uid, ids, context)
+
+        compute_context = dict(context, reconcile_partial=True)
+        (credit, debit, credit_curr, debit_curr, amount_currency_writeoff,
+            writeoff, currency_rate_difference, account_id, partner_id ,
+            currency_id, unrec_ids, merges_rec) = self._compute(
+                cr, uid, unrec_lines, compute_context)
+
+        # FIXME when to do normal reconcile? maybe base on writeoff?
+        if self.pool['res.currency'].is_zero(cr, uid, currency_id, writeoff):
+            # TODO split reconcile in two to avoid doing _check/_compute twice
+            res = self.reconcile(
+                cr, uid, unrec_ids, context=context,
+                writeoff_acc_id=writeoff_acc_id,
+                writeoff_period_id=writeoff_period_id,
+                writeoff_journal_id=writeoff_journal_id)
+            return res
+        # marking the lines as reconciled does not change their validity, so there is no need
+        # to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
+        r_id = move_rec_obj.create(cr, uid,
+                                   {'type': type,
+                                    },
+                                   context=reconcile_context)
+        # Do not use the magic tuples as it is extremely costly on large collections
+        # XXX we do not need to put reconcile_id to None/False, right?
+        self.write(cr, uid, unrec_ids, {'reconcile_partial_id': r_id,
+                                        },
+                   context=reconcile_context)
+        merges_rec.add(r_id)
+        # FIXME This method does not do any currency magic, it might need to
+        # be replaced
+        move_rec_obj.reconcile_partial_check(
+            cr, uid, list(merges_rec), context=reconcile_context)
+        return True
+
+    def reconcile(self, cr, uid, ids, type='auto',
+                  writeoff_acc_id=False, writeoff_period_id=False,
+                  writeoff_journal_id=False, context=None):
+        """This method is completely overridden in order
+        to include a full multicurrency support
+        The context will determine if second currency is used
+        for reconciliation or not 'reconcile_second_currency'
+        In addition, when matching the transaction amounts,
+        differences must be processed as both exchange difference and
+        write-off, when applicable. Many optimisations and integrity
+        controls are added. Finally, the original code is
+        documented for an easier maintenance.
+        """
+        move_obj = self.pool['account.move']
+        move_rec_obj = self.pool['account.move.reconcile']
+        partner_obj = self.pool['res.partner']
+        currency_obj = self.pool['res.currency']
+
+        # if some lines are already reconciled, they are just ignored
+        unrec_lines = self._get_lines_to_reconcile(cr, uid, ids, context)
+
+        if context is None:
+            context = {}
+
+        # unrec_ids will be used to store all the id for this reconcile, and
+        # also all the newly created lines too
+
+        (credit, debit, credit_curr, debit_curr, amount_currency_writeoff,
+            writeoff, currency_rate_difference, account, partner_id ,
+            currency, unrec_ids, partial_reconcile_ids) = self._compute(
+                cr, uid, unrec_lines, context)
+
+        # we need some browse records
+        company_currency = account.company_id.currency_id
+
+        # Use date in context or today
+        date = context.get('date_p', time.strftime('%Y-%m-%d'))
+        # If date_p in context => take this date
+        # this is so old school...
+        # if context.has_key('date_p') and context['date_p']:
+        #     date = context['date_p']
+        # else:
+        #     date = time.strftime('%Y-%m-%d')
 
         if context.get('fy_closing'):
             # We don't want to generate any write-off
@@ -773,11 +896,11 @@ class account_move_line(osv.osv):
                         'name': libelle,
                         'debit': self_debit,
                         'credit': self_credit,
-                        'account_id': account_id,
+                        'account_id': account.id,
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': 0.0
@@ -793,7 +916,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': 0.0
@@ -814,13 +937,15 @@ class account_move_line(osv.osv):
                     cr, uid,
                     [
                         ('move_id', '=', exchange_diff_move_id),
-                        ('account_id', '=', account_id)
+                        ('account_id', '=', account.id)
                     ]
                 )
                 # the following case should never happen but still...
-                if account_id == exchange_diff_acc_id:
+                if account.id == exchange_diff_acc_id:
                     exchange_diff_line_ids = [exchange_diff_line_ids[1]]
-                ids += exchange_diff_line_ids
+
+                # add the created lines to the reconcile block
+                unrec_ids += exchange_diff_line_ids
 
             # create write off transaction
             if not currency_obj.is_zero(cr, uid, company_currency, writeoff):
@@ -851,11 +976,11 @@ class account_move_line(osv.osv):
                         'name': libelle,
                         'debit': self_debit,
                         'credit': self_credit,
-                        'account_id': account_id,
+                        'account_id': account.id,
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency':-1 * amount_currency_writeoff
@@ -871,7 +996,7 @@ class account_move_line(osv.osv):
                         'date': date,
                         'partner_id': partner_id,
                         'currency_id': (
-                            currency_id or
+                            currency.id or
                             (account.currency_id.id or False)
                         ),
                         'amount_currency': amount_currency_writeoff
@@ -894,39 +1019,46 @@ class account_move_line(osv.osv):
                     cr, uid,
                     [
                         ('move_id', '=', writeoff_move_id),
-                        ('account_id', '=', account_id)
+                        ('account_id', '=', account.id)
                     ],
                 )
                 # the following case should never happen but still...
-                if account_id == writeoff_acc_id:
+                if account.id == writeoff_acc_id:
                     writeoff_line_ids = [writeoff_line_ids[1]]
-                ids += writeoff_line_ids
 
-        r_id = move_rec_obj.create(cr, uid, {
-            'type': type,
-            'line_id': map(lambda x: (4, x, False), ids),
-            'line_partial_ids': map(lambda x: (3, x, False), ids)
-        })
+                # add the created lines to the reconcile block
+                unrec_ids += writeoff_line_ids
+
+        # marking the lines as reconciled does not change their validity,
+        # so there is no need to revalidate their moves completely.
+        reconcile_context = dict(context, novalidate=True)
+        r_id = move_rec_obj.create(cr, uid,
+                                   {'type': type,
+                                    },
+                                   context=reconcile_context)
+
+        # Do not use the magic tuples as it is extremely costly on large collections
+        self.write(cr, uid, unrec_ids, {'reconcile_id': r_id,
+                                        'reconcile_partial_id': False,
+                                        },
+                   context=context)
+
         wf_service = netsvc.LocalService("workflow")
-        # the id of the move.reconcile is written in
-        # the move.line (self) by the create method above
-        # because of the way the line_id are defined: (4, x, False)
-        for id in ids:
+        # trigger the workflow on any item listening to move lines
+        for id in unrec_ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
-        if lines and lines[0]:
-            partner_id = (
-                lines[0].partner_id and
-                lines[0].partner_id.id or
-                False
+        # tested before in the method that there is an unrec_line
+        # also done before is finding partner_id that need to be the same
+        # for all unrec_lines
+        if (
+            partner_id and
+            not partner_obj.has_something_to_reconcile(
+                cr, uid, partner_id, context=context
             )
-            if (
-                partner_id and
-                not partner_obj.has_something_to_reconcile(
-                    cr, uid, partner_id, context=context
-                )
-            ):
-                partner_obj.mark_as_reconciled(
-                    cr, uid, [partner_id], context=context
-                )
+        ):
+            partner_obj.mark_as_reconciled(
+                cr, uid, [partner_id], context=context
+            )
+
         return r_id

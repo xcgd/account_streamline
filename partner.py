@@ -31,7 +31,7 @@ class res_partner_needaction(osv.Model):
     _inherit = ['res.partner', 'mail.thread', 'ir.needaction_mixin']
 
     def _check_supplier_account(self, cr, uid, ids, name, args, context=None):
-        account_osv = self.pool.get('account.account')
+        account_osv = self.pool['account.account']
         res = dict()
         partners = self.browse(cr, uid, ids, context=context)
 
@@ -52,7 +52,7 @@ class res_partner_needaction(osv.Model):
         return res
 
     def _check_customer_account(self, cr, uid, ids, name, args, context=None):
-        account_osv = self.pool.get('account.account')
+        account_osv = self.pool['account.account']
         res = dict()
         partners = self.browse(cr, uid, ids, context=context)
 
@@ -76,7 +76,7 @@ class res_partner_needaction(osv.Model):
         'property_account_payable': {
             'account_streamline.mt_partner_supplier': (
                 lambda self, cr, uid, obj, ctx=None: (
-                    not self.pool.get('account.account').browse(
+                    not self.pool['account.account'].browse(
                         cr, uid,
                         obj['property_account_payable'],
                         context=ctx
@@ -87,7 +87,7 @@ class res_partner_needaction(osv.Model):
         'property_account_receivable': {
             'account_streamline.mt_partner_customer': (
                 lambda self, cr, uid, obj, ctx=None: (
-                    not self.pool.get('account.account').browse(
+                    not self.pool['account.account'].browse(
                         cr, uid,
                         obj['property_account_receivable']
                     ).type == 'receivable'
@@ -132,7 +132,7 @@ class res_partner_needaction(osv.Model):
         cur_id = super(res_partner_needaction, self).create(
             cr, uid, values, context=context)
 
-        obj = self.pool.get('ir.model.data')
+        obj = self.pool['ir.model.data']
         followers = [
             follower.id for follower in obj.get_object(
                 cr, uid, 'account_streamline', 'group_account_creators'
@@ -153,7 +153,7 @@ class res_partner_needaction(osv.Model):
         self.message_subscribe(cr, uid, [cur_id], followers, subtypes,
                                context=context)
 
-        account_osv = self.pool.get('account.account')
+        account_osv = self.pool['account.account']
         supplier = values.get('supplier', None)
         customer = values.get('customer', None)
         p_accnt_receivable = values.get('property_account_receivable', False)
@@ -188,14 +188,14 @@ class res_partner_needaction(osv.Model):
         # get domain from parent object if exists
         dom = super(res_partner_needaction, self)._needaction_domain_get(
             cr, uid, context=context)
-        obj = self.pool.get('ir.model.data')
+        obj = self.pool['ir.model.data']
         followers = obj.get_object(
             cr, uid,
             'account_streamline',
             'group_account_creators'
         ).message_follower_ids
 
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
 
         if user.partner_id in followers:
             mydom = [

@@ -107,7 +107,7 @@ class good_to_pay(osv.osv_memory):
             "'state_line_ids': 'entering_wizard'}"
         )
 
-        aml_obj = self.pool.get('account.move.line')
+        aml_obj = self.pool['account.move.line']
         move_lines = aml_obj.search(
             cr, uid,
             move_line_domain + [
@@ -145,7 +145,7 @@ class good_to_pay(osv.osv_memory):
         if 'active_ids' in context:
             del context['active_ids']
 
-        return (self.pool.get('payment.suggestion')
+        return (self.pool['payment.suggestion']
                 .print_payment_suggestion(cr, uid, active_ids,
                                           context=context))
 
@@ -155,7 +155,7 @@ class good_to_pay(osv.osv_memory):
         :return False and the first partner having a debit balance, otherwise
         return True.
         """
-        aml_osv = self.pool.get('account.move.line')
+        aml_osv = self.pool['account.move.line']
 
         for partner_id, line_ids in context_saved['lines_by_partner'].items():
             total_credit = 0.0
@@ -176,7 +176,7 @@ class good_to_pay(osv.osv_memory):
         Return those partners associated with their accounts in a dictionary.
         """
 
-        aml_osv = self.pool.get('account.move.line')
+        aml_osv = self.pool['account.move.line']
         partner_dict = {}
         conflicts = {}
         lines = aml_osv.browse(cr, uid, line_ids, context=context)
@@ -205,8 +205,8 @@ class good_to_pay(osv.osv_memory):
         """Return a dialog box-friendly representation of the conflicts."""
 
         tr_accounts = tr_partners = unt_accounts = unt_partners = 0
-        partner_osv = self.pool.get('res.partner')
-        account_osv = self.pool.get('account.account')
+        partner_osv = self.pool['res.partner']
+        account_osv = self.pool['account.account']
         partner_ids = conflicts.keys()
         msg = _(
             u"Different accounts are being referred for the same partner(s):"
@@ -251,10 +251,10 @@ class good_to_pay(osv.osv_memory):
 
     def good_to_pay(self, cr, uid, ids, context=None):
 
-        aml_osv = self.pool.get('account.move.line')
-        avl_osv = self.pool.get('account.voucher.line')
-        voucher_osv = self.pool.get('account.voucher')
-        journal_osv = self.pool.get('account.journal')
+        aml_osv = self.pool['account.move.line']
+        avl_osv = self.pool['account.voucher.line']
+        voucher_osv = self.pool['account.voucher']
+        journal_osv = self.pool['account.journal']
 
         supplier_to_voucher_map = dict()
         voucher_amounts = dict()
@@ -336,7 +336,7 @@ class good_to_pay(osv.osv_memory):
 
                     vals['account_id'] = account_id
 
-                    bank_osv = self.pool.get("res.partner.bank")
+                    bank_osv = self.pool['res.partner.bank']
                     bank_id = bank_osv.search(
                         cr, uid, [('partner_id', '=', partner_id)],
                         context=context
@@ -495,7 +495,7 @@ class good_to_pay(osv.osv_memory):
         }
 
     def __entering_wizard(self, cr, uid, ids, list_ids, context):
-        move_line_osv = self.pool.get('account.move.line')
+        move_line_osv = self.pool['account.move.line']
         reads = move_line_osv.read(
             cr, uid, list_ids, ['partner_id'], context=context
         )
@@ -575,7 +575,7 @@ class good_to_pay(osv.osv_memory):
         return res
 
     def __add_line(self, cr, uid, ids, context):
-        move_line_osv = self.pool.get('account.move.line')
+        move_line_osv = self.pool['account.move.line']
         reads = move_line_osv.read(
             cr, uid, ids, ['partner_id'], context
         )
@@ -598,7 +598,7 @@ class good_to_pay(osv.osv_memory):
         line_ids = itertools.chain.from_iterable(
             context['lines_by_partner'].values()
         )
-        aml_osv = self.pool.get('account.move.line')
+        aml_osv = self.pool['account.move.line']
         reads = aml_osv.read(cr, uid, line_ids, ['credit', 'debit'], context)
         total_credit = reduce(
             lambda x, y: x + y, [read['credit'] for read in reads]
