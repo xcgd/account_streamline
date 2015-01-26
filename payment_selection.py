@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Account Analytic Online, for OpenERP
-#    Copyright (C) 2013 XCG Consulting (www.xcg-consulting.fr)
+#    Copyright (C) 2013-2015 XCG Consulting (www.xcg-consulting.fr)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -45,7 +45,7 @@ move_line_domain = [
 ]
 
 
-class good_to_pay(osv.osv_memory):
+class good_to_pay(osv.TransientModel):
     """create vouchers for all invoices that have been selected
     """
 
@@ -273,15 +273,7 @@ class good_to_pay(osv.osv_memory):
                 )
 
             context_saved = leval(form['context_saved'])
-            test, partner_name = self.__check_partner_debits(
-                cr, uid, context_saved, context
-            )
-            if not test:
-                raise osv.except_osv(
-                    _('Error'),
-                    _('The voucher for the partner %s is debit.' %
-                      partner_name)
-                )
+            # Both debit and credit are allowed, no checks anymore
             auto = form['generate_report']
             active_ids = list(
                 itertools.chain.from_iterable(
@@ -294,7 +286,7 @@ class good_to_pay(osv.osv_memory):
                 # first we need to make sure the line is acceptable to be
                 # used in a voucher (ie: account is marked as payable
 
-                if not aml.account_id.type == 'payable':
+                if aml.account_id.type not in ('payable', 'receivable'):
                     msg = msg_invalid_line_type % aml.account_id.type
                     raise osv.except_osv(_('Error!'), msg)
 
