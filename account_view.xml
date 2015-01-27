@@ -11,11 +11,11 @@
                 <xpath expr="//label[@for='note']" position="before">
                     <separator string="Static Analytic"/>
                     <group col="2" colspan="2">
-                        <div class="oe_analytic" />
+                      <field name="analytic_dimensions" />
                     </group>
                     <separator string="Dynamic Analytic"/>
                     <group col="2" colspan="2">
-                        <div class="oe_analytic" prefix="t" suffix="ctl" />
+                        <field name="analytic_dimensions" prefix="t" suffix="ctl" />
                     </group>
                     <separator/>
                 </xpath>
@@ -28,7 +28,7 @@
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
-                    <!-- TODO Change this to a button tag on Odoo 8 (doesn't work on Odoo 7)... -->
+                  <field name="analytic_dimensions" />
                     <div class="oe_analytic" />
                 </xpath>
             </field>
