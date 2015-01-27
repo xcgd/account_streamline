@@ -14,7 +14,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='parent_id']" position="after">
-                    <button class="oe_analytic" />
+                  <field name="analytic_dimensions" />
                 </xpath>
             </field>
         </record>
@@ -28,7 +28,7 @@
                     <xpath expr="//notebook" position="inside">
                         <page string="Analytic Static" attrs="{'invisible': [('is_company','=', False)]}">
                             <group>
-                                <div class="oe_analytic" />
+                              <field name="analytic_dimensions" />
                             </group>
                         </page>
                     </xpath>

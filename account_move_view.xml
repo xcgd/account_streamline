@@ -77,7 +77,7 @@
                                     <field name="amount_currency"
                                         invisible="1" />
                                     <field name="state" invisible="1" />
-                                    <div class="oe_analytic" />
+                                    <field name="analytic_dimensions" readonly="True" />
                                 </tree>
                             </field>
                         </page>
@@ -100,7 +100,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@string='Reconciliation']" position="after">
                     <group string="Analytic Static">
-                        <div class="oe_analytic" />
+                      <field name="analytic_dimensions" />
                     </group>
                 </xpath>
             </field>
