@@ -77,7 +77,7 @@
                                     <field name="amount_currency"
                                         invisible="1" />
                                     <field name="state" invisible="1" />
-                                    <field name="analytic_dimensions" readonly="True" />
+                                    <field name="analytic_dimensions" />
                                 </tree>
                             </field>
                         </page>

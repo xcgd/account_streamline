@@ -27,7 +27,7 @@
                     <field readonly="1" name="debit" sum="Total Debit"/>
                     <field readonly="1" name="credit" sum="Total Credit"/>
                     <field readonly="1" name="account_tax_id"/>
-                    <field name="analytic_dimensions" readonly="True" />
+                    <field name="analytic_dimensions" />
                 </tree>
             </field>
         </record>
