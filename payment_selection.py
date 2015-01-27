@@ -286,7 +286,10 @@ class good_to_pay(osv.TransientModel):
                     vals['partner_id'] = partner_id
                     # id is stored in fist column, name in second column
                     vals['journal_id'] = form['journal_id'][0]
-                    vals['type'] = 'payment'
+                    if aml.account_id.type in ('payable'):
+                        vals['type'] = 'payment'
+                    if aml.account_id.type in ('receivable'):
+                        vals['type'] = 'receipt'
                     journal = journal_osv.browse(
                         cr, uid, vals['journal_id'])
                     vals['amount'] = 0.0
