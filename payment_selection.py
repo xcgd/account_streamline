@@ -28,7 +28,8 @@ from openerp.tools.translate import _
 
 
 msg_invalid_line_type = _('Account type %s is not usable in payment vouchers.')
-msg_invalid_partner_type = _('Partner %s is not a supplier.')
+msg_invalid_partner_type_supplier = _('Partner %s is not a supplier.')
+msg_invalid_partner_type_customer = _('Partner %s is not a customer.')
 msg_define_dc_on_journal = _(
     'Please define default credit/debit accounts on the journal "%s".')
 msg_already_reconciled = _(
@@ -269,8 +270,17 @@ class good_to_pay(osv.TransientModel):
                     msg = msg_invalid_line_type % aml.account_id.type
                     raise osv.except_osv(_('Error!'), msg)
 
-                if not aml.partner_id or not aml.partner_id.supplier:
-                    msg = msg_invalid_partner_type % aml.partner_id.name
+                if (
+                    aml.account_id.type == 'payable'
+                    and (not aml.partner_id or not aml.partner_id.supplier)
+                ):
+                    msg = msg_invalid_partner_type_supplier % aml.partner_id.name
+                    raise osv.except_osv(_('Error!'), msg)
+                if (
+                    aml.account_id.type == 'receivable'
+                    and (not aml.partner_id or not aml.partner_id.customer)
+                ):
+                    msg = msg_invalid_partner_type_customer % aml.partner_id.name
                     raise osv.except_osv(_('Error!'), msg)
 
                 if aml.reconcile_id:
