@@ -9,6 +9,16 @@ from openerp.tools.translate import _
 class payment_suggestion(orm.TransientModel):
     _name = 'payment.suggestion'
 
+    def _get_report_name(
+        self, cr, uid, ids, field_name, arg, context=None):
+        """Give the payment suggestion report name for storing
+        """
+        # Do not change to a dictionary comprehension, it would break this 
+        result = dict()
+        for voucher_id in ids:
+            result[voucher_id] = _("PaymentSuggestion.pdf")
+        return result
+
     _columns = {
         'voucher_ids': fields.many2many(
             'account.voucher',
@@ -16,6 +26,12 @@ class payment_suggestion(orm.TransientModel):
             'payment_suggestion_id',
             'voucher_id',
             _('Vouchers')),
+        'report_name': fields.function(
+            _get_report_name,
+            method=True,
+            type='text',
+            store=False,
+        ),
     }
 
     def print_payment_suggestion(self, cr, uid, ids, context=None):

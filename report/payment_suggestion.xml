@@ -7,7 +7,7 @@
         <report id="account_streamline.payment_suggestion" name="account_streamline.payment_suggestion"
             auto="False" model="payment.suggestion"
             file="account_streamline/report/payment_suggestion.mako" string="Payment Suggestion"
-            webkit_header="account_streamline.voucher_report_header" attachment="'PaymentSuggestion'"
+            webkit_header="account_streamline.voucher_report_header" attachment="object.report_name"
             report_type="webkit" attachment_use="True" usage="default" />
 
     </data>
