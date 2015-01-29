@@ -581,19 +581,17 @@ class good_to_pay(osv.TransientModel):
 
     def __compute_sum_and_nb_lines(self, cr, uid, context):
         res = {}
-        line_ids = itertools.chain.from_iterable(
-            context['lines_by_partner'].values()
-        )
+        all_line_ids = []
+        for line_ids in context['lines_by_partner'].values():
+            all_line_ids.extend(line_ids)
         aml_osv = self.pool['account.move.line']
-        reads = aml_osv.read(cr, uid, line_ids, ['credit', 'debit'], context)
-        total_credit = reduce(
-            lambda x, y: x + y, [read['credit'] for read in reads]
-        )
-        total_debit = reduce(
-            lambda x, y: x + y, [read['debit'] for read in reads]
-        )
-        res['total_amount'] = total_credit - total_debit
-        res['nb_lines'] = len(reads)
+        res['total_amount'] = 0
+        aml_brl = aml_osv.browse(cr, uid, all_line_ids, context)
+        for aml_br in aml_brl:
+            res['total_amount'] += (aml_br.credit - aml_br.debit) * (
+                1 if aml_br.account_id.type == 'payable' else -1
+            )
+        res['nb_lines'] = len(aml_brl)
         return res
 
     def __add_del_element(
