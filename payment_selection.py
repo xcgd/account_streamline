@@ -382,6 +382,8 @@ class good_to_pay(osv.TransientModel):
                 # Add credits, substract debits.
                 voucher_amounts[voucher_id] += avl.amount_unreconciled * (
                     1 if aml.credit else -1
+                ) * (
+                    1 if aml.account_id.type == 'payable' else -1
                 )
 
             # once every voucher is finished we recompute the voucher totals
