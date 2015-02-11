@@ -54,7 +54,6 @@ ${css}
 
 .address .shipping{
     margin-top:10px;
-    margin-left:0px;
     font-size: 12px;
     font-weight: bold;
     }
