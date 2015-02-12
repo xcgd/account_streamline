@@ -38,30 +38,26 @@ ${css}
 .addressleft,
 .addressright {
     width: 50%;
-    margin: 10px 0;
-    font-size: 16px;
+    margin: 20px 0;
 }
 
 .addressleft {
     float: left;
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .addressright {
     float: right;
-    margin-top: 30px;
+    margin-top: 50px;
 }
 
 .address .shipping{
     margin-top:10px;
-    font-size: 12px;
-    font-weight: bold;
+    margin-left:10px;
     }
 
 .address .recipient {
     margin-top: 15px;
-    font-size: 12px;
-    font-weight: bold;
 }
 
 .address td.addresstitle {
@@ -106,8 +102,8 @@ ${css}
     text-align: center;
     font-size: 12px;
     font-weight: bold;
-    padding-right: 3px
-    padding-left: 3px
+    padding-right: 3px;
+    padding-left: 3px;
     border-bottom: 1px solid lightGrey;
 }
 
