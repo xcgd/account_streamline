@@ -1217,6 +1217,11 @@ msgstr "Sélection de paiements bons à payer"
 msgid "Simple View"
 msgstr "Vue simple"
 
+#. module: account_streamline
+#: view:account.voucher:0
+msgid "Journal Items"
+msgstr "Ecritures Comptables"
+
 #, python-format
 #~ msgid "The voucher for the partner %s is debit."
 #~ msgstr "Le bon pour le partenaire %s est débiteur."
