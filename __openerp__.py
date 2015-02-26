@@ -20,7 +20,7 @@
 ##############################################################################
 {
     "name": "Account Streamline",
-    "version": '1.14.3',
+    "version": '1.17',
     "author": "XCG Consulting",
     "category": 'Accounting',
     "description": """Enhancements to the account module to streamline its
