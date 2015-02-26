@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-28 11:01+0000\n"
-"PO-Revision-Date: 2015-01-28 12:02+0200\n"
+"PO-Revision-Date: 2015-02-26 14:44+0200\n"
 "Last-Translator: Vincent Hatakeyama <vincent.lhote@xcg-consulting.fr>\n"
 "Language-Team: XCG Consulting\n"
 "Language: fr\n"
@@ -395,7 +395,8 @@ msgstr "Marquer en Bon à payer"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view or consolidation."
 msgstr ""
-"You cannot create journal items on an account of type view or consolidation."
+"Vous ne pouvez créer d’écriture comptable sur un compte de type vue ou "
+"consolidation."
 
 #. module: account_streamline
 #: view:email.remittance:0
@@ -737,7 +738,7 @@ msgstr "Statut"
 #. module: account_streamline
 #: view:res.partner:0
 msgid "Unread"
-msgstr "Non-lu"
+msgstr "Non lu"
 
 #. module: account_streamline
 #: field:account.move.line.goodtopay,context_saved:0
@@ -1198,7 +1199,7 @@ msgstr "Partenaire sélectionné"
 #: field:res.company,remittance_letter_top:0
 #, python-format
 msgid "Remittance Letter - top message"
-msgstr "Avis de règlement - Message du haut"
+msgstr "Avis de règlement - message du haut"
 
 #. module: account_streamline
 #: code:addons/account_streamline/partner.py:169
@@ -1220,7 +1221,16 @@ msgstr "Vue simple"
 #. module: account_streamline
 #: view:account.voucher:0
 msgid "Journal Items"
-msgstr "Ecritures Comptables"
+msgstr "Écritures Comptables"
+
+#. module: account
+#: view:account.unreconcile:0
+msgid ""
+"If you unreconcile transactions, you must also verify all the actions that "
+"are linked to those transactions because they will not be disabled"
+msgstr ""
+"Si vous annulez ces lettrages, vous devez aussi vérifier tous les éléments "
+"qui sont liés à ces écritures car ils ne seront pas désactivés"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
@@ -1234,52 +1244,3 @@ msgstr "Factures fournisseurs"
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
 msgstr "Paiements clients"
-
-#, python-format
-#~ msgid "The voucher for the partner %s is debit."
-#~ msgstr "Le bon pour le partenaire %s est débiteur."
-
-#~ msgid "Payments Selection"
-#~ msgstr "Sélection de paiements"
-
-#, python-format
-#~ msgid "Some entries are already reconciled."
-#~ msgstr "Plusieurs entrées sont déjà lettrées."
-
-#, python-format
-#~ msgid "All entries must have the same account to be reconciled."
-#~ msgstr "Toutes les écritures doivent avoir le même compte pour être lettrés."
-
-#~ msgid "You cannot create journal items on an account of type view."
-#~ msgstr ""
-#~ "Vous ne pouvez pas créer d’écriture comptable sur un compte de type vue."
-
-#, python-format
-#~ msgid "Entry \"%s\" is not valid !"
-#~ msgstr "L’entrée « %s » n'est pas valide !"
-
-#~ msgid "status"
-#~ msgstr "état"
-
-#~ msgid ""
-#~ "If you unreconcile transactions, you must also verify all the actions that "
-#~ "are linked to those transactions because they will not be disabled"
-#~ msgstr ""
-#~ "Si vous annulez ces lettrages, vous devez aussi vérifier tous les éléments "
-#~ "qui sont liés à ces écritures car ils ne seront pas désactivés"
-
-#~ msgid "Active in Reporting"
-#~ msgstr "Actif dans les rapports"
-
-#~ msgid "Total:"
-#~ msgstr "Total :"
-
-#~ msgid "when selected, only the financial manager can read and write"
-#~ msgstr ""
-#~ "Lorsqu'il est activé, seul le directeur financier peut lire et écrire"
-
-#~ msgid "Sent emails"
-#~ msgstr "Emails envoyés"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
