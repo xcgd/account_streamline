@@ -1222,6 +1222,19 @@ msgstr "Vue simple"
 msgid "Journal Items"
 msgstr "Ecritures Comptables"
 
+#. module: account
+#: model:ir.actions.act_window,name:account.action_invoice_tree2
+#: model:ir.ui.menu,name:account.menu_action_invoice_tree2
+msgid "Supplier Invoices"
+msgstr "Factures Fournisseurs"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
+msgid "Customer Payments"
+msgstr "Paiements Clients"
+
 #, python-format
 #~ msgid "The voucher for the partner %s is debit."
 #~ msgstr "Le bon pour le partenaire %s est débiteur."
