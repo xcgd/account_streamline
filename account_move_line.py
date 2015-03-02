@@ -713,12 +713,12 @@ class account_move_line(osv.osv):
                 and line.reconcile_partial_id
                 and line.reconcile_partial_id not in merges_rec
             ):
-                merges_rec.add(object)
+                merges_rec.add(line.reconcile_partial_id)
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
-                        if line2.id not in unrec_lines:
+                        if line2 not in unrec_lines:
                             # only put it at the end
-                            unrec_lines.append(line2.id)
+                            unrec_lines.append(line2)
 
         # Get account to check for reconcile flag
         account_obj = self.pool['account.account']
@@ -773,6 +773,7 @@ class account_move_line(osv.osv):
             writeoff, currency_rate_difference, account_id, partner_id ,
             currency_id, unrec_ids, merges_rec) = self._compute(
                 cr, uid, unrec_lines, compute_context)
+        merges_ids = {merge.id for merge in merges_rec}
 
         # FIXME when to do normal reconcile? maybe base on writeoff?
         if self.pool['res.currency'].is_zero(cr, uid, currency_id, writeoff):
@@ -795,11 +796,11 @@ class account_move_line(osv.osv):
         self.write(cr, uid, unrec_ids, {'reconcile_partial_id': r_id,
                                         },
                    context=reconcile_context)
-        merges_rec.add(r_id)
+        merges_ids.add(r_id)
         # FIXME This method does not do any currency magic, it might need to
         # be replaced
         move_rec_obj.reconcile_partial_check(
-            cr, uid, list(merges_rec), context=reconcile_context)
+            cr, uid, list(merges_ids), context=reconcile_context)
         return True
 
     def reconcile(self, cr, uid, ids, type='auto',
