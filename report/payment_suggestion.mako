@@ -125,17 +125,6 @@ ${css}
             %endif
         </table>
     </div>
-    <div class="addressright">
-        <table class="recipient">
-            <tr><th class="addresstitle"></th></tr>
-             %if object.voucher_ids:
-            <tr><td class="name">${object.voucher_ids[0].partner_id.name or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].partner_id.street or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].partner_id.street2 or ''}</td></tr>
-            <tr><td class="name">${object.voucher_ids[0].partner_id.zip or ''}</td></tr>
-            %endif
-        </table>
-    </div>
 </div>
 &nbsp;&nbsp;
 <!-- Using h2 as the font-size property doesn't seem to affect divs...-->
