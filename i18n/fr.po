@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-28 11:01+0000\n"
-"PO-Revision-Date: 2015-02-26 14:44+0200\n"
-"Last-Translator: Vincent Hatakeyama <vincent.lhote@xcg-consulting.fr>\n"
+"POT-Creation-Date: 2015-03-27 17:10+0000\n"
+"PO-Revision-Date: 2015-03-27 18:12+0100\n"
+"Last-Translator: Houzéfa Abbasbhay <houzefa.abba@xcg-consulting.fr>\n"
 "Language-Team: XCG Consulting\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #. module: account_streamline
 #: view:account.move.line.reconcile:0
@@ -32,7 +32,7 @@ msgstr "account.config.settings"
 
 #. module: account_streamline
 #: view:account.move.line.reconcile:0
-#: code:addons/account_streamline/account_move_line.py:972
+#: code:addons/account_streamline/account_move_line.py:973
 #, python-format
 msgid "Write-Off"
 msgstr "Écart de règlement"
@@ -110,7 +110,7 @@ msgid "Vouchers to Debit"
 msgstr "Bons de règlement à débiter"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move_line.py:888
+#: code:addons/account_streamline/account_move_line.py:889
 #, python-format
 msgid "You have to configure an account for the exchange gain/loss."
 msgstr "Vous devez créer un compte de gain/perte de change."
@@ -118,7 +118,8 @@ msgstr "Vous devez créer un compte de gain/perte de change."
 #. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:634
 #, python-format
-msgid "All entries must have the same account AND same partner to be reconciled."
+msgid ""
+"All entries must have the same account AND same partner to be reconciled."
 msgstr ""
 "Toutes les écritures doivent avoir le même compte et le même partenaire pour "
 "être lettrés."
@@ -146,17 +147,14 @@ msgid "The account is not defined to be reconciled!"
 msgstr "Le compte n’est pas configuré pour être lettré !"
 
 #. module: account_streamline
-#: selection:account.account,t1_ctl:0
-#: selection:account.account,t2_ctl:0
-#: selection:account.account,t3_ctl:0
-#: selection:account.account,t4_ctl:0
+#: selection:account.account,t1_ctl:0 selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0 selection:account.account,t4_ctl:0
 #: selection:account.account,t5_ctl:0
 msgid "Optional"
 msgstr "Optionnel"
 
 #. module: account_streamline
-#: view:account.move:0
-#: view:account.move.line:0
+#: view:account.move:0 view:account.move.line:0
 msgid "Total Credit"
 msgstr "Crédit total"
 
@@ -182,8 +180,7 @@ msgid "Credit amount"
 msgstr "Montant en crédit"
 
 #. module: account_streamline
-#: field:account.move,message_ids:0
-#: field:account.move.line,message_ids:0
+#: field:account.move,message_ids:0 field:account.move.line,message_ids:0
 #: field:account.move.line.streamline.mail.thread,message_ids:0
 #: view:res.company:0
 msgid "Messages"
@@ -195,13 +192,12 @@ msgid "Journal Search"
 msgstr "Recherche journal"
 
 #. module: account_streamline
-#: view:account.move:0
-#: view:account.move.line:0
+#: view:account.move:0 view:account.move.line:0
 msgid "Total Debit"
 msgstr "Débit total"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move.py:113
+#: code:addons/account_streamline/account_move.py:114
 #: code:addons/account_streamline/account_move_line.py:550
 #: code:addons/account_streamline/account_move_line.py:557
 #: code:addons/account_streamline/account_move_line.py:566
@@ -221,7 +217,7 @@ msgstr "Erreur !"
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:159
-#: report:addons/account_streamline/report/remittance_letter.mako:201
+#: report:addons/account_streamline/report/remittance_letter.mako:196
 msgid "Amount"
 msgstr "Montant"
 
@@ -232,14 +228,17 @@ msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
 
 #. module: account_streamline
 #: constraint:account.move.line:0
-msgid "The amount expressed in the secondary currency must be positive when the journal item is a debit and negative when if it is a credit."
+msgid ""
+"The amount expressed in the secondary currency must be positive when the "
+"journal item is a debit and negative when if it is a credit."
 msgstr ""
 "Le montant exprimé dans la devise de transaction doit être positif lorsque "
 "l'écriture comptable est au débit et négatif au crédit"
 
 #. module: account_streamline
 #: constraint:account.move:0
-msgid "You cannot create more than one move per period on a centralized journal."
+msgid ""
+"You cannot create more than one move per period on a centralized journal."
 msgstr ""
 "Vous ne pouvez pas créer plus d'un mouvement par période dans un journal "
 "centralisé."
@@ -255,14 +254,14 @@ msgstr "Avis de règlement"
 #. module: account_streamline
 #: code:addons/account_streamline/account_voucher.py:147
 #, python-format
-msgid "You have to configure account base code and account tax code on the '%s' tax!"
+msgid ""
+"You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
-"Vous devez configurer les codes de base et fiscal du compte pour la taxe « %"
-"s » !"
+"Vous devez configurer les codes de base et fiscal du compte pour la taxe "
+"« %s » !"
 
 #. module: account_streamline
-#: help:account.move,message_unread:0
-#: help:account.move.line,message_unread:0
+#: help:account.move,message_unread:0 help:account.move.line,message_unread:0
 #: help:account.move.line.streamline.mail.thread,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -296,7 +295,9 @@ msgstr "Lettrage"
 
 #. module: account_streamline
 #: constraint:account.move.line:0
-msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
+msgid ""
+"You cannot create journal items with a secondary currency without recording "
+"both 'currency' and 'amount currency' field."
 msgstr ""
 "Vous ne pouvez pas créer d'écritures comptables avec une monnaie secondaire "
 "sans enregistrer à la fois le champ « devise » et le champ « montant de la "
@@ -327,7 +328,9 @@ msgstr "Vue détaillée"
 
 #. module: account_streamline
 #: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal."
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
 "La date de votre écriture ne correspond pas à la période définie! Vous devez "
 "modifier la date ou supprimer la contrainte de date du journal."
@@ -336,41 +339,36 @@ msgstr ""
 #: help:account.move,message_summary:0
 #: help:account.move.line,message_summary:0
 #: help:account.move.line.streamline.mail.thread,message_summary:0
-msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 "Contient un résumé de la discussion (nombre de messages, ...). Ce résumé est "
 "directement au format HTML pour être inséré dans les vues kanban."
 
 #. module: account_streamline
-#: code:addons/account_streamline/payment_selection.py:448
-#: code:addons/account_streamline/payment_selection.py:521
+#: code:addons/account_streamline/payment_selection.py:450
+#: code:addons/account_streamline/payment_selection.py:523
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
 
 #. module: account_streamline
-#: field:account.account,a1_id:0
-#: field:account.account,a2_id:0
-#: field:account.account,a3_id:0
-#: field:account.account,a4_id:0
-#: field:account.account,a5_id:0
-#: field:account.move.line,a1_id:0
-#: field:account.move.line,a2_id:0
-#: field:account.move.line,a3_id:0
-#: field:account.move.line,a4_id:0
-#: field:account.move.line,a5_id:0
-#: field:res.partner,a1_id:0
-#: field:res.partner,a2_id:0
-#: field:res.partner,a3_id:0
-#: field:res.partner,a4_id:0
+#: field:account.account,a1_id:0 field:account.account,a2_id:0
+#: field:account.account,a3_id:0 field:account.account,a4_id:0
+#: field:account.account,a5_id:0 field:account.move.line,a1_id:0
+#: field:account.move.line,a2_id:0 field:account.move.line,a3_id:0
+#: field:account.move.line,a4_id:0 field:account.move.line,a5_id:0
+#: field:res.partner,a1_id:0 field:res.partner,a2_id:0
+#: field:res.partner,a3_id:0 field:res.partner,a4_id:0
 #: field:res.partner,a5_id:0
 msgid "Generated Analytic Field"
 msgstr "Champ analytique autogénéré"
 
 #. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:680
-#: code:addons/account_streamline/account_move_line.py:887
-#: code:addons/account_streamline/account_move_line.py:954
+#: code:addons/account_streamline/account_move_line.py:888
+#: code:addons/account_streamline/account_move_line.py:955
 #, python-format
 msgid "Warning!"
 msgstr "Attention !"
@@ -392,15 +390,7 @@ msgid "Mark as good to pay"
 msgstr "Marquer en Bon à payer"
 
 #. module: account_streamline
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view or consolidation."
-msgstr ""
-"Vous ne pouvez créer d’écriture comptable sur un compte de type vue ou "
-"consolidation."
-
-#. module: account_streamline
-#: view:email.remittance:0
-#: field:email.remittance,partners:0
+#: view:email.remittance:0 field:email.remittance,partners:0
 msgid "Partners"
 msgstr "Partenaires"
 
@@ -416,7 +406,7 @@ msgid "Transaction Currency"
 msgstr "Devise de transaction"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move.py:108
+#: code:addons/account_streamline/account_move.py:109
 #, python-format
 msgid "Unable to post! The following analysis codes are mandatory:"
 msgstr ""
@@ -462,7 +452,7 @@ msgstr "Journal : %s"
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:158
-#: report:addons/account_streamline/report/remittance_letter.mako:199
+#: report:addons/account_streamline/report/remittance_letter.mako:194
 msgid "Debit/Credit"
 msgstr "Débit/Crédit"
 
@@ -489,7 +479,9 @@ msgstr "Les suggestions de paiement doivent s’appliquer qu’à un seul journa
 
 #. module: account_streamline
 #: model:email.template,body_html:account_streamline.remittance_letter_email_template
-msgid "Dear provider, Please take note of the details of the transaction with your account (attached)."
+msgid ""
+"Dear provider, Please take note of the details of the transaction with your "
+"account (attached)."
 msgstr ""
 "Cher fournisseur, veuillez prendre note des détails de transaction sur votre "
 "compte (pièce jointe)."
@@ -505,16 +497,20 @@ msgid "To Debit"
 msgstr "Au débit"
 
 #. module: account_streamline
-#: code:addons/account_streamline/payment_suggestion.py:18
-#: field:email.remittance,vouchers:0
-#: field:payment.suggestion,voucher_ids:0
+#: code:addons/account_streamline/payment_selection.py:191
+#, python-format
+msgid "Different accounts are being referred for the same partner(s):"
+msgstr "Plus d’un compte pour un même partenaire :"
+
+#. module: account_streamline
+#: code:addons/account_streamline/payment_suggestion.py:28
+#: field:email.remittance,vouchers:0 field:payment.suggestion,voucher_ids:0
 #, python-format
 msgid "Vouchers"
 msgstr "Bons de règlement"
 
 #. module: account_streamline
-#: field:account.account,is_limited:0
-#: field:account.journal,is_limited:0
+#: field:account.account,is_limited:0 field:account.journal,is_limited:0
 msgid "Limited access"
 msgstr "Accès limité"
 
@@ -532,10 +528,12 @@ msgstr "AvisDeRèglement.pdf"
 
 #. module: account_streamline
 #: constraint:account.move.line:0
-msgid "If you see this, the constraint redefined in account_streamline.account_move_line._check_currency_company is not working!"
+msgid ""
+"If you see this, the constraint redefined in account_streamline."
+"account_move_line._check_currency_company is not working!"
 msgstr ""
-"Si vous voyez ceci, la contrainte redéfinie dans "
-"account_streamline.account_move_line.check_currency_company ne marche pas !"
+"Si vous voyez ceci, la contrainte redéfinie dans account_streamline."
+"account_move_line.check_currency_company ne marche pas !"
 
 #. module: account_streamline
 #: model:mail.group,name:account_streamline.group_account_creators
@@ -551,14 +549,10 @@ msgstr "L’entrée est déjà lettrée."
 #. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:693
 #, python-format
-msgid "All entries must have the same second currency! Reconcile on company currency otherwise."
+msgid ""
+"All entries must have the same second currency! Reconcile on company "
+"currency otherwise."
 msgstr "Toutes les entrées doivent être dans la même devise."
-
-#. module: account_streamline
-#: code:addons/account_streamline/report/payment_suggestion.py:130
-#, python-format
-msgid "No draft voucher selected."
-msgstr "Pas bon de règlement à l'état brouillon sélectionné."
 
 #. module: account_streamline
 #: code:addons/account_streamline/payment_selection.py:227
@@ -567,7 +561,7 @@ msgid "({0} more partners with {1} accounts)"
 msgstr "(plus {0} partenaires avec {1} comptes)"
 
 #. module: account_streamline
-#: report:addons/account_streamline/report/remittance_letter.mako:218
+#: report:addons/account_streamline/report/remittance_letter.mako:213
 #, fuzzy
 msgid "Total TTC"
 msgstr "Crédit total"
@@ -594,9 +588,10 @@ msgid "Generate Payment Suggestion"
 msgstr "Générer suggestion de paiement"
 
 #. module: account_streamline
-#: field:account.move.line.goodtopay,view_selection:0
-msgid "View selector"
-msgstr "Voir sélecteur"
+#: code:addons/account_streamline/payment_suggestion.py:19
+#, python-format
+msgid "PaymentSuggestion.pdf"
+msgstr "SuggestionDePaiement.pdf"
 
 #. module: account_streamline
 #: code:addons/account_streamline/account_voucher.py:186
@@ -610,10 +605,15 @@ msgid "To Credit"
 msgstr "Au crédit"
 
 #. module: account_streamline
-#: code:addons/account_streamline/payment_selection.py:191
+#: code:addons/account_streamline/report/payment_suggestion.py:130
 #, python-format
-msgid "Different accounts are being referred for the same partner(s):"
-msgstr "Plus d’un compte pour un même partenaire :"
+msgid "No draft voucher selected."
+msgstr "Pas bon de règlement à l'état brouillon sélectionné."
+
+#. module: account_streamline
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr "Vous ne pouvez créer d’écriture comptable sur un compte de type vue."
 
 #. module: account_streamline
 #: field:account.move.line.reconcile,writeoff_curr:0
@@ -621,10 +621,8 @@ msgid "Write-Off amount"
 msgstr "Écart de règlement"
 
 #. module: account_streamline
-#: selection:account.account,t1_ctl:0
-#: selection:account.account,t2_ctl:0
-#: selection:account.account,t3_ctl:0
-#: selection:account.account,t4_ctl:0
+#: selection:account.account,t1_ctl:0 selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0 selection:account.account,t4_ctl:0
 #: selection:account.account,t5_ctl:0
 msgid "Forbidden"
 msgstr "Interdit"
@@ -642,7 +640,10 @@ msgstr "email.remittance"
 
 #. module: account_streamline
 #: constraint:account.move.line:0
-msgid "The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal."
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 msgstr ""
 "Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
 "devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
@@ -650,7 +651,7 @@ msgstr ""
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:157
-#: report:addons/account_streamline/report/remittance_letter.mako:200
+#: report:addons/account_streamline/report/remittance_letter.mako:195
 msgid "Currency"
 msgstr "Devise"
 
@@ -693,6 +694,11 @@ msgid "Check Supplier Account"
 msgstr "Vérifier le compte fournisseur"
 
 #. module: account_streamline
+#: field:account.move.line.goodtopay,view_selection:0
+msgid "View selector"
+msgstr "Voir sélecteur"
+
+#. module: account_streamline
 #: model:ir.actions.act_window,name:account_streamline.action_move_line_accounting_items_complete_tree
 #: model:ir.ui.menu,name:account_streamline.menu_action_move_line_accounting_items_complete
 msgid "Full View"
@@ -702,7 +708,10 @@ msgstr "Vue complète"
 #: code:addons/account_streamline/res_company.py:32
 #: help:res.company,remittance_letter_top:0
 #, python-format
-msgid "Message to write at the top of Remittance Letter reports. Available variables: \"$iban\" for the IBAN; \"$date\" for the payment date. HTML tags are allowed."
+msgid ""
+"Message to write at the top of Remittance Letter reports. Available "
+"variables: \"$iban\" for the IBAN; \"$date\" for the payment date. HTML tags "
+"are allowed."
 msgstr ""
 "Message écrit en haut des rapports d'avis de règlement. Variables "
 "disponibles : « $iban » pour l’IBAN ; « $date » pour la date de paiement. "
@@ -745,6 +754,7 @@ msgstr "Non lu"
 #: field:account.voucher,iban:0
 #: field:account.voucher,remittance_letter_bottom:0
 #: field:account.voucher,report_remittance_letter_name:0
+#: field:payment.suggestion,report_name:0 field:res.users,employee_id:0
 msgid "unknown"
 msgstr "inconnu"
 
@@ -757,12 +767,6 @@ msgstr "Montant total"
 #: selection:account.move.line,move_state:0
 msgid "Unposted"
 msgstr "Non posté"
-
-#. module: account_streamline
-#: view:account.move.line.goodtopay:0
-#: view:account.move.line.reconcile:0
-msgid "or"
-msgstr "ou"
 
 #. module: account_streamline
 #: field:account.move,message_is_follower:0
@@ -789,14 +793,14 @@ msgid "Partner %s is not a supplier."
 msgstr "Le partenaire %s n’est pas un fournisseur."
 
 #. module: account_streamline
-#: view:account.move:0
-#: view:account.move.line:0
+#: view:account.move:0 view:account.move.line:0
 #: model:ir.model,name:account_streamline.model_account_move_line
 msgid "Journal Items"
-msgstr "Écritures journaux"
+msgstr "Écritures comptables"
 
 #. module: account_streamline
 #: view:account.move:0
+#: model:ir.actions.server,name:account_streamline.account_streamline_multi_validate_server_action
 msgid "Post"
 msgstr "Poster"
 
@@ -844,7 +848,7 @@ msgstr "Client crée, veuillez vérifier le compte associé."
 #. module: account_streamline
 #: code:addons/account_streamline/account_move_line.py:728
 #: code:addons/account_streamline/payment_selection.py:251
-#: code:addons/account_streamline/payment_selection.py:501
+#: code:addons/account_streamline/payment_selection.py:503
 #: code:addons/account_streamline/report/payment_suggestion.py:114
 #: code:addons/account_streamline/report/payment_suggestion.py:129
 #: code:addons/account_streamline/report/remittance_letter.py:111
@@ -876,10 +880,8 @@ msgid "No posted voucher selected."
 msgstr "Pas de bon de règlement à l’état posté sélectionné."
 
 #. module: account_streamline
-#: selection:account.account,t1_ctl:0
-#: selection:account.account,t2_ctl:0
-#: selection:account.account,t3_ctl:0
-#: selection:account.account,t4_ctl:0
+#: selection:account.account,t1_ctl:0 selection:account.account,t2_ctl:0
+#: selection:account.account,t3_ctl:0 selection:account.account,t4_ctl:0
 #: selection:account.account,t5_ctl:0
 msgid "Mandatory"
 msgstr "Obligatoire"
@@ -890,7 +892,7 @@ msgid "Linked Object"
 msgstr "Objet lié"
 
 #. module: account_streamline
-#: code:addons/account_streamline/payment_selection.py:502
+#: code:addons/account_streamline/payment_selection.py:504
 #, python-format
 msgid "Partners undefined in the following accounting move entries: %s."
 msgstr "Partenaires indéfinis dans les pièces comptables suivantes : %s."
@@ -902,22 +904,22 @@ msgstr "Justificatif comptable"
 
 #. module: account_streamline
 #: view:email.remittance:0
-msgid "Selected partners are listed below. Their email can be edited in the list; press Enter to validate."
+msgid ""
+"Selected partners are listed below. Their email can be edited in the list; "
+"press Enter to validate."
 msgstr ""
 "Les partenaires sélectionnés sont listés ci-dessous. Leur courriel peut être "
 "modifié dans la liste ; appuyez sur Entrée pour valider."
 
 #. module: account_streamline
-#: code:addons/account_streamline/res_company.py:38
-#: view:res.company:0
+#: code:addons/account_streamline/res_company.py:38 view:res.company:0
 #: field:res.company,remittance_letter_bottom:0
 #, python-format
 msgid "Remittance Letter - bottom message"
 msgstr "Avis de règlement - message du bas"
 
 #. module: account_streamline
-#: view:account.move.line.goodtopay:0
-#: view:account.move.line.reconcile:0
+#: view:account.move.line.goodtopay:0 view:account.move.line.reconcile:0
 #: view:email.remittance:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -928,7 +930,7 @@ msgid "The name of the partner must be unique!"
 msgstr "Le nom du partenaire doit être unique !"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move_line.py:892
+#: code:addons/account_streamline/account_move_line.py:893
 #, python-format
 msgid "Exchange difference"
 msgstr "Écart de change"
@@ -994,10 +996,8 @@ msgid "Voucher Lines"
 msgstr "Lignes de bon de règlement"
 
 #. module: account_streamline
-#: field:account.account,t1_ctl:0
-#: field:account.account,t2_ctl:0
-#: field:account.account,t3_ctl:0
-#: field:account.account,t4_ctl:0
+#: field:account.account,t1_ctl:0 field:account.account,t2_ctl:0
+#: field:account.account,t3_ctl:0 field:account.account,t4_ctl:0
 #: field:account.account,t5_ctl:0
 msgid "Move Line Analytic Control"
 msgstr "Contrôle de l'analytique des écritures"
@@ -1023,8 +1023,7 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_streamline
-#: help:account.account,is_limited:0
-#: help:account.journal,is_limited:0
+#: help:account.account,is_limited:0 help:account.journal,is_limited:0
 msgid "When selected, only the financial manager can read and write"
 msgstr "Lorsqu'il est activé, seul le directeur financier peut lire et écrire"
 
@@ -1035,7 +1034,8 @@ msgstr "Lettrage des écritures comptables"
 
 #. module: account_streamline
 #: model:ir.actions.act_window,help:account_streamline.action_move_line_tree_reconciliation
-msgid "<p>\n"
+msgid ""
+"<p>\n"
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
@@ -1091,14 +1091,16 @@ msgstr "Nom"
 #: code:addons/account_streamline/res_company.py:39
 #: help:res.company,remittance_letter_bottom:0
 #, python-format
-msgid "Message to write at the bottom of Remittance Letter reports. HTML tags are allowed."
+msgid ""
+"Message to write at the bottom of Remittance Letter reports. HTML tags are "
+"allowed."
 msgstr ""
 "Message à écrire en bas des rapports d'avis de règlement. Les balises HTML "
 "sont autorisées."
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:156
-#: report:addons/account_streamline/report/remittance_letter.mako:198
+#: report:addons/account_streamline/report/remittance_letter.mako:193
 msgid "Invoice date"
 msgstr "Date de facturation"
 
@@ -1121,7 +1123,7 @@ msgstr "Généré le %s"
 
 #. module: account_streamline
 #: report:addons/account_streamline/report/payment_suggestion.mako:154
-#: report:addons/account_streamline/report/remittance_letter.mako:197
+#: report:addons/account_streamline/report/remittance_letter.mako:192
 msgid "Transaction reference"
 msgstr "Référence de transaction"
 
@@ -1132,7 +1134,7 @@ msgid "Analytical view"
 msgstr "Vue analytique"
 
 #. module: account_streamline
-#: code:addons/account_streamline/account_move_line.py:955
+#: code:addons/account_streamline/account_move_line.py:956
 #, python-format
 msgid "You have to provide an account for the write off entry."
 msgstr "Vous devez fournir un compte pour la suppression d’écritures."
@@ -1143,8 +1145,7 @@ msgid "This is the debit amount in transaction currency"
 msgstr "Représente le montant en débit dans la monnaie de transaction"
 
 #. module: account_streamline
-#: help:account.move,message_ids:0
-#: help:account.move.line,message_ids:0
+#: help:account.move,message_ids:0 help:account.move.line,message_ids:0
 #: help:account.move.line.streamline.mail.thread,message_ids:0
 msgid "Messages and communication history"
 msgstr "Messages et historique de communication"
@@ -1168,8 +1169,7 @@ msgid "Credit"
 msgstr "Crédit"
 
 #. module: account_streamline
-#: view:account.move.line:0
-#: view:res.partner:0
+#: view:account.move.line:0 view:res.partner:0
 msgid "Analytic Static"
 msgstr "Analytique statique"
 
@@ -1179,9 +1179,9 @@ msgid "account.group_account_user"
 msgstr "account.group_account_user"
 
 #. module: account_streamline
-#: field:account.journal,is_active:0
-msgid "Is Active"
-msgstr "Est actif"
+#: view:account.move.line.goodtopay:0 view:account.move.line.reconcile:0
+msgid "or"
+msgstr "ou"
 
 #. module: account_streamline
 #: model:ir.model,name:account_streamline.model_account_move_line_streamline_mail_thread
@@ -1194,8 +1194,7 @@ msgid "Selected Partner"
 msgstr "Partenaire sélectionné"
 
 #. module: account_streamline
-#: code:addons/account_streamline/res_company.py:31
-#: view:res.company:0
+#: code:addons/account_streamline/res_company.py:31 view:res.company:0
 #: field:res.company,remittance_letter_top:0
 #, python-format
 msgid "Remittance Letter - top message"
@@ -1218,10 +1217,8 @@ msgstr "Sélection de paiements bons à payer"
 msgid "Simple View"
 msgstr "Vue simple"
 
-#. module: account_streamline
-#: view:account.voucher:0
-msgid "Journal Items"
-msgstr "Écritures Comptables"
+#~ msgid "Is Active"
+#~ msgstr "Est actif"
 
 #. module: account
 #: view:account.unreconcile:0
