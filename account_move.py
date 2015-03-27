@@ -150,6 +150,20 @@ class account_move(osv.Model):
 
         return res
 
+    def multi_validate(self, cr, uid, ids, context=None):
+        """Validate the selected accounting entries.
+        """
+
+        if context is None:
+            context = {}
+
+        ids = context.get('active_ids', ids)
+
+        self.button_validate(cr, uid, ids, context=context)
+
+        # Don't return anything so it doesn't crash when calling from a form
+        # view.
+
     def _check_duplicate_ref_on_account_move_same_account(
         self, cr, uid, ids, context=None
     ):

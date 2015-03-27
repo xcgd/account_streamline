@@ -120,5 +120,23 @@
             </field>
         </record>
 
+        <!-- Actions. -->
+
+        <record id="account_streamline_multi_validate_server_action"
+            model="ir.actions.server">
+            <field name="code">action = object.multi_validate()</field>
+            <field name="model_id" ref="model_account_move" />
+            <field name="name">Post</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+        <record id="account_streamline_multi_validate_action" model="ir.values">
+            <field name="key2">client_action_multi</field>
+            <field name="model">account.move</field>
+            <field name="name">Post</field>
+            <field name="value"
+                eval="'ir.actions.server,%d' % account_streamline_multi_validate_server_action" />
+        </record>
+
     </data>
 </openerp>
