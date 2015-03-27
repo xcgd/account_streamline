@@ -35,7 +35,9 @@
                             <field name="date" />
                             <field name="to_check" />
                             <field name="amount" invisible="1" />
-                            <field name="object_reference" attrs="{'invisible': [('object_reference', '=', False)]}" readonly="True"/>
+                            <field name="object_reference"
+                                attrs="{'invisible': [('object_reference', '=', False)]}"
+                                readonly="True" />
                         </group>
                     </group>
                     <notebook>
@@ -61,16 +63,14 @@
                                         groups="base.group_multi_currency"
                                         required="0"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
-                                    <field name="debit_curr"
-                                        sum="Total Debit"
+                                    <field name="debit_curr" sum="Total Debit"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
-                                    <field name="credit_curr"
-                                        sum="Total Credit"
+                                    <field name="credit_curr" sum="Total Credit"
                                         on_change="onchange_currency(account_id,debit_curr,credit_curr,currency_id,parent.date)" />
                                     <field name="debit"
-                                           groups="base.group_multi_currency" sum="Total Debit" />
+                                        groups="base.group_multi_currency" sum="Total Debit" />
                                     <field name="credit"
-                                           groups="base.group_multi_currency" sum="Total Credit" />
+                                        groups="base.group_multi_currency" sum="Total Credit" />
                                     <field name="analytic_account_id"
                                         groups="analytic.group_analytic_accounting" />
                                     <field name="tax_code_id" />

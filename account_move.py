@@ -19,13 +19,14 @@
 ##############################################################################
 
 import logging
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, expression, osv
 from openerp.tools.translate import _
 import yaml
-from lxml import etree
-from openerp import SUPERUSER_ID
+
 
 _logger = logging.getLogger(__name__)
+
 
 # account.move.line fields that don't become read-only when the account.move
 # object is posted.
