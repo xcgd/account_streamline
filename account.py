@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp import tools
+from openerp import fields as new_fields
 from openerp.osv import fields, osv
 from lxml import etree
 from openerp.addons.analytic_structure.MetaAnalytic import MetaAnalytic
@@ -102,7 +103,7 @@ class account_analytic_structure(osv.Model):
 
     _para_analytic = {('t', 'ctl'): {
         'model': 'account_move_line',
-        'type': fields.selection,
+        'type': new_fields.Selection,
         'default': '2',
         'args': (CTL_SELECTION, "Move Line Analytic Control"),
         'kwargs': dict(required=True),
