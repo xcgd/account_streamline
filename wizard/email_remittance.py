@@ -18,8 +18,7 @@ class email_remittance(orm.TransientModel):
             'email.template',
             string="Email template",
             domain=email_template_domain,
-            required=True,
-            readonly=True),
+            required=True),
 
         'partners': fields.many2many(
             'res.partner',
