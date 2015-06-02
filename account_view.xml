@@ -29,7 +29,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='parent_id']" position="after">
                   <field name="analytic_dimensions" />
-                    <div class="oe_analytic" />
                 </xpath>
             </field>
         </record>
