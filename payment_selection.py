@@ -86,7 +86,6 @@ class good_to_pay(osv.TransientModel):
         'view_selection': fields.selection(
             [('complete', 'Complete view'),
              ('detailed', 'Detailed view')],
-            translate=True,
             string='View selector',
             required=True,
         ),
