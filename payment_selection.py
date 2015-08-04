@@ -579,6 +579,7 @@ class good_to_pay(osv.osv_memory):
         reads = move_line_osv.read(
             cr, uid, ids, ['partner_id'], context
         )
+        reads = reads if type(reads) == list else [reads]
         reads = [read for read in reads if read['partner_id']]
         dict_ids = self.__compile_list_dict(reads)
         for partner_id in dict_ids.keys():
@@ -600,6 +601,7 @@ class good_to_pay(osv.osv_memory):
         )
         aml_osv = self.pool.get('account.move.line')
         reads = aml_osv.read(cr, uid, line_ids, ['credit', 'debit'], context)
+        reads = reads if type(reads) == list else [reads]
         total_credit = reduce(
             lambda x, y: x + y, [read['credit'] for read in reads]
         )
