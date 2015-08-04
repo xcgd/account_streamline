@@ -565,6 +565,7 @@ class good_to_pay(osv.TransientModel):
         reads = move_line_osv.read(
             cr, uid, ids, ['partner_id'], context
         )
+        reads = reads if type(reads) == list else [reads]
         reads = [read for read in reads if read['partner_id']]
         dict_ids = self.__compile_list_dict(reads)
         for partner_id in dict_ids.keys():
