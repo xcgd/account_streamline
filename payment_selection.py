@@ -78,7 +78,7 @@ class good_to_pay(osv.TransientModel):
             'good_to_pay_rel_',
             'line_id',
             'good_to_pay_id',
-            _('Lines'),
+            "Lines",
         ),
         'generate_report': fields.boolean('Generate Report'),
         'nb_lines': fields.integer('Number of lines'),
