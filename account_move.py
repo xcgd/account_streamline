@@ -28,6 +28,10 @@ import yaml
 _logger = logging.getLogger(__name__)
 
 
+# Whether duplicate accounting reference checks should be cross-company.
+CROSS_COMPANY_DUPLICATE_REF_CHECK = False
+
+
 # account.move.line fields that don't become read-only when the account.move
 # object is posted.
 list_readonly_loose = [
@@ -170,6 +174,7 @@ class account_move(osv.Model):
         """ Check that if the company does not allow duplicate ref/account.
         That it is not 
         """
+
         am_brl = self.browse(cr, uid, ids, context)
         for am_br in am_brl:
             if (
@@ -179,9 +184,23 @@ class account_move(osv.Model):
                 # check that there is no other line with same
                 # partner but different ref on the move
                 # Use SUPERUSER_ID to be sure to find all
+
+                # How to find duplicates. Limit to the current company based on
+                # a setting.
+                duplicate_ref_search_domain = [
+                    ('id', '!=', am_br.id),
+                    ('ref', '=', am_br.ref),
+                ]
+                if not CROSS_COMPANY_DUPLICATE_REF_CHECK:
+                    am_company = am_br.company_id  # Related from the journal.
+                    if am_company:
+                        duplicate_ref_search_domain.append(
+                            ('company_id', '=', am_company.id),
+                        )
+
                 am_same_ref_ids = self.search(
                     cr, SUPERUSER_ID,
-                    [('ref', '=', am_br.ref), ('id', '!=', am_br.id)],
+                    duplicate_ref_search_domain,
                     context=context)
                 if am_same_ref_ids:
                     _logger.debug("Found ref %s in other account move"
