@@ -960,6 +960,12 @@ msgid "Allow duplicate (reference, account) on journals"
 msgstr "Autoriser transaction en double"
 
 #. module: account_streamline
+#: field:account.config.settings,restrain_duplicate_ref_on_different_years_only:0
+#: field:res.company,restrain_duplicate_ref_on_different_years_only:0
+msgid "Unique references for same fiscal year"
+msgstr "Références uniques pour une même année fiscale"
+
+#. module: account_streamline
 #: view:account.move:0
 msgid "Add an internal note..."
 msgstr "Ajouter une note interne…"
