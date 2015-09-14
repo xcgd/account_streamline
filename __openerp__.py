@@ -63,6 +63,9 @@
         'security/record_rules.xml',
     ],
     #'demo_xml': [],
+    'css': [
+        'static/src/css/account_streamline.css'
+    ],
     'test': [],
     'installable': True,
     'active': False,

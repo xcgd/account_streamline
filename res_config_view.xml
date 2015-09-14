@@ -14,9 +14,14 @@
                         <field name="allow_duplicate_ref_on_account_move_same_account" class="oe_inline"/>
                         <label for="allow_duplicate_ref_on_account_move_same_account"/>
                     </div>
+                    <div>
+                        <field name="restrain_duplicate_ref_on_different_years_only" class="oe_inline_dependent oe_inline" attrs="{'readonly':[('allow_duplicate_ref_on_account_move_same_account', '==', False)]}"/>
+                        <label for="restrain_duplicate_ref_on_different_years_only"/>
+                    </div>
                 </xpath>
             </field>
-        </record>
-
+       </record>
+               
+              
     </data>
 </openerp>

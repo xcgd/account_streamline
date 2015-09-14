@@ -34,6 +34,11 @@ class account_streamline_configuration(osv.TransientModel):
         'allow_duplicate_ref_on_account_move_same_account': fields.boolean(
             "Allow duplicate (reference, account) on journals",
         ),
+        'restrain_duplicate_ref_on_different_years_only': fields.boolean(
+            "Restrain duplicate references for different years only",
+            help="Check this option to constrain unique references on a same fiscal year. "
+            "Available only when duplicated references are allowed, otherwise it is ignored.",
+        ),
     }
 
     def get_default_allow_duplicate_ref_on_account_move_same_account(
@@ -58,5 +63,28 @@ class account_streamline_configuration(osv.TransientModel):
             val = {
                 'allow_duplicate_ref_on_account_move_same_account':
                     config_br.allow_duplicate_ref_on_account_move_same_account,
+            }
+            company_osv.write(cr, uid, company_id, val, context=context)
+
+    def get_default_restrain_duplicate_ref_on_different_years_only(self, cr, uid, fields, context=None):
+        res = {}
+        user = self.pool['res.users'].browse(cr, uid, uid, context)
+        res['restrain_duplicate_ref_on_different_years_only'] = \
+            user.company_id.restrain_duplicate_ref_on_different_years_only
+        return res
+
+    def set_restrain_duplicate_ref_on_different_years_only(
+        self, cr, uid, ids, context=None
+    ):
+        """Set this on the company of the user
+        """
+        user = self.pool['res.users'].browse(cr, uid, uid, context)
+        company_id = user.company_id.id
+        company_osv = self.pool['res.company']
+        config_brl = self.browse(cr, uid, ids, context)
+        for config_br in config_brl:
+            val = {
+                'restrain_duplicate_ref_on_different_years_only':
+                    config_br.restrain_duplicate_ref_on_different_years_only,
             }
             company_osv.write(cr, uid, company_id, val, context=context)

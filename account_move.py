@@ -173,8 +173,10 @@ class account_move(osv.Model):
         am_brl = self.browse(cr, uid, ids, context)
         for am_br in am_brl:
             if (
-                not am_br.company_id.
-                    allow_duplicate_ref_on_account_move_same_account
+                (not am_br.company_id.
+                    allow_duplicate_ref_on_account_move_same_account)
+                or (am_br.company_id.allow_duplicate_ref_on_account_move_same_account
+                    and am_br.company_id.restrain_duplicate_ref_on_different_years_only)
             ):
                 # check that there is no other line with same
                 # partner but different ref on the move
@@ -199,7 +201,27 @@ class account_move(osv.Model):
                                     "Found same partner in move %(move)d line "
                                     "%(line)d" % {
                                         'move': am_br.id, 'line': aml_br.id})
-                                return False
+                                
+                                if (am_br.company_id.allow_duplicate_ref_on_account_move_same_account
+                                    and am_br.company_id.restrain_duplicate_ref_on_different_years_only):
+                                    # check if the duplicated ref is on the same fiscal year
+                                    
+                                    account_period = self.pool.get('account.period')
+                                    ap_br_current = account_period.browse(cr, uid, am_br.period_id.id, context=context)
+                                    ap_br_found = account_period.browse(cr, uid, aml_br.period_id.id, context=context)
+                                    
+                                    if (ap_br_current and ap_br_found):
+                                        if ap_br_current.fiscalyear_id.id == ap_br_found.fiscalyear_id.id:
+                                            _logger.debug(
+                                                "Found same fiscal year %(year)d in move %(move)d line "
+                                                "%(line)d" % {
+                                                    'year': ap_br_current.fiscalyear_id.id,
+                                                    'move': am_br.id,
+                                                    'line': aml_br.id})
+                                            return False
+                                        
+                                else:
+                                    return False
                             else:
                                 _logger.debug("Found different partner "
                                     "%(partner)s in move %(move)d line "
@@ -211,6 +233,7 @@ class account_move(osv.Model):
                     _logger.debug("Ref %s unique in account move"
                         % am_br.ref)
         return True
+
 
     _constraints = [
         (

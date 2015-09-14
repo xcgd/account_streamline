@@ -42,6 +42,9 @@ class res_company(osv.Model):
         'allow_duplicate_ref_on_account_move_same_account': fields.boolean(
             "Allow duplicate (reference, account) on journals",
             ),
+        'restrain_duplicate_ref_on_different_years_only': fields.boolean(
+            "Unique references for same fiscal year",
+            ),
     }
 
     _defaults = {
@@ -55,4 +58,5 @@ on your account (IBAN «$iban») on «$date».<br/>
 We remain available should you have any query regarding this payment.
 </p>
 ''',
+        'restrain_duplicate_ref_on_different_years_only': False,
     }
