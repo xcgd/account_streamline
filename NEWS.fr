@@ -1,6 +1,7 @@
 NEXT
 
 - Correction des totaux des avis de règlement.
+- Option unicité des numéros de facture par année en option.
 
 account_streamline 1.10.5
 

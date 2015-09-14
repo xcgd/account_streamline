@@ -2,6 +2,7 @@ next
 ~~~~
 
 * [TKT/2015/01627] Menu command to post multiple accounting entries at once.
+* [TASK-623] Option unique reference for same fiscal year.
 
 
 account_streamline 1.18
