@@ -67,6 +67,11 @@ class account_move_line(osv.osv):
         'account.move.line.streamline.mail.thread',
     ]
  
+ 
+    # The _register_hook is there to modify the store function from the ref field of the base account_move_line.
+    # Since the hook is called after all db initializations, 
+    # we have to register the function manually by calling _store_function from the orm. 
+    # This is to prevent the field to be recalculated on each deployment.
     def _register_hook(self, cr):
         self.pool._store_function['account.move'].append((self._name, 'ref', _get_accountmove_ref, tuple(['ref']) if ['ref'] else None, 10, None))
         self.pool._store_function['account.move'].sort(lambda x, y: cmp(x[4], y[4]))
