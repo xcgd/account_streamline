@@ -26,6 +26,8 @@ from openerp import netsvc
 import time
 from lxml import etree
 from openerp.addons.analytic_structure.MetaAnalytic import MetaAnalytic
+from openerp.addons.account.account_move_line import account_move_line as parent
+from openerp.osv import orm
 
 # fields that are considered as forbidden once the move_id has been posted
 forbidden_fields = ["move_id"]
@@ -52,7 +54,10 @@ class aml_streamline_mail_thread(osv.AbstractModel):
             self, cr, uid, vals, context=context
         )
 
-
+def _get_accountmove_ref(self, cr, uid, ids, context=None):
+    return self.pool['account.move.line'].search(
+        cr, uid, [('move_id', 'in', ids)], context=context)
+    
 class account_move_line(osv.osv):
     __metaclass__ = MetaAnalytic
     _name = 'account.move.line'
@@ -61,7 +66,12 @@ class account_move_line(osv.osv):
         'account.move.line',
         'account.move.line.streamline.mail.thread',
     ]
-
+ 
+    def _register_hook(self, cr):
+        self.pool._store_function['account.move'].append((self._name, 'ref', _get_accountmove_ref, tuple(['ref']) if ['ref'] else None, 10, None))
+        self.pool._store_function['account.move'].sort(lambda x, y: cmp(x[4], y[4]))
+        return super(account_move_line, self)._register_hook(cr)
+    
     def _get_reconcile_date(self, cr, uid, ids, field_name, arg, context):
         move_line_osv = self.pool['account.move.line']
         result = {}
