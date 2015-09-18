@@ -1,6 +1,7 @@
 NEXT
 
 - Correction des totaux des avis de règlement.
+- [TKT/2015/02865] Mise à jour de la référence dans les lignes comptables quand la référence est modifiée dans la pièce comptable.
 
 account_streamline 1.10.5
 

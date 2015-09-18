@@ -2,6 +2,7 @@ next
 ~~~~
 
 * [TKT/2015/01627] Menu command to post multiple accounting entries at once.
+* [TKT/2015/02865] Update move line ref field when the ref is modified in move.
 
 
 account_streamline 1.18
